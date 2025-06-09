@@ -23,9 +23,9 @@ img {
 {% else %}
 <p>签到状态：<strong>尚未签到</strong></p>
 {% endif %}
-<p>请向签到志愿者出示下面的二维码。</p>
+<p>请向签到处的志愿者出示下面的二维码。</p>
 <div class="infobox warning">
-    <p>注意：该二维码可以用于领取订购的纪念品，请勿将截图发送给他人。</p>
+    <p>注意：该二维码可用领取您订购的纪念品，请勿将本页的截图或二维码发送给他人。</p>
 </div>
 <img src="data:image/png;base64,{{ qr | safe }}">
 {% endblock %}

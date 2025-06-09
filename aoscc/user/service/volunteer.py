@@ -31,7 +31,7 @@ def is_volunteer() -> bool:
 @bp.post('/volunteer/cancel')
 def post_volunteer_cancel():
     if is_volunteer():
-        flash('您的申请已获组委会确认，请联系组委会取消！')
+        flash('您的申请已获会务工作组确认，请联系会务工作组取消！')
     else:
         delete_from('volunteer', {'uid': g.uid})
         flash('取消成功！')

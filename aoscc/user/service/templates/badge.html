@@ -27,9 +27,9 @@
 <div id="badge">
     <article>
         <h2>定制胸牌</h2>
-        <p>我们乐意为您提供定制的会议胸牌，您可以自定义昵称和自我介绍，也可以上传透明背景 PNG 发挥您的创意。</p>
-        <p>如果您未提交定制，我们默认为与会者提供空白胸牌，您可在现场使用记号笔绘制。</p>
-        <p>请勿在定制胸牌时上传侵权或不合适的内容。</p>
+        <p>现场与会者可免费领取定制胸牌，欢迎您填入自定义昵称及自我介绍，抑或上传透明背景的 PNG 图片，发挥您的创意。</p>
+        <p>如果您未提交定制，我们将为您提供空白胸牌，届时可在现场使用记号笔绘制。</p>
+        <p>请勿在定制胸牌时上传侵权或不恰当的内容。</p>
         <div class="infobox">
             <p>
                 提示：
@@ -52,23 +52,23 @@
                 <label for="line2">自我介绍</label>
                 <textarea id="line2" name="line2" rows="3" maxlength="100"
                     placeholder="这是一个定制胸牌样例&#10;一行写不下也没关系">{{ form['line2'] }}</textarea>
-                <div>可选，可以为网络 ID 、单位、代词等，视乎行长可以 2-4 行。</div>
+                <div>可选，可以为网络 ID 、单位、代词等，视乎行长可填写 2-4 行。</div>
             </div>
             <div class="form-row">
                 <label></label>
                 <div><button type="submit" class="primary">保存</button></div>
             </div>
-            <p><strong>或者</strong>您也可以上传带有 Alpha 通道的透明背景 PNG 图层定制：</p>
+            <p><strong>或者</strong>您也可以上传带有 Alpha 通道的透明背景 PNG 图层进行定制：</p>
             <div class="form-row">
                 <label for="overlay">定制图层</label>
                 <input type="file" id="overlay" name="overlay" accept="image/png">
                 <div>
-                    定制区域为昵称和自我介绍区域，可以使用
+                    定制区域为昵称和自我介绍区域，可考虑使用
                     <a download href="{{ url_for('static', filename='badge/customize.png') }}">PNG</a>
                     和
                     <a download href="{{ url_for('static', filename='badge/customize.svg') }}">SVG</a>
                     模板辅助您的设计。<br>
-                    上传文件大小不应超过 10 MiB ，尺寸不超过 1200x800 像素。<br>
+                    文件大小不应超过 10 MiB ，尺寸不超过 1200x800 像素。<br>
                 </div>
             </div>
 

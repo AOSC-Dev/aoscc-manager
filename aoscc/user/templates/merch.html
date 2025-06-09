@@ -87,7 +87,7 @@ table button {
         {% if is_open %}
         本轮订购将于 {{ MERCH_CLOSE | datetime }} 结束。
         {% else %}
-        当前不在订购时间。
+        纪念品订购已截止，请留意后续发布的社区资讯，参与纪念品与周边通贩。
         {% endif %}
     </p>
 </div>
@@ -145,7 +145,7 @@ table button {
 {% endif %}
 {% if form and not is_open %}
 <div class="infobox warning">
-    <p>提示：当前不在订购时间，若已寄出，修改可能无法生效，建议<a href="{{ url_for('contact') }}">联系组委会</a>。</p>
+    <p>提示：纪念品订购已截止，我们已在处理商铺发货。若已寄出，上述收货信息修改可能无法生效，如有需要，请<a href="{{ url_for('contact') }}">联系会务工作组</a>。</p>
 </div>
 {% endif %}
 {% endif %}
@@ -153,17 +153,17 @@ table button {
     <div class="form-row">
         <label for="address">收货地址</label>
         <textarea id="address" name="address" required rows="3"
-            minlength="10" maxlength="200">{{ form['address'] }}</textarea>
-        <div>请按「xx省xx市xx区 具体地址」顺序完整填写，海外地址填写后请<a href="{{ url_for('contact') }}">联系组委会</a>。</div>
+            minlength="10" maxlength="200" placeholder="北京市西城区复兴门外大街2号">{{ form['address'] }}</textarea>
+        <div>请按「xx省xx市xx区 具体地址」顺序完整填写，如需海外收货，请在填写后<a href="{{ url_for('contact') }}">联系会务工作组</a>。</div>
     </div>
     <div class="form-row">
         <label for="phone">收货电话</label>
         <input type="tel" id="phone" name="phone" required
-            minlength="5" maxlength="20" value="{{ form['phone'] }}">
+            minlength="5" maxlength="20" value="{{ form['phone'] }}" placeholder="13800138000">
     </div>
     <div class="form-row">
         <label for="name">收货人</label>
-        <input type="text" id="name" name="name" required maxlength="10" value="{{ form['name'] }}">
+        <input type="text" id="name" name="name" required maxlength="10" value="{{ form['name'] }} placeholder="安安"">
     </div>
     <div class="form-row">
         <label></label>
@@ -203,7 +203,7 @@ table button {
     </tbody>
 </table>
 <p>小计：{{ total | price | safe }}</p>
-<p>该价格不含运费，运费可能为到付，或以发货时通知为准。</p>
+<p>该价格不含运费，运费信息请以发货时通知为准。</p>
 <p>订单批量交付制作后不支持退款。</p>
 <p><a class="button primary" href="{{ url_for('.billing') }}">去结算 &gt;</a></p>
 {% else %}

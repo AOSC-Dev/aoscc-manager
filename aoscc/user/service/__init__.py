@@ -18,7 +18,7 @@ def post_cancel():
         flash('您已完成签到，无法取消！')
         return redirect(url_for('.index'))
     if volunteer.is_volunteer():
-        flash('您是已确认的志愿者，无法取消！请先联系组委会取消志愿者状态。')
+        flash('您是已确认的志愿者，无法取消！请先联系会务工作组取消志愿者状态。')
         return redirect(url_for('.index'))
     # 已预订住宿?
     badge.post_badge_del()  # need to delete PNG file
