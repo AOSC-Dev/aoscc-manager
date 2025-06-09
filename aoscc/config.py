@@ -27,13 +27,13 @@ PERIP_LIMIT = (5, 2/60/60)
 
 ## services
 REGISTER_CLOSE = datetime(2025, 7, 12, 22, 0, 0)
-BADGE_CLOSE = datetime(2025, 7, 12, 22, 0, 0)
+BADGE_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 VOLUNTEER_OPEN = True
 VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))
 
 ## merch
 MERCH_OPEN = datetime(2025, 6, 7, 22, 0, 0)
-MERCH_CLOSE = datetime(2025, 7, 7, 22, 0, 0)
+MERCH_CLOSE = datetime(2025, 7, 4, 0, 0, 0)
 # inventory
 Item = namedtuple('Item', 'name,desc,img,sku,price')
 _tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。'
