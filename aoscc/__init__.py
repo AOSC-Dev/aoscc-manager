@@ -3,7 +3,7 @@ import sys
 import sqlite3
 from pathlib import Path
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from .config import *
 from .secret import SECRET
@@ -43,6 +43,10 @@ def make_app() -> Flask:
     @app.get('/contact')
     def contact():
         return render_template('contact.html')
+    
+    @app.before_request
+    def fix_remote_addr():
+        request.remote_addr = request.headers['X-Real-IP']
 
     return app
 
