@@ -42,8 +42,8 @@ def _generate_overlay(line1: str, line2: str) -> Image.Image | None:
         text2 = Image.new("RGBA", (2500, 600))
         draw1 = ImageDraw.Draw(text1)
         draw2 = ImageDraw.Draw(text2)
-        font1 = ImageFont.truetype(Path(current_app.static_folder)/'badges'/'MiSans-Demibold.ttf', 250)
-        font2 = ImageFont.truetype(Path(current_app.static_folder)/'badges'/'MiSans-Normal.ttf', 110)
+        font1 = ImageFont.truetype(Path(current_app.static_folder)/'badge'/'MiSans-Demibold.ttf', 250)
+        font2 = ImageFont.truetype(Path(current_app.static_folder)/'badge'/'MiSans-Normal.ttf', 110)
 
         draw1.text((0, -45), line1, (0xff,0xff,0xff), font1)
         draw2.text((0, -20), line2, (0xe6,0xe6,0xe6), font2, spacing=32)
