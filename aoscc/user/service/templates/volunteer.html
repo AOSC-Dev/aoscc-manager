@@ -1,0 +1,77 @@
+{% extends "index.html" %}
+{% block title %}志愿者招募{% endblock %}
+
+{% block page %}
+<h2>{{ TITLE }} 志愿者招募</h2>
+<p>每年的 AOSCC 我们都要迎接百余位来自各地的朋友，在欣喜之余，我们需要不少人手帮助我们完成会务工作。</p>
+<p>在志愿工作的过程中，您不仅可以积累到举办大型活动的经验，还能与五湖四海的朋友们建立友谊。{{ TITLE }} 有你更精彩！</p>
+<p></p>
+<p>志愿者的工作包括：</p>
+<ul>
+    <li>组织与会者签到</li>
+    <li>协助管理物料</li>
+    <li>维持会场秩序</li>
+    <li>引导与会者</li>
+    <li>清理会场卫生</li>
+    <li>等等……</li>
+</ul>
+<p>
+    为了让与会者能够迅速找到身边的志愿者，我们还会为志愿者定制专属的 T 恤和工作人员胸牌，如果有意参与志愿工作，请完成
+    <a href="{{ url_for('.badge') }}">胸牌定制</a>
+    ，并在下面填写你的 T 恤尺码。
+</p>
+<p>我们将根据报名情况，不定期邀约志愿者加入工作组，报名后请留意系统通知。</p>
+<h2>报名</h2>
+{% if form %}
+    {% if form['status'] > 0 %}
+    <p>我们<strong>已确认</strong>您的报名，欢迎加入 {{ TITLE }} 工作组。</p>
+    {% elif form['status'] < 0 %}
+    <p>感谢您对 {{ TITLE }} 的支持和帮助，但我们目前人手已经足够，祝您参会愉快！</p>
+    {% else %}
+    <p>您的报名<strong>已提交</strong>，请留意后续系统通知。您也可以在下方修改报名信息。</p>
+    <p>如需取消报名，请点击下方按钮。</p>
+    <form method="post" action="{{ url_for('.post_volunteer_cancel') }}">
+        <button type="submit" class="danger">取消报名</button>
+    </form>
+    {% endif %}
+{% elif not VOLUNTEER_OPEN %}
+<div class="infobox">
+    <p>感谢您的关注，志愿者招募已结束，祝您参会愉快！</p>
+</div>
+{% else %}
+<form method="post">
+    <div class="form-row">
+        <label for="arrive">计划抵返日期</label>
+        <div>
+            <input type="date" id="arrive" name="arrive" required min="2025-07-21" max="2025-07-26">
+            -
+            <input type="date" id="depart" name="depart" required min="2025-07-27" max="2025-07-31">
+        </div>
+        <div>签到工作需要提前 1-2 日到达。</div>
+    </div>
+    <div class="form-row">
+        <label for="tshirt">T 恤尺码</label>
+        <div><select id="tshirt" name="tshirt" required>
+            {% for size in VOLUNTEER_TSHIRT_SKU %}
+            <option value="{{ size }}">{{ size }}</option>
+            {% endfor %}
+        </select></div>
+        <div>尺码表见<a href="https://www.tshe.com/items/151" target="_blank">此处</a>。</div>
+    </div>
+    <div class="form-row">
+        <label for="contrib">贡献者 ID</label>
+        <input type="text" id="contrib" name="contrib" maxlength="30" placeholder="选填">
+        <div>如果您是 AOSC 社区贡献者，请填写 ID 。</div>
+    </div>
+    <div class="form-row">
+        <label for="other">其他信息</label>
+        <textarea id="other" name="other" rows="4" maxlength="500" placeholder="选填"></textarea>
+        <div>可以填写类似活动组织经验，或者其他想要告诉我们的信息。</div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">报名！</button></div>
+    </div>
+</form>
+{% endif %}
+{% endblock %}

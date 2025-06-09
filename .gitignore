@@ -1,0 +1,8 @@
+/instance/
+/venv/
+/aoscc/secret.py
+
+*.pyc
+__pycache__/
+*.egg-info/
+.mypy_cache/

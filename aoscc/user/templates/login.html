@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}登入{% endblock %}
+
+{% block css %}
+<style>
+main {
+    display: flex;
+    flex-flow: row wrap-reverse;
+    gap: 3rem;
+}
+
+main > * {
+    width: 100%;
+}
+@media (min-width: 768px) {
+    main > * {
+        flex: 1 0px;
+    }
+}
+
+form {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+form > * {
+    width: 100%;
+}
+
+form > img {
+    width: 5rem;
+}
+@media screen and (prefers-color-scheme: dark) {
+    form > img {
+        filter: drop-shadow(0 0 0.2rem #fff)
+    }
+}
+
+.button.telegram {
+    margin: 1rem 0;
+    line-height: 1.8;
+    font-size: 1.15rem;
+    background-color: #0088cc;
+    color: #fff;
+}
+
+.hr-div {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 1rem;
+}
+.hr-div > hr {
+    flex: 1;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<aside>
+    <h1>{{ TITLE }} 会议注册</h1>
+    <p>安同开源社区年度聚会 {{ TITLE }} 将于 7 月 26-27 日在上海交通大学举行。在为期两天的活动中，您将被各色信创泥头车轮番创飞，不用麻醉，一样情不自禁创起来，飞起来……</p>
+    <p>{{ TITLE }} 不设注册费，欢迎所有感兴趣的朋友注册参会！</p>
+    <p>注册时遇到问题？请<a href="{{ url_for('contact') }}">联系组委会</a>寻求帮助。</p>
+</aside>
+<form method="post">
+    <img src="{{ url_for('static', filename='aosc.png') }}" alt="AOSC Logo">
+    <a class="button telegram" href="https://t.me/AOSCCbot?start=1" target="_blank">通过 Telegram 机器人登入</a>
+    <div class="hr-div"><hr>或者使用邮箱登入<hr></div>
+    <input type="email" name="email" placeholder="example@aosc.io" required maxlength="254">
+    <button type="submit">发送验证邮件</button>
+</form>
+
+{% endblock %}

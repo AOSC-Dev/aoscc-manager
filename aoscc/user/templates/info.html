@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+{% block title %}联络信息{% endblock %}
+
+{% block page %}
+<form method="post">
+    <h2>怎么称呼您？</h2>
+    <div class="form-row">
+        <label for="nick">昵称</label>
+        <input type="text" id="nick" name="nick" required maxlength="50" value="{{ g.nick }}">
+        <div>用于在公开和私下场合中提及您。</div>
+    </div>
+    <script>
+        document.getElementById('nick').addEventListener('input', (event) => {
+            let text = '';
+            if (event.target.value) text = '，' + event.currentTarget.value;
+            document.querySelector('h1 .nick').textContent = text;
+        });
+    </script>
+    <h2>主要联系方式</h2>
+    <p>
+        {% if g.type == 'telegram' %}
+        您的通知将通过 <a href="https://t.me/AOSCCbot" target="_blank">Telegram 机器人</a> 发送到您绑定的 Telegram 账号。
+        {% elif g.type == 'email' %}
+        您的通知将通过电子邮件发送到 {{ g.identity }} 。
+        {% endif %}
+    </p>
+    <p>希望更换主要联系方式？请使用相应方式重新登入。</p>
+    <h2>备用联系方式</h2>
+    <p>当主要联系方式无法及时联系到您，我们可能会尝试这些方式。建议至少填写一项。</p>
+    {% if g.type != 'telegram' %}
+    <div class="form-row">
+        <label for="telegram">Telegram</label>
+        <input type="text" id="telegram" name="telegram" maxlength="35" value="{{ form['telegram'] }}">
+    </div>
+    {% endif %}
+    {% if g.type != 'email' %}
+    <div class="form-row">
+        <label for="email">邮箱</label>
+        <input type="email" id="email" name="email" maxlength="254" value="{{ form['email'] }}">
+    </div>
+    {% endif %}
+    <div class="form-row">
+        <label for="phone">手机</label>
+        <input type="tel" id="phone" name="phone" maxlength="30" value="{{ form['phone'] }}">
+    </div>
+    <div class="form-row">
+        <label for="qq">QQ</label>
+        <input type="text" id="qq" name="qq" maxlength="15" value="{{ form['qq'] }}">
+    </div>
+    <div class="form-row">
+        <label for="wechat">微信</label>
+        <input type="text" id="wechat" name="wechat" maxlength="30" value="{{ form['wechat'] }}">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">保存</button></div>
+    </div>
+</form>
+{% endblock %}

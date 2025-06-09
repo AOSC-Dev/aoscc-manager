@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% block title %}参会服务{% endblock %}
+
+{% block css %}
+<style>
+h3 ~ p {
+    margin-left: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>您已完成注册，接下来……</h2>
+    <div>
+    {% if VOLUNTEER_OPEN %}
+    <h3>报名志愿者</h3>
+    <p>{{ TITLE }} ，有你更精彩！我们正在招募会务志愿者，欢迎有意帮忙的朋友报名。</p>
+    <p><a href="{{ url_for('.volunteer') }}">去报名 &gt;&gt;</a></p>
+    {% endif %}
+    <h3>签到</h3>
+    <p>我们迫不及待想要和大家见面。</p>
+    <p><a href="{{ url_for('.checkin') }}">去签到 &gt;&gt;</a></p>
+    <h3>定制胸牌</h3>
+    <p>我们乐意为您提供定制的会议胸牌，自定义昵称和自我介绍，或上传图片发挥您的创意。</p>
+    <p><a href="{{ url_for('.badge') }}">去定制 &gt;&gt;</a></p>
+    <h3>预订住宿</h3>
+    <p>协议住宿将在稍后上线。</p>
+    <p><a href="{{ url_for('.accommo') }}">去预订 &gt;&gt;</a></p>
+    <h3>PGP 签名派对</h3>
+    <p>会议期间将同步进行分散式 PGP 签名派对，来与新老朋友们共织 Trust Web 吧！</p>
+    <p><a href="{{ url_for('.pgp') }}">去填写 &gt;&gt;</a></p>
+    </div>
+<h2>取消注册</h2>
+    <p>如需取消注册，请点击下方按钮，我们将删除您的实名信息。</p>
+    <form method="post" action="{{ url_for('.post_cancel') }}"
+        onsubmit="return confirm('取消注册将同时删除以上各项关联信息，确定吗？')">
+        <button type="submit" class="danger">取消注册</button>
+    </form>
+{% endblock %}

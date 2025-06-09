@@ -1,0 +1,156 @@
+{% extends "index.html" %}
+{% block title %}PGP 密钥签名派对{% endblock %}
+
+{% block css %}
+<style>
+input#fpr,
+textarea#keyuid {
+    font-family: monospace;
+}
+input#signee {
+    width: 5rem;
+}
+form pre {
+    font-size: 1.2rem;
+    white-space: pre-wrap;
+}
+select {
+    max-width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>PGP 密钥签名派对</h2>
+<p>本次 {{ TITLE }} 期间，我们将组织与会者进行分散式的 PGP 密钥签名派对。</p>
+<p>您需要填写自己的 PGP 密钥指纹和关联的身份（<code>uid</code>），在会议期间与其他与会者互相校验指纹、检查身份证件，并在会后签署对方的密钥。</p>
+<div class="infobox error">
+    <p>参加签名派对的与会者务必注意：</p>
+    <p>1. 请在<strong>议程之间</strong>的空闲时间进行签名活动，不要干扰议程。</p>
+    <p>2. 请<strong>礼貌询问</strong>他人是否愿意和您签名，其他人<strong>没有</strong>必须和您签名的义务。</p>
+    <p>3. 参与这项活动是<strong>自愿的</strong>，并非所有人都参与签名派对。</p>
+</div>
+{% if not mykey %}
+<form method="post">
+    <h2>登记密钥</h2>
+    <p>如果您不理解本页面所述的概念，可以自行上网查阅资料，或到<a href="https://aosc.io/contact" target="_blank">社区各主要群组</a>寻求帮助。</p>
+    <div class="form-row">
+        <label for="fpr">密钥指纹</label>
+        <input type="text" id="fpr" name="fpr" required minlength="40" maxlength="40" pattern="[0-9A-F]{40}">
+        <div>应为 40 位十六进制字符串，不加空格。</div>
+    </div>
+    <div class="form-row">
+        <label for="keyuid">关联身份</label>
+        <textarea type="text" id="keyuid" name="keyuid" required rows="2" maxlength="500"></textarea>
+        <div>
+            又称 <code>uid</code> ，一般形如 <code>Name &lt;email@example.com&gt;</code> 。<br>
+            一行一个，只列出你计划请求签署的即可。
+        </div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div>
+            <input type="checkbox" id="consent" name="consent" required>
+            <label for="consent">我已阅读上方注意事项</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div>
+            <button type="submit" class="primary">加入派对！</button>
+        </div>
+    </div>
+</form>
+<script>
+    document.getElementById('fpr').addEventListener('change', (event) => {
+        event.currentTarget.value = event.currentTarget.value.toUpperCase();
+    });
+</script>
+{% else %}
+<h2>开始签名！</h2>
+<form method="post" action="{{ url_for('.post_pgp_sign') }}">
+    <h3>第一步：交换彼此的用户编号</h3>
+    <p>我的用户编号是：{{ g.uid }}</p>
+    <p>
+        对方的用户编号是：
+        <input type="text" id="signee" name="signee" placeholder="请输入...">
+        <button type="button" id="query">查询</button>
+    </p>
+
+    <h3>第二步：检查彼此屏幕上的密钥指纹匹配</h3>
+    <p>我的密钥指纹是：</p>
+    <pre>{{ mykey['fpr'] | fpr }}</pre>
+    <p><span class="signee-nick">对方</span> 的密钥指纹是：</p>
+    <pre id="signee-fpr"></pre>
+
+    <h3>第三步：检查彼此关联的身份与证件匹配</h3>
+    <p>我的关联身份是：</p>
+    <pre>{{ mykey['keyuid'] }}</pre>
+    <p><span class="signee-nick">对方</span> 的关联身份是：</p>
+    <pre id="signee-keyuid"></pre>
+
+    <h3>第四步：选择一个验证等级，保存！</h3>
+    <p><select id="level" name="level">
+        <option value="0">0: 无可奉告</option>
+        <option value="1">1: 我主观上相信对方关联的身份</option>
+        <option value="2">2: 我简单地核实了对方关联的身份</option>
+        <option value="3">3: 我严谨地核实了对方关联的身份（慎用） </option>
+    </select></p>
+    <p><button type="submit" class="primary">保存信任记录</button></p>
+</form>
+<script>
+    let level3WarningShown = false;
+    document.getElementById('level').addEventListener('change', (event) => {
+        if (level3WarningShown) return;
+        if (event.currentTarget.value === "3") {
+            event.currentTarget.value = "2";
+            alert('验证等级 3 要求极其谨慎的身份核验，对于会场能进行的验证而言，大概并不合适！已为您调整为等级 2 ，如执意使用等级 3 ，请再次选择。');
+            level3WarningShown = true;
+        }
+    });
+    document.getElementById('query').addEventListener('click', async (event) => {
+        try {
+            const url = '{{ url_for(".pgp_key") }}?uid='+document.getElementById('signee').value;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("failed getting key info");
+            const data = await response.json();
+            document.querySelectorAll('.signee-nick').forEach((elm) => {
+                elm.textContent = data.nick;
+            });
+            document.getElementById('signee-fpr').textContent = data.fpr;
+            document.getElementById('signee-keyuid').textContent = data.keyuid;
+        }
+        catch (err) {
+            console.log(err);
+            document.querySelectorAll('.signee-nick').forEach((elm) => {
+                elm.textContent = '对方';
+            });
+            document.getElementById('signee-fpr').textContent = '';
+            document.getElementById('signee-keyuid').textContent = '';
+        }
+    });
+</script>
+<h2>信任记录</h2>
+{% if records %}
+<pre>{% for record in records %}
+user-id: {{ record['signee'] }}
+fingerprint: {{ record['fpr'] }}
+key-uid(s): {{ record['keyuid'].replace('\r\n', ', ') }}
+cert-level: {{ record['level']}}
+
+{% endfor %}</pre>
+<form method="post" action="{{ url_for('.post_pgp_sign_del') }}">
+    <input type="text" name="signee" placeholder="user-id">
+    <button type="submit">删除记录</button>
+</form>
+{% else %}
+<p>您还没有信任其他密钥。</p>
+{% endif %}
+<h2>修改密钥信息</h2>
+<p>您的密钥已提交，如需修改，他人对您的信任记录将<strong title="全部木大">全部无效</strong>，请谨慎操作！</p>
+<form method="post" action="{{ url_for('.post_pgp_cancel') }}"
+    onsubmit="return confirm('所有他人对您的信任记录都将无效，确定吗？')">
+    <button type="submit" class="danger">修改密钥信息</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block title %}签到{% endblock %}
+
+{% block css %}
+<style>
+img {
+    max-width: 30rem;
+    width: 100%;
+    filter: invert(6.66%);
+}
+@media screen and (prefers-color-scheme: dark) {
+    img {
+        filter: invert(93.33%);
+    }
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>签到</h2>
+{% if False and form["arrived"] %}
+<p>签到状态：<strong>已签到</strong></p>
+{% else %}
+<p>签到状态：<strong>尚未签到</strong></p>
+{% endif %}
+<p>请向签到志愿者出示下面的二维码。</p>
+<div class="infobox warning">
+    <p>注意：该二维码可以用于领取订购的纪念品，请勿将截图发送给他人。</p>
+</div>
+<img src="data:image/png;base64,{{ qr | safe }}">
+{% endblock %}

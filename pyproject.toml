@@ -1,0 +1,22 @@
+[project]
+name = "aoscc"
+version = "2025.6.8.0"
+dependencies = [
+    "flask",
+    "python-telegram-bot",
+    "requests",
+    "pillow",
+    "PyNaCl",
+    "regex",
+    "qrcode",
+]
+requires-python = ">=3.13"
+authors = [
+  {name = "TechCiel", email = "ciel@aosc.io"},
+]
+
+[tool.setuptools]
+packages = ["aoscc"]
+
+[project.scripts]
+aoscc = "aoscc:main"

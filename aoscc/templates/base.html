@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <title>{% block title %}{% endblock %} - {{ TITLE }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+        {% block css %}
+        {% endblock %}
+        <link rel="icon" href="{{ url_for('static', filename='aosc.png') }}">
+    </head>
+    <body>
+        {% if TESTING %}
+        <header style="background-color:darkred;color:white;text-align:center;padding:1rem">当前为测试系统</header>
+        {% endif %}
+        <main>
+            {% block main %}
+            {% endblock %}
+        </main>
+        <footer>
+            <p>
+                &copy; 安同开源社区 2011 - {{ NOW().year }}，保留一切权利。
+            </p>
+        </footer>
+        {% if get_flashed_messages() %}
+        <script>alert('{{ "".join(get_flashed_messages()) }}')</script>
+        {% endif %}
+    </body>
+</html>

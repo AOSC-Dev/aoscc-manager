@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}管理{% endblock %}
+
+{% block main %}
+<h1>管理</h1>
+<p>您当前的角色是：{{ ' '.join(g.roles) or '无' }}</p>
+<p>请求授权 ID ：<code id="session">{{ session['id'] }}</code></p>
+<nav>
+    <div>
+        {% if has_role('admin') %}
+        <!-- TODO -->
+        <a class="button" href="#">用户列表</a>
+        <a class="button" href="#">收款管理</a>
+        <a class="button" href="#">会议签到</a>
+        <a class="button" href="#">通知管理</a>
+        <a class="button" href="#">投票</a>
+        <a class="button" href="#">抽奖</a>
+        {% endif %}
+    </div>
+    <div class="spacer"></div>
+    <div>
+        {% if has_role('admin') %}
+        <a class="button" href="#">授权管理</a><!-- TODO -->
+        {% endif %}
+        {% if g.roles %}
+        <a class="button" href="{{ url_for('.revoke') }}">撤销权限</a>
+        {% endif %}
+    </div>
+</nav>
+<hr>
+{% block page %}
+{% if g.roles %}
+<p>请选择一个模块开始。</p>
+{% endif %}
+{% endblock %}
+<script>
+    document.getElementById('session').addEventListener('click', (event) => {
+        navigator.clipboard.writeText(event.currentTarget.textContent);
+        alert('已复制！');
+    })
+</script>
+{% endblock %}

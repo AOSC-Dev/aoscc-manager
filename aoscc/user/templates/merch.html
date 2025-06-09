@@ -1,0 +1,213 @@
+{% extends "index.html" %}
+{% block title %}纪念品{% endblock %}
+
+{% block css %}
+<style>
+article {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+    gap: 1rem;
+}
+article section {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: #9992;
+}
+article section div:first-child {
+    display: flex;
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+}
+article section img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+article section div:last-child {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 1rem;
+    height: max-content;
+
+}
+article section h3 {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+article section h3 span {
+    flex: 0 0 fit-content;
+    color: orange;
+}
+
+article section form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: auto;
+}
+article section input[type="number"] {
+    width: 100%;
+}
+article section form:has(select) button {
+    grid-column-end: span 2;
+}
+
+dialog[open] {
+    height: 100vh;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+dialog::backdrop {
+    background-color: #000a;
+}
+dialog img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+table button {
+    padding: 0.2rem 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+
+<h2>橱窗</h2>
+<div class="infobox">
+    <p>
+        提示：
+        {% if is_open %}
+        本轮订购将于 {{ MERCH_CLOSE | datetime }} 结束。
+        {% else %}
+        当前不在订购时间。
+        {% endif %}
+    </p>
+</div>
+
+<article>
+    {% for item in INVENTORY.values() %}
+    <section>
+        <div><img src="{{ url_for('static', filename=item.img) }}"></div>
+        <div>
+            <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
+            <p>{{ item.desc | safe }}</p>
+            {% if is_open %}
+            <form method="post" action="{{ url_for('.post_merch_buy') }}">
+                {% if item.sku %}
+                <select name="sku">
+                    {% for sku in item.sku %}
+                    <option value="{{ sku }}">{{ sku }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                <input type="number" name="quantity" value="1" min="1" max="99">
+                <input type="hidden" name="name" value="{{ item.name }}">
+                <button type="submit" class="primary">订购</button>
+            </form>
+            {% endif %}
+        </div>
+    </section>
+    {% endfor %}
+</article>
+<dialog><img></dialog>
+<script>
+    let modal = document.querySelector('dialog');
+    let img = document.querySelector('dialog img');
+    modal.addEventListener('click', (event) => {
+        modal.close();
+    });
+    document.querySelectorAll('article section img').forEach((elm) => {
+        elm.addEventListener('click', (event) => {
+            img.src = event.currentTarget.src;
+            modal.showModal();
+        });
+    });
+</script>
+
+
+<h2>收货信息</h2>
+<div class="infobox">
+    <p>提示：{% if registered %}您已注册{% else %}如您计划参加{% endif %} {{ TITLE }}，可在会场签到时领取订购的纪念品。</p>
+</div>
+{% if items %}
+{% if not form and not registered %}
+<div class="infobox error">
+    <p><strong>注意！</strong>您还未填写收货信息，也未注册会议！</p>
+</div>
+{% endif %}
+{% if form and not is_open %}
+<div class="infobox warning">
+    <p>提示：当前不在订购时间，若已寄出，修改可能无法生效，建议<a href="{{ url_for('contact') }}">联系组委会</a>。</p>
+</div>
+{% endif %}
+{% endif %}
+<form method="post" action="{{ url_for('.post_merch_address') }}">
+    <div class="form-row">
+        <label for="address">收货地址</label>
+        <textarea id="address" name="address" required rows="3"
+            minlength="10" maxlength="200">{{ form['address'] }}</textarea>
+        <div>请按「xx省xx市xx区 具体地址」顺序完整填写，海外地址填写后请<a href="{{ url_for('contact') }}">联系组委会</a>。</div>
+    </div>
+    <div class="form-row">
+        <label for="phone">收货电话</label>
+        <input type="tel" id="phone" name="phone" required
+            minlength="5" maxlength="20" value="{{ form['phone'] }}">
+    </div>
+    <div class="form-row">
+        <label for="name">收货人</label>
+        <input type="text" id="name" name="name" required maxlength="10" value="{{ form['name'] }}">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">保存</button></div>
+    </div>
+</form>
+
+
+<h2>购物车</h2>
+{% if items %}
+<table>
+    <thead>
+        <tr>
+            <th>品项</th>
+            <th>型别</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item['item'] }}</td>
+            <td>{{ item['spec'] }}</td>
+            <td>{{ item['quantity'] }}</td>
+            <td>{{ item['price'] | price | safe }}</td>
+            <td>
+                {% if is_open and not item['fulfilled'] %}
+                <form method="post" action="{{ url_for('.post_merch_remove', bid=item['bid']) }}">
+                    <button type="submit">删除</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>小计：{{ total | price | safe }}</p>
+<p>该价格不含运费，运费可能为到付，或以发货时通知为准。</p>
+<p>订单批量交付制作后不支持退款。</p>
+<p><a class="button primary" href="{{ url_for('.billing') }}">去结算 &gt;</a></p>
+{% else %}
+<p>购物车为空。</p>
+{% endif %}
+
+{% endblock %}

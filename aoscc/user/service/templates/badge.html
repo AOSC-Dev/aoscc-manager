@@ -1,0 +1,116 @@
+{% extends "index.html" %}
+{% block title %}定制胸牌{% endblock %}
+
+{% block css %}
+<style>
+#badge {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1.5rem;
+}
+#badge article {
+    flex: 1 1 min-content;
+}
+#badge aside {
+    flex: 0 0 15rem;
+}
+#badge aside img {
+    width: 100%;
+    background-image: url('{{ url_for("static", filename="badge/template.png") }}');
+    background-size: cover;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+
+<div id="badge">
+    <article>
+        <h2>定制胸牌</h2>
+        <p>我们乐意为您提供定制的会议胸牌，您可以自定义昵称和自我介绍，也可以上传透明背景 PNG 发挥您的创意。</p>
+        <p>如果您未提交定制，我们默认为与会者提供空白胸牌，您可在现场使用记号笔绘制。</p>
+        <p>请勿在定制胸牌时上传侵权或不合适的内容。</p>
+        <div class="infobox">
+            <p>
+                提示：
+                {% if NOW() < BADGE_CLOSE %}
+                定制将于 {{ BADGE_CLOSE | datetime }} 截止。
+                {% else %}
+                定制已截止。
+                {% endif %}
+            </p>
+        </div>
+        {% if NOW() < BADGE_CLOSE %}
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <label for="line1">昵称</label>
+                <input type="text" id="line1" name="line1" required
+                    maxlength="20" placeholder="安同开源" value="{{ form['line1'] }}">
+                <div>必填，建议为昵称或姓名，一行，字体按宽度自动调整。</div>
+            </div>
+            <div class="form-row">
+                <label for="line2">自我介绍</label>
+                <textarea id="line2" name="line2" rows="3" maxlength="100"
+                    placeholder="这是一个定制胸牌样例&#10;一行写不下也没关系">{{ form['line2'] }}</textarea>
+                <div>可选，可以为网络 ID 、单位、代词等，视乎行长可以 2-4 行。</div>
+            </div>
+            <div class="form-row">
+                <label></label>
+                <div><button type="submit" class="primary">保存</button></div>
+            </div>
+            <p><strong>或者</strong>您也可以上传带有 Alpha 通道的透明背景 PNG 图层定制：</p>
+            <div class="form-row">
+                <label for="overlay">定制图层</label>
+                <input type="file" id="overlay" name="overlay" accept="image/png">
+                <div>
+                    定制区域为昵称和自我介绍区域，可以使用
+                    <a download href="{{ url_for('static', filename='badge/customize.png') }}">PNG</a>
+                    和
+                    <a download href="{{ url_for('static', filename='badge/customize.svg') }}">SVG</a>
+                    模板辅助您的设计。<br>
+                    上传文件大小不应超过 10 MiB ，尺寸不超过 1200x800 像素。<br>
+                </div>
+            </div>
+
+        </form>
+        <script>
+            document.getElementById('overlay').addEventListener('change', (event) => {
+                if (event.currentTarget.files.length == 1) {
+                    event.currentTarget.form.submit();
+                }
+            });
+            const debounce = (callback, wait) => {
+                let timeoutId = null;
+                return (...args) => {
+                    window.clearTimeout(timeoutId);
+                    timeoutId = window.setTimeout(() => {
+                        callback(...args);
+                    }, wait);
+                };
+            }
+            document.querySelector('form').addEventListener('input', debounce((event) => {
+                if (event.target.id == 'overlay') return;
+                const query = new URLSearchParams({
+                    line1: document.getElementById('line1').value,
+                    line2: document.getElementById('line2').value
+                }).toString();
+                document.querySelector('img').src = '{{ url_for(".badge_live") }}?' + query;
+            }, 300));
+        </script>
+        {% endif %}
+    </article>
+
+    <aside>
+        <h2>预览</h2>
+        <img src="{{ url_for('.badge_live') }}">
+        {% if NOW() < BADGE_CLOSE %}
+        {% if form or file_exists %}
+        <form method="post" action="{{ url_for('.post_badge_del') }}">
+            <button type="submit" class="danger">取消定制</button>
+        </form>
+        {% endif %}
+        {% endif %}
+    </aside>
+</div>
+
+{% endblock %}

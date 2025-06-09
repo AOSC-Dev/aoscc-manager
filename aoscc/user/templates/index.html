@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1>
+    您好<span class="nick">{% if g.nick %}，{{ g.nick }}{% endif %}</span>！
+    <span class="status {{ 'registered' if registered else 'not-registered'}}">
+        {{ '已注册' if registered else '尚未注册'}}
+    </span>
+</h1>
+<p>欢迎您参加 {{ TITLE }} 。</p>
+<nav>
+    <div>
+        {% if g.nick %}
+        <a class="button{% if request.path == url_for('user.info') %} primary{% endif %}" href="{{ url_for('user.info') }}">联络信息</a>
+        {% if not registered %}
+        <a class="button{% if request.path == url_for('user.register') %} primary{% endif %}" href="{{ url_for('user.register') }}">参会注册</a>
+        {% else %}
+        <a class="button{% if request.blueprint == 'user.service' %} primary{% endif %}" href="{{ url_for('user.service.index') }}">参会服务</a>
+        {% endif %}
+        <a class="button{% if request.path == url_for('user.merch') %} primary{% endif %}" href="{{ url_for('user.merch') }}">纪念品</a>
+        {% endif %}
+    </div>
+    <div class="spacer"></div>
+    <div>
+        {% if g.nick %}
+        <a class="button{% if request.path == url_for('user.billing') %} primary{% endif %}"href="{{ url_for('user.billing') }}">账单</a>
+        {% endif %}
+        <a class="button" href="{{ url_for('user.login.logout') }}">登出</a>
+    </div>
+</nav>
+<hr>
+{% block page %}
+{% endblock %}
+{% endblock %}
