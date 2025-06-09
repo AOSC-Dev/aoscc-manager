@@ -25,6 +25,10 @@ a:hover {
     text-decoration: underline;
 }
 
+li {
+    margin-bottom: 0.5rem;
+}
+
 button, .button {
     display: inline-block;
     cursor: pointer;

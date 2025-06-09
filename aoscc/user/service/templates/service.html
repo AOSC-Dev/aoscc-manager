@@ -14,26 +14,26 @@ h3 ~ p {
     <div>
     {% if VOLUNTEER_OPEN %}
     <h3>报名志愿者</h3>
-    <p>{{ TITLE }} ，有你更精彩！我们正在招募会务志愿者，欢迎有意帮忙的朋友报名。</p>
+    <p>{{ TITLE }}，有你更精彩！我们正在招募会务志愿者，欢迎有意协助现场工作的朋友报名。</p>
     <p><a href="{{ url_for('.volunteer') }}">去报名 &gt;&gt;</a></p>
     {% endif %}
     <h3>签到</h3>
-    <p>我们迫不及待想要和大家见面。</p>
+    <p>现场签到、领取纪念衫及纪念品礼包等请由此进。</p>
     <p><a href="{{ url_for('.checkin') }}">去签到 &gt;&gt;</a></p>
     <h3>定制胸牌</h3>
-    <p>我们乐意为您提供定制的会议胸牌，自定义昵称和自我介绍，或上传图片发挥您的创意。</p>
+    <p>线下与会者可免费定制胸牌，欢迎您填入自定义昵称及自我介绍，或上传图片发挥您的创意。</p>
     <p><a href="{{ url_for('.badge') }}">去定制 &gt;&gt;</a></p>
     <h3>预订住宿</h3>
     <p>协议住宿将在稍后上线。</p>
-    <p><a href="{{ url_for('.accommo') }}">去预订 &gt;&gt;</a></p>
+    <!-- <p><a href="{{ url_for('.accommo') }}">去预订 &gt;&gt;</a></p> -->
     <h3>PGP 签名派对</h3>
-    <p>会议期间将同步进行分散式 PGP 签名派对，来与新老朋友们共织 Trust Web 吧！</p>
+    <p>会议期间将同步进行分散式 PGP 签名派对：来与新老朋友们共织信任网 (Web of Trust) 吧！</p>
     <p><a href="{{ url_for('.pgp') }}">去填写 &gt;&gt;</a></p>
     </div>
 <h2>取消注册</h2>
-    <p>如需取消注册，请点击下方按钮，我们将删除您的实名信息。</p>
+    <p>如需取消注册，请点击下方按钮，我们将立即删除您的实名信息。</p>
     <form method="post" action="{{ url_for('.post_cancel') }}"
-        onsubmit="return confirm('取消注册将同时删除以上各项关联信息，确定吗？')">
+        onsubmit="return confirm('取消注册将同时删除您已填写的注册及参会服务信息，您确定要取消注册吗？')">
         <button type="submit" class="danger">取消注册</button>
     </form>
 {% endblock %}
