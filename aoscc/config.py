@@ -28,7 +28,7 @@ GLOBAL_LIMIT = (100, 50/60/60)
 PERIP_LIMIT = (5, 2/60/60)
 
 ## services
-REGISTER_CLOSE = datetime(2025, 7, 12, 22, 0, 0)
+REGISTER_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 BADGE_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 VOLUNTEER_OPEN = True
 VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))

@@ -94,6 +94,3 @@ def merch():
     return render_template(
         'merch.html', is_open=is_open, items=items, total=total, form=form,
     )
-
-
-
