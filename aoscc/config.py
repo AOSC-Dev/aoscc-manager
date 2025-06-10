@@ -21,6 +21,8 @@ LOG_ID = -1002400222732
 SMTP_SERVER = 'smtp.qcloudmail.com'
 SMTP_PORT = 465
 SMTP_USERNAME = 'noreply@aoscc.aosc.io'
+MAIL_FROM = f'{TITLE} <{SMTP_USERNAME}>'
+MAIL_REPLY_TO = f'{TITLE} <aoscc@aosc.io>'
 # token bucket for email
 GLOBAL_LIMIT = (100, 50/60/60)
 PERIP_LIMIT = (5, 2/60/60)

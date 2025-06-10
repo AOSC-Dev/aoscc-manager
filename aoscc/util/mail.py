@@ -14,7 +14,8 @@ from .tg import send_telegram
 def send_email(email: str, title: str, msg: str) -> bool:
     try:
         message = MIMEText(msg)
-        message['From'] = f'{TITLE} <{SMTP_USERNAME}>'
+        message['From'] = MAIL_FROM
+        message['Reply-To'] = MAIL_REPLY_TO
         message['To'] = email
         message['Subject'] = title
         with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
