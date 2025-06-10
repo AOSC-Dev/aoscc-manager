@@ -15,7 +15,7 @@ def is_registered() -> bool:
 
 
 def check_citizen_id(id: str) -> bool:
-    if not re.fullmatch(r'([1-6]\d{5}|(71|8[1-3])0000|9[1-7]\d{4})\d{11}[0-9X]', id):
+    if not re.fullmatch(r'([1-6]\d{5}|(8[1-3])0000)\d{11}[0-9X]', id):
         return False  # overall format and coarse district code check
     try:  # date validity
         dob = date(int(id[6:10]), int(id[10:12]), int(id[12:14]))

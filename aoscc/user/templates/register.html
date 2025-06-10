@@ -12,13 +12,14 @@
     <div class="form-row">
         <label for="legal_name">真实姓名</label>
         <input type="text" id="legal_name" name="legal_name" required minlength="2" maxlength="20">
+        <div>与证件保持一致。</div>
     </div>
     <div class="form-row">
-        <label for="citizen_id">身份证号</label>
+        <label for="citizen_id">公民身份号码</label>
         <input type="text"
             id="citizen_id" name="citizen_id" required
             minlength="18" maxlength="18" pattern="[0-9]{17}[0-9X]">
-        <div>如果您没有身份证号，请<a href="{{ url_for('contact') }}">联系会务组</a>提交其他有效证件信息。</div>
+        <div>含居民身份证、港澳台居民居住证。如果您没有以上证件，请<a href="{{ url_for('contact') }}">联系会务组</a>注册。</div>
     </div>
     <h2>参会须知</h2>
     <p>为了维护会场秩序和与会者的体验，请您阅知以下参会注意事项：</p>
