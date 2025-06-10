@@ -28,8 +28,8 @@
     {% elif form['status'] < 0 %}
     <p>感谢您对 {{ TITLE }} 会务的支持和帮助，但我们目前人手已经足够，祝您参会愉快！</p>
     {% else %}
-    <p>您的报名<strong>已提交</strong>，请留意后续系统通知。您也可以在下方修改报名信息。</p>
-    <p>如需取消报名，请点击下方按钮。</p>
+    <p>您的报名<strong>已提交</strong>，请留意后续系统通知。</p>
+    <p>如需修改或取消报名，请点击下方按钮。</p>
     <form method="post" action="{{ url_for('.post_volunteer_cancel') }}">
         <button type="submit" class="danger">取消报名</button>
     </form>
