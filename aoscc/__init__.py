@@ -46,7 +46,7 @@ def make_app() -> Flask:
     
     @app.before_request
     def fix_remote_addr():
-        request.remote_addr = request.headers['X-Real-IP']
+        request.remote_addr = request.headers.get('X-Real-IP', request.remote_addr)
 
     return app
 
