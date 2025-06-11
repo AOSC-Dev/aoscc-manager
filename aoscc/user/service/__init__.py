@@ -15,12 +15,14 @@ def index():
 @bp.post('/service/cancel')
 def post_cancel():
     if checkin.is_checked_in():
-        flash('您已完成签到，无法取消！')
+        flash('您已完成签到，无法取消注册！')
         return redirect(url_for('.index'))
     if volunteer.is_volunteer():
-        flash('您是已确认的志愿者，无法取消！请先联系会务组取消志愿者状态。')
+        flash('您是已确认的志愿者，无法取消注册！请先联系会务组取消志愿者状态。')
         return redirect(url_for('.index'))
-    # 已预订住宿?
+    if accommo.is_booked():
+        flash('您已预订协议酒店，无法取消注册！请先至预订页面取消。')
+        return redirect(url_for('.index'))
     badge.post_badge_del()  # need to delete PNG file
     delete_from('register', {'uid': g.uid})  # most tables will CASCADE delete
     session.pop('_flashes', None)  # clear repetitive msg

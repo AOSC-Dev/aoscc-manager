@@ -1,0 +1,197 @@
+{% extends "index.html" %}
+{% block title %}协议住宿预订{% endblock %}
+
+{% block css %}
+<style>
+.sub-row {
+    margin-bottom: 0.5rem;
+}
+form:has(input.private-room:checked) .shared-only {
+    display: none;
+}
+form:has(#type-roommate:not(:checked)) .roommate-only {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% macro accommo_tos() -%}
+<ol>
+    <li>先到先得：我们按预订时间安排房间，预订后请尽快付款，未付款的预订可能随时被取消</li>
+    <li>拼住：我们将按组别优先匹配入住日期相同的同住人，如全部或部分日期未拼成，入住时需补缴整间房费</li>
+    <li>提前取消：7 月 22 日中午 12:00 前可自由取消，提供全额退款</li>
+    <li>临期取消：在上述时间之后取消的，整间扣收半日房费，拼房入住的需同住人协商一致，否则不予取消</li>
+    <li>退房时间：中午 12:00 前，延迟退房的费用由酒店按规定收取，拼住的由未按时退房的入住人承担</li>
+    <li>发票：如需开具可洽酒店前台，按实际付款金额开具</li>
+    <li>安全：注意消防安全，入住后请熟悉消防设施位置及疏散路线，请勿在酒店内吸烟</li>
+    <li>未成年人：入住需携带身份证或户口本，并现场电话联系监护人取得知情同意，原则上不安排未成年人随机拼房入住</li>
+    <li>一旦在此预订并支付住宿费，即表示您并同意以上各项条款，未尽事宜，由会务组负责解释</li>
+</ol>
+{%- endmacro -%}
+
+{% block page %}
+<h2>协议住宿预订</h2>
+<div class="infobox">
+    <p>
+        提示：
+        {% if NOW() < ACCOMMO_CLOSE %}
+        住宿预订将于 {{ ACCOMMO_CLOSE | datetime }} 结束，在此之前可自主预订或取消。
+        {% else %}
+        住宿预订已截止，如需增补或修改请{{ CONTACT_US | safe }}。
+        {% endif %}
+    </p>
+</div>
+<p>我们在位于沪闵路 213 号的<strong>「汉庭江川路地铁站新店」</strong>提供协议住宿，与会者可自愿选择入住，房费自行支付。</p>
+<p>我们将于 25 日在酒店大堂设置签到处，提前抵达的与会者可先行签到和领取物资。</p>
+
+{% if form %}
+
+<h2>您的预订详情</h2>
+<p>房型：{{ form['room'] }}</p>
+<p>日期：{{ form['checkin'] }} 入住，{{ form['checkout'] }} 退房</p>
+<p>
+    入住组别：{{ form['type'] }}
+    （当前组内共有：{{ get_ngroupmate(form['room'], form['type']) }} 人）
+</p>
+<p>联系手机：{{ form['phone'] }}</p>
+{% if form['other'] %}
+<p>备注:</p>
+<p>{{ form['other'] }}</p>
+{% endif %}
+<p>请前往账单页面查看账单，并尽快支付住宿费用，未支付的预约随时可能被取消。</p>
+<p><a class="button primary" href="{{ url_for('user.billing') }}">去结算 &gt;</a></p>
+
+<h3>预订条款</h3>
+{{ accommo_tos() }}
+<p>您已于预订时选择同意以上条款。</p>
+
+<h3>取消预订</h3>
+<p>如需取消，请点击下方按钮，然后前往<a href="{{ url_for('user.billing') }}">账单</a>获取退款信息。</p>
+<form method="post" action="{{ url_for('.post_accommo_cancel') }}">
+    <button type="submit" class="danger">取消预订</button>
+</form>
+
+{% elif NOW() < ACCOMMO_CLOSE %}
+
+<form method="post">
+    <div class="form-row">
+        <label for="contrib">入住房型</label>
+        <div>
+            {% for room in ROOM_OFFERING.values() %}
+            <div class="sub-row">
+                <input type="radio" id="room-{{ room.name }}"
+                    class="{{ 'shared-room' if room.nguest > 1 else 'private-room' }}"
+                    name="room" value="{{ room.name }}" required>
+                <label for="room-{{ room.name }}">
+                    {{ room.name }}
+                    （{{ room.price | price | safe }}/晚/间
+                    {% if room.nguest > 1 %}，可拼住{% endif %}
+                    ，{{ vacancy_str(vacancy[room.name]) }}）
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="arrive">入住日期</label>
+        <div>
+            <div class="sub-row">
+                <label>入住日：</label>
+                <input type="date" id="checkin" name="checkin" required
+                    min="{{ DATE_RANGE[0] | date }}" max="{{ DATE_RANGE[1] | date }}">
+            </div>
+            <div class="sub-row">
+                <label>退房日：</label>
+                <input type="date" id="checkout" name="checkout" required
+                    min="{{ (DATE_RANGE[0]+ONE_DAY) | date }}" max="{{ (DATE_RANGE[1]+ONE_DAY) | date }}">
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="contrib">入住方式</label>
+        <div>
+            <div class="sub-row">
+                <input type="radio" id="type-single" name="_type" required>
+                <label for="type-single">单独入住</label>
+            </div>
+            <div class="sub-row shared-only">
+                <input type="radio" id="type-roommate" name="_type" required>
+                <label for="type-roommate">指定室友拼住</label>
+            </div>
+            <div class="sub-row shared-only">
+                <input type="radio" id="type-male" name="_type" required>
+                <label for="type-male">男士随机拼住</label>
+            </div>
+            <div class="sub-row shared-only">
+                <input type="radio" id="type-female" name="_type" required>
+                <label for="type-female">女士随机拼住</label>
+            </div>
+        </div>
+        <div class="shared-only"><strong>注意：</strong>如您是未成年人，请勿选择随机拼住。</div>
+    </div>
+    <div class="form-row shared-only roommate-only">
+        <label for="contrib">同住人配对</label>
+        <input type="text" id="type" name="type" required
+            maxlength="20" placeholder="{{ random_token }}">
+        <div>请同住人在该处填写相同的内容，但注意和其他与会者区分。</div>
+        <div>建议使用尽可能随机的字符串，比如我们为你生成的占位文本。</div>
+    </div>
+    <script>
+        const input_type = document.getElementById('type');
+        function clearAccoType() {
+            document.querySelectorAll('input[name=_type]').forEach((elm) => {
+                elm.checked = false;
+            })
+            input_type.value = '';
+        }
+        document.querySelectorAll('input[type=radio].private-room').forEach((elm) => {
+            elm.addEventListener('change', (event) => {
+                clearAccoType();
+                document.getElementById('type-single').checked = true;
+                document.getElementById('type-single').dispatchEvent(new Event('change'));
+            })
+        })
+        document.querySelectorAll('input[type=radio].shared-room').forEach((elm) => {
+            elm.addEventListener('change', (event) => {
+                clearAccoType();
+            })
+        })
+        document.getElementById('type-single').addEventListener('change', (event) => {
+            input_type.value = '单独入住_{{ random_token }}';
+        })
+        document.getElementById('type-male').addEventListener('change', (event) => {
+            input_type.value = '男士随机';
+        })
+        document.getElementById('type-female').addEventListener('change', (event) => {
+            input_type.value = '女士随机';
+        })
+        document.getElementById('type-roommate').addEventListener('change', (event) => {
+            input_type.value = '';
+        })
+    </script>
+    <div class="form-row">
+        <label for="phone">手机号</label>
+        <input type="text" id="phone" name="phone" required minlength="11" maxlength="11" pattern="1\d{10}">
+        <div>将提供给酒店用于联络和入住，请填写中国大陆 11 位手机号。</div>
+    </div>
+    <div class="form-row">
+        <label for="other">备注</label>
+        <textarea id="other" name="other" rows="3" maxlength="500" placeholder="选填"></textarea>
+        <div>您有什么特殊情况需要我们知道吗？</div>
+    </div>
+    <div class="form-row">
+        <label>预订条款</label>
+        <div>
+            {{ accommo_tos() }}
+            <input type="checkbox" id="consent" name="consent" required>
+            <label for="consent">我已阅读并同意以上预订条款</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">提交预订</button></div>
+    </div>
+</form>
+
+{% endif %}
+{% endblock %}

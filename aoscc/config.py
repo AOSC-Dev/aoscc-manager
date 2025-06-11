@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from collections import namedtuple
 
 ## basic info
@@ -30,6 +30,13 @@ PERIP_LIMIT = (5, 2/60/60)
 ## services
 REGISTER_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 BADGE_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
+ACCOMMO_CLOSE = datetime(2025, 7, 22, 12, 0, 0)
+Room = namedtuple('Room', 'name,nguest,price,vacancy')
+ROOM_OFFERING = {x.name: x for x in [
+    Room('标准间', 2, 28000, 6),
+    Room('大床房', 1, 28000, 5),
+]}
+DATE_RANGE = (date(2025, 7, 25), date(2025, 7, 27))
 VOLUNTEER_OPEN = True
 VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))
 

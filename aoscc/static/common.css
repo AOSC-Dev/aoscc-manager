@@ -104,6 +104,9 @@ select, textarea {
     filter: contrast(0.5);
     font-size: 0.9rem;
 }
+.form-row .sub-row {
+    margin-bottom: 0.5rem;
+}
 
 div.infobox {
     background-color: #7ce5;
