@@ -18,15 +18,19 @@ def close_db(_):
     g.db.close()
 
 
+def query_all(sql: str, args: tuple) -> list[dict]:
+    cur = g.db.execute(sql, args)
+    rows = cur.fetchall()
+    return list(map(dict, rows))
+
+
 def fetch_all(table: str, cond: dict) -> list[dict]:
-    cur = g.db.execute(
+    return query_all(
         f'SELECT * FROM {table} WHERE {(
             " AND ".join(f"{k} = ?" for k in cond.keys())
         ) if cond else '1'}',
         tuple(cond.values())
     )
-    rows = cur.fetchall()
-    return list(map(dict, rows))
 
 
 def fetch_one(table: str, cond: dict) -> dict|None:
