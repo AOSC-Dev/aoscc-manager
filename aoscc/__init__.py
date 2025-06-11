@@ -40,6 +40,10 @@ def make_app() -> Flask:
     app.register_blueprint(user_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
+    @app.get("/robots.txt")
+    def robots():
+        return "User-agent: *\nDisallow: /"
+
     @app.get('/contact')
     def contact():
         return render_template('contact.html')
