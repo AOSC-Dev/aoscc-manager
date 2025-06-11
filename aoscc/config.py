@@ -4,8 +4,8 @@ from collections import namedtuple
 
 ## basic info
 TITLE = 'AOSCC 2025'
-TESTING = True
-URL_BASE = 'https://aoscc.aosc.io:444'
+TESTING = False
+URL_BASE = 'https://aoscc.aosc.io'
 MAX_FILE_SIZE = 10*1024*1024  # 10 MiB
 SESSION_EXPIRY = timedelta(days=14)
 LOGIN_TOKEN_EXPIRY = 20  # minutes
