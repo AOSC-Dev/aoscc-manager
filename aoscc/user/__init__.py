@@ -10,9 +10,9 @@ def acl_check():
     if request.blueprint == 'user.login':  # do not regulate login/logout
         return
     if not g.uid:  # all pages require logged in
-        return redirect(url_for('.login.login'))
+        return redirect(url_for('user.login.login'))
     if not g.nick and request.path != '/':  # provide nick before other service
-        return redirect(url_for('.info'))
+        return redirect(url_for('user.info'))
 
 
 @bp.context_processor
