@@ -72,6 +72,14 @@ form > img {
     <div class="hr-div"><hr>或使用邮箱登入<hr></div>
     <input type="email" name="email" placeholder="example@aosc.io" required maxlength="254">
     <button type="submit">发送验证邮件</button>
+    <script>
+        document.querySelector('form').addEventListener('submit', (event) => {
+            event.currentTarget.addEventListener('submit', (event) => {
+                event.preventDefault();
+                return false;
+            })
+        })
+    </script>
 </form>
 
 {% endblock %}
