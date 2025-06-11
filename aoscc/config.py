@@ -9,19 +9,26 @@ URL_BASE = 'https://aoscc.aosc.io'
 MAX_FILE_SIZE = 10*1024*1024  # 10 MiB
 SESSION_EXPIRY = timedelta(days=14)
 LOGIN_TOKEN_EXPIRY = 20  # minutes
+# see SECRET in secret.py
 
 ## telegram bot
+# see BOT_TOKEN in secret.py
 # forward questions to
 MGMT_ID = -1002609311064
 # used in URL of login message
 LOG_ID = -1002400222732
 
 ## email
-# SMTP credentials
-SMTP_SERVER = 'smtp.qcloudmail.com'
-SMTP_PORT = 465
-SMTP_USERNAME = 'noreply@aoscc.aosc.io'
-MAIL_FROM = f'{TITLE} <{SMTP_USERNAME}>'
+# see EMAIL_PROVIDERS in secret.py
+DEFAULT_PROVIDER = 'mailgun'
+EMAIL_RULES = [
+    (r'^((vip.)?qq|163|126|sina|foxmail)\.com$', 'txcloud'),
+    (r'^.+\.cn$', 'txcloud'),
+    (r'^(gmail|outlook|hotmail|icloud)\.com$', 'mailgun'),
+    (r'^(protonmail\.(com|ch)|(proton|pm)\.me)$', 'mailgun'),
+    (r'^aosc\.io$', 'mailgun'),
+]
+MAIL_FROM = f'{TITLE} <noreply@aoscc.aosc.io>'
 MAIL_REPLY_TO = f'{TITLE} <aoscc@aosc.io>'
 # token bucket for email
 GLOBAL_LIMIT = (100, 50/60/60)

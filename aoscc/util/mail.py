@@ -1,30 +1,40 @@
+import re
 import smtplib
 from time import time
+from html import escape
 from collections import defaultdict
 from email.mime.text import MIMEText
+from email.utils import make_msgid
 
 from flask import request
 
 from ..config import *
-from ..secret import SMTP_PASSWORD
+from ..secret import EMAIL_PROVIDERS
 from .verify import sign_msg
 from .tg import send_telegram
 
 
-def send_email(email: str, title: str, msg: str) -> bool:
+def send_email(email: str, title: str, msg: str) -> str:
     try:
+        host = email.split('@')[1]
+        smtp_provider = EMAIL_PROVIDERS[DEFAULT_PROVIDER]
+        for pattern, provider in EMAIL_RULES:
+            if re.match(pattern, host):
+                smtp_provider = EMAIL_PROVIDERS[provider]
         message = MIMEText(msg)
+        msgid = make_msgid(domain=smtp_provider.login.split('@')[1])
+        message['Message-ID'] = msgid
         message['From'] = MAIL_FROM
         message['Reply-To'] = MAIL_REPLY_TO
         message['To'] = email
         message['Subject'] = title
-        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.sendmail(SMTP_USERNAME, [email], message.as_string())
-        return True
+        with smtplib.SMTP_SSL(smtp_provider.server, smtp_provider.port) as server:
+            server.login(smtp_provider.login, smtp_provider.password)
+            server.sendmail(smtp_provider.login, [email], message.as_string())
+        return f'via {smtp_provider.server} msgid {msgid}'
     except Exception as exc:
         send_telegram(LOG_ID, repr(exc))
-        return False
+        return ''
 
 
 class TokenBucket:
@@ -62,8 +72,8 @@ def send_email_login(email: str) -> str:
 
 请勿回复此邮件，如需更多协助，请联系 aoscc@aosc.io 。
 """
-    if send_email(email, f'欢迎您注册 {TITLE} ！', msg):
-        send_telegram(LOG_ID, f'#SENT {addr} {email}')
+    if result := send_email(email, f'欢迎您注册 {TITLE} ！', msg):
+        send_telegram(LOG_ID, f'#SENT {addr} {email} {escape(result)}')
         return '验证邮件已发送到您的邮箱，请注意查收，并记得检查垃圾邮件箱。如果没有收到，请十分钟后再试。'
     else:
         send_telegram(LOG_ID, f'#FAILED {addr} {email}')
