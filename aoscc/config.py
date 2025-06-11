@@ -25,7 +25,7 @@ MAIL_FROM = f'{TITLE} <{SMTP_USERNAME}>'
 MAIL_REPLY_TO = f'{TITLE} <aoscc@aosc.io>'
 # token bucket for email
 GLOBAL_LIMIT = (100, 50/60/60)
-PERIP_LIMIT = (5, 2/60/60)
+PERIP_LIMIT = (2, 6/60/60)
 
 ## services
 REGISTER_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
