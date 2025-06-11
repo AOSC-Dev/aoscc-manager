@@ -64,7 +64,7 @@ def send_email_login(email: str) -> str:
 """
     if send_email(email, f'欢迎您注册 {TITLE} ！', msg):
         send_telegram(LOG_ID, f'#SENT {addr} {email}')
-        return '验证邮件已发送到您邮箱的垃圾箱，请注意查收。'
+        return '验证邮件已发送到您的邮箱，请注意查收，并记得检查垃圾邮件箱。如果没有收到，请十分钟后再试。'
     else:
         send_telegram(LOG_ID, f'#FAILED {addr} {email}')
         return '发送时遇到错误。'
