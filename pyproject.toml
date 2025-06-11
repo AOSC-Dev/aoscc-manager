@@ -9,6 +9,7 @@ dependencies = [
     "PyNaCl",
     "regex",
     "qrcode",
+    "gunicorn",
 ]
 requires-python = ">=3.13"
 authors = [
