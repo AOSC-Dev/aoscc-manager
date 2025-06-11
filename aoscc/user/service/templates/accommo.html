@@ -157,7 +157,7 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
             })
         })
         document.getElementById('type-single').addEventListener('change', (event) => {
-            input_type.value = '单独入住_{{ random_token }}';
+            input_type.value = '单独入住{{ random_token }}';
         })
         document.getElementById('type-male').addEventListener('change', (event) => {
             input_type.value = '男士随机';

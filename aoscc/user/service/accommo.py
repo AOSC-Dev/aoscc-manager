@@ -39,7 +39,7 @@ def _get_vacancy() -> dict[str, dict[str, int]]:
             allocated_slots = allocated_rooms * room.nguest
             available_slots = allocated_slots - occupied_slots
             v[room.name][''] -= allocated_rooms
-            if available_slots and not line['type'].startswith('单独入住_'):
+            if available_slots and not line['type'].startswith('单独入住'):
                 v[room.name][line['type']] = available_slots
         return v
     except Exception as exc:
@@ -98,13 +98,16 @@ def post_accommo():
         print(room)
         if not ((room[''] > 0) or (room.get(form['type'], 0) > 0)):
             raise ValueError
+        price = ROOM_OFFERING[form['room']].price*(checkout-checkin).days
+        if not form['type'].startswith('单独入住'):
+            price /= 2
         bid = insert_dict('billing', {
             'uid': g.uid,
             'category': '住宿',
             'item': f'协议酒店住宿：{checkin.day}-{checkout.day}日',
             'spec': f'{form["room"]}-{form["type"]}',
             'quantity': 1,
-            'price': ROOM_OFFERING[form['room']].price*(checkout-checkin).days
+            'price': price,
         })
         insert_dict('accommo', form|{'bid': bid, 'uid': g.uid})
         flash('预订成功！房间已为您预留，请前往支付。')
