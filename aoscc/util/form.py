@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from collections import namedtuple
 
 from flask import request, flash
@@ -40,3 +41,7 @@ def validate(*fields: Field, show_flash: bool = True) -> dict | None:
         my_flash('无效表单。')
         return
     return ret
+
+
+def parse_date(s: str):
+    return datetime.strptime(s, '%Y-%m-%d').date()

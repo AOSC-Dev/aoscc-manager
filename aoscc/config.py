@@ -76,6 +76,7 @@ INVENTORY = {x.name: x for x in [
 ]}
 
 NOW = datetime.now
+ONE_DAY = timedelta(days=1)
 
 
 ALL_CONFIG = {k: v for k, v in locals().items() if re.fullmatch(r'[A-Z]+(_[A-Z]+)*', k)}
