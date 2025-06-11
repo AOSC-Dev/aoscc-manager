@@ -131,6 +131,14 @@ select {
             document.getElementById('signee-keyuid').textContent = '';
         }
     });
+    document.getElementById('signee').addEventListener('keydown', (event) => {
+        if(event.keyCode == 13) {
+            document.getElementById('query').dispatchEvent(new Event('click'));
+            event.currentTarget.blur();
+            event.preventDefault();
+            return false;
+        }
+    })
 </script>
 <h2>信任记录</h2>
 {% if records %}
