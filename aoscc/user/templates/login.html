@@ -63,7 +63,7 @@ form > img {
     <h1>{{ TITLE }} 与会者注册</h1>
     <p>安同开源社区年度聚会 {{ TITLE }} 将于 7 月 26-27 日在上海交通大学举行。在为期两天的活动中，您将被各色信创泥头车轮番创飞，不用麻醉，一样情不自禁创起来，飞起来……</p>
     <p>{{ TITLE }} 不设注册费，欢迎所有感兴趣的朋友注册参会！</p>
-    <p>注册时遇到问题？请<a href="{{ url_for('contact') }}">联系会务组</a>寻求帮助。</p>
+    <p>注册时遇到问题？请{{ CONTACT_US | safe }}寻求帮助。</p>
 </aside>
 <form method="post">
     <img src="{{ url_for('static', filename='aosc.png') }}" alt="AOSC Logo">

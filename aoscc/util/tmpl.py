@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import url_for
+
 from ..config import *
 from . import bp
 
@@ -7,6 +9,11 @@ from . import bp
 @bp.app_context_processor
 def inject_config():
     return dict(**ALL_CONFIG)
+
+
+@bp.app_context_processor
+def inject_contact_us():
+    return dict(CONTACT_US=f'<a href="{ url_for('contact') }">联系会务组</a>')
 
 
 @bp.app_template_filter('price')

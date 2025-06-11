@@ -54,10 +54,10 @@
 <p>您总共应支付 {{ total | price | safe }} 元，可通过下列方式扫码支付。</p>
 <p><strong>付款时请点击下方【添加备注】附言【{{ hash }}】。</strong></p>
 <div class="infobox warning">
-    <p><strong>务必注意！</strong>如忘记添加转账附言，请立即<a href="{{ url_for('contact') }}">联系会务组</a>，因沟通疏忽造成的损失将由您自行承担。</p>
+    <p><strong>务必注意！</strong>如忘记添加转账附言，请立即{{ CONTACT_US | safe }}，因沟通疏忽造成的损失将由您自行承担。</p>
 </div>
 <p>由于转账需要收款志愿者人工确认，请您支付完成一段时间后查看账单状态。</p>
-<p>如支付遇到问题，或超过 3 日仍未被确认，请<a href="{{ url_for('contact') }}">联系会务组</a>。
+<p>如支付遇到问题，或超过 3 日仍未被确认，请{{ CONTACT_US | safe }}。
 <div id="qrcodes">
     <img src="{{ url_for('static', filename='alipay.jpg') }}" alt="支付宝收款码">
     <img src="{{ url_for('static', filename='wechat.jpg') }}" alt="微信支付收款码">
@@ -67,7 +67,7 @@
 <p>您目前没有待支付的项目。</p>
 {% elif total < 0 %}
 <p>
-    您支付的金额超出了所订购的项目，请<a href="{{ url_for('contact') }}">联系会务组</a>索取退款。
+    您支付的金额超出了所订购的项目，请{{ CONTACT_US | safe }}索取退款。
 </p>
 {% endif %}
 

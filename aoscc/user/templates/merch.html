@@ -145,7 +145,7 @@ table button {
 {% endif %}
 {% if form and not is_open %}
 <div class="infobox warning">
-    <p>提示：纪念品订购已截止，我们已在处理商铺发货。若已寄出，上述收货信息修改可能无法生效，如有需要，请<a href="{{ url_for('contact') }}">联系会务组</a>。</p>
+    <p>提示：纪念品订购已截止，我们已在处理商铺发货。若已寄出，上述收货信息修改可能无法生效，如有需要，请{{ CONTACT_US | safe }}。</p>
 </div>
 {% endif %}
 {% endif %}
@@ -154,7 +154,7 @@ table button {
         <label for="address">收货地址</label>
         <textarea id="address" name="address" required rows="3"
             minlength="10" maxlength="200" placeholder="北京市西城区复兴门外大街2号">{{ form['address'] }}</textarea>
-        <div>请按「xx省xx市xx区 具体地址」顺序完整填写，如需海外收货，请在填写后<a href="{{ url_for('contact') }}">联系会务组</a>。</div>
+        <div>请按「xx省xx市xx区 具体地址」顺序完整填写，如需海外收货，请在填写后{{ CONTACT_US | safe }}。</div>
     </div>
     <div class="form-row">
         <label for="phone">收货电话</label>

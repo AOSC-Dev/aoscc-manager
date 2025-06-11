@@ -19,7 +19,7 @@
         <input type="text"
             id="citizen_id" name="citizen_id" required
             minlength="18" maxlength="18" pattern="[0-9]{17}[0-9X]">
-        <div>含居民身份证、港澳台居民居住证。如果您没有以上证件，请<a href="{{ url_for('contact') }}">联系会务组</a>注册。</div>
+        <div>含居民身份证、港澳台居民居住证。如果您没有以上证件，请{{ CONTACT_US | safe }}注册。</div>
     </div>
     <h2>参会须知</h2>
     <p>为了维护会场秩序和与会者的体验，请您阅知以下参会注意事项：</p>
