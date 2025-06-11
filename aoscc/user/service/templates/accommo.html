@@ -131,10 +131,9 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
     </div>
     <div class="form-row shared-only roommate-only">
         <label for="contrib">同住人配对</label>
-        <input type="text" id="type" name="type" required
-            maxlength="20" placeholder="{{ random_token }}">
-        <div>请同住人在该处填写相同的内容，但注意和其他与会者区分。</div>
-        <div>建议使用尽可能随机的字符串，比如我们为你生成的占位文本。</div>
+        <input type="text" id="type" name="type" required maxlength="20">
+        <div>请每组同住人在该处<strong>填写相同的内容</strong>，但注意和其他与会者区分。</div>
+        <div>建议一方使用随机字符串，比如我们为你生成的占位文本，然后告知另一方填写相同内容。</div>
     </div>
     <script>
         const input_type = document.getElementById('type');
@@ -166,7 +165,7 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
             input_type.value = '女士随机';
         })
         document.getElementById('type-roommate').addEventListener('change', (event) => {
-            input_type.value = '';
+            input_type.value = '自选分组{{ random_token }}';
         })
     </script>
     <div class="form-row">
