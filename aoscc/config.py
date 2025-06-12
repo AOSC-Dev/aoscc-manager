@@ -24,7 +24,7 @@ DEFAULT_PROVIDER = 'mailgun'
 EMAIL_RULES = [
     (r'^((vip.)?qq|163|126|sina|foxmail)\.com$', 'txcloud'),
     (r'^.+\.cn$', 'txcloud'),
-    (r'^(outlook|hotmail)\.[a-z]+$', 'mailgun'),
+    (r'^(outlook|hotmail)\.[a-z]+$', 'txcloud'),
     (r'^(gmail|icloud)\.com$', 'mailgun'),
     (r'^(protonmail\.(com|ch)|(proton|pm)\.me)$', 'mailgun'),
     (r'^aosc\.io$', 'mailgun'),
