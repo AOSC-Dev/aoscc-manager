@@ -21,11 +21,11 @@ def make_app() -> Flask:
         'SESSION_COOKIE_SECURE': True,
         'PERMANENT_SESSION_LIFETIME': SESSION_EXPIRY,
         'MAX_CONTENT_LENGTH': MAX_FILE_SIZE,
+        'TEMPLATES_AUTO_RELOAD': True,
     })
     if TESTING:
         app.config.update({
             'SESSION_COOKIE_SECURE': False,
-            'TEMPLATES_AUTO_RELOAD': True,
         })
 
     os.makedirs(app.instance_path, exist_ok=True)
