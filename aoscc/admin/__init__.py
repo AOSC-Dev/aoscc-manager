@@ -12,18 +12,20 @@ def has_role(role: str) -> bool:
 
 
 @bp.context_processor
-def check_registered():
+def inject_has_role():
     return dict(has_role=has_role)
 
 
-def check_role(view, role):
-    @functools.wraps(view)
-    def wrapped(*args, **kwargs):
-        if not has_role(role):
-            flash('角色权限不足。')
-            return redirect(url_for('.index'))
-        return view(*args, **kwargs)
-    return wrapped
+def check_role(role):
+    def wrapper(view):
+        @functools.wraps(view)
+        def wrapped(*args, **kwargs):
+            if not has_role(role):
+                flash('角色权限不足。')
+                return redirect(url_for('.index'))
+            return view(*args, **kwargs)
+        return wrapped
+    return wrapper
 
 
 @bp.get('/')
@@ -42,6 +44,9 @@ def revoke():
 @bp.route('/checkin/<string:token>')
 def do_checkin(token: str):  # TODO
     raise NotImplementedError
+
+
+from . import grant
 
 
 

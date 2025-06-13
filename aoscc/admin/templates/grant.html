@@ -1,0 +1,49 @@
+{% extends "admin.html" %}
+{% block title %}权限管理{% endblock %}
+
+{% block css %}
+<style>
+td {
+    font-family: monospace;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+
+<h2>当前管理员</h2>
+<table>
+    <thead>
+        <tr>
+            <th>客户端 ID</th>
+            <th>角色权限</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin['id'] }}</td>
+            <td>{{ admin['roles'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>授权与除权</h2>
+<form method="post">
+    <div class="form-row">
+        <label for="id">客户端 ID</label>
+        <input type="text" id="id" name="id" required minlength="32" maxlength="32" pattern="[0-9a-f]{32}">
+    </div>
+    <div class="form-row">
+        <label for="role">授予角色</label>
+        <input type="text" id="role" name="role" maxlength="20" pattern="[a-z]+">
+        <div>留空将撤销其全部权限。</div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="danger">提交</button></div>
+    </div>
+</form>
+
+{% endblock %}

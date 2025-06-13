@@ -20,10 +20,10 @@
     <div class="spacer"></div>
     <div>
         {% if has_role('admin') %}
-        <a class="button" href="#">授权管理</a><!-- TODO -->
+        <a class="button" href="{{ url_for('.grant') }}">权限</a>
         {% endif %}
         {% if g.roles %}
-        <a class="button" href="{{ url_for('.revoke') }}">撤销权限</a>
+        <a class="button" href="{{ url_for('.revoke') }}">登出</a>
         {% endif %}
     </div>
 </nav>
