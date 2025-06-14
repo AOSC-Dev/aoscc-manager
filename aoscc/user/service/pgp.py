@@ -18,7 +18,7 @@ def post_pgp():
     elif form := validate(
         Field('密钥指纹', 'fpr', 40, 40, str, r'[0-9A-F]{40}'),
         Field('关联身份', 'keyuid', 1, 500, str, True),
-        Field('必须阅知注意事项！', 'consent', 2, 2, str, lambda x: x=='on'),
+        Field('必须阅知注意事项！', 'consent', 2, 2, str, 'on'),
     ):
         form.pop('consent', None)
         insert_dict('pgp_info', form|{'uid': g.uid})

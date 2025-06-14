@@ -23,7 +23,9 @@ def validate(*fields: Field, form: dict = None) -> dict | None:
             if not typed_val or cond is True:
                 cond = lambda _: True
             if isinstance(cond, str):
-                cond = lambda x, pattern=cond: bool(re.fullmatch(pattern, x))
+                cond = (cond,)
+            if isinstance(cond, tuple):
+                cond = lambda x, ptns=cond: any(re.fullmatch(ptn, x) for ptn in ptns)
             # 4. cond check
             if not cond(typed_val):
                 raise ValueError()

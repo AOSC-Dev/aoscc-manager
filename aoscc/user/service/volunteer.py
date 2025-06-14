@@ -15,7 +15,7 @@ def post_volunteer():
     elif form := validate(
         Field('抵达日期', 'arrive', 10, 10, str, r'2025-07-2[1-6]'),
         Field('返程日期', 'depart', 10, 10, str, r'2025-07-(27|28|29|30|31)'),
-        Field('T 恤尺码', 'tshirt', 1, 3, str, lambda x: x in VOLUNTEER_TSHIRT_SKU),
+        Field('T 恤尺码', 'tshirt', 1, 3, str, VOLUNTEER_TSHIRT_SKU),
         Field('贡献者 ID', 'contrib', 0, 30, str, True),
         Field('其他信息', 'other', 0, 500, str, True),
     ):

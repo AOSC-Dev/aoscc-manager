@@ -37,7 +37,7 @@ def post_register():
     elif form := validate(
         Field('真实姓名', 'legal_name', 1, 20, str, True),
         Field('身份证号', 'citizen_id', 18, 18, lambda x: str(x).upper(), check_citizen_id),
-        Field('必须阅知参会须知！', 'consent', 2, 2, str, lambda x: x=='on'),
+        Field('必须阅知参会须知！', 'consent', 2, 2, str, 'on'),
     ):
         insert_dict('register', {
             'uid': g.uid,

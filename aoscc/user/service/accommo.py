@@ -77,7 +77,7 @@ def post_accommo():
             Field('入住方式组别', 'type', 1, 20, str, True),
             Field('手机号', 'phone', 11, 11, str, r'1\d{10}'),
             Field('备注', 'other', 0, 500, str, True),
-            Field('必须同意预订条款！', 'consent', 2, 2, str, lambda x: x=='on'),
+            Field('必须同意预订条款！', 'consent', 2, 2, str, 'on'),
         )
         form.pop('consent')
         checkin, checkout = map(parse_date, (form['checkin'], form['checkout']))
