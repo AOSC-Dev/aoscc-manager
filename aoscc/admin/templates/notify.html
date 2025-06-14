@@ -11,9 +11,19 @@
 <h2>发送通知</h2>
 <form method="post">
     <div class="form-row">
+        <label for="uids">常用组别</label>
+        <div>
+            <a class="button" href="?uids=all_user">全部用户</a>
+            <a class="button" href="?uids=all_registered">已注册用户</a>
+            <a class="button" href="?uids=all_arrived">已签到用户</a>
+            <a class="button" href="?uids=all_accommo">住宿预订人</a>
+            <a class="button" href="?uids=all_volunteer">所有志愿者报名</a>
+        </div>
+    </div>
+    <div class="form-row">
         <label for="uids">用户 ID</label>
         <input type="text" id="uids" name="uids" required pattern="\d+(,\d+)*,?"
-            value="{{ request.args.get('uids', '') }}">
+            value="{{ uids }}">
         <div>使用逗号分隔一组收信用户 ID 。</div>
     </div>
     <div class="form-row">

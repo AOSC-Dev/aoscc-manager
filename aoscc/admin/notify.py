@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, g
+from flask import render_template, flash, redirect, url_for, g, request
 
 from ..config import *
-from ..util.db import query_all, insert_dict
+from ..util.db import query_all, insert_dict, fetch_all
 from ..util.form import Field, validate
 from . import bp, check_role
 
@@ -42,7 +42,23 @@ def post_notify_flush():
 def notify():
     in_progress = query_all('SELECT COUNT(*) AS cnt FROM notify WHERE retry < 3')[0]['cnt']
     failed = query_all('SELECT * FROM notify JOIN user USING(uid) WHERE retry >= 3')
-    return render_template('notify.html', in_progress=in_progress, failed=failed)
+    
+    match request.args.get('uids', ''):
+        case '':
+            uids = ''
+        case 'all_user':
+            uids = ','.join([str(u['uid']) for u in fetch_all('user', {})])
+        case 'all_registered':
+            uids = ','.join([str(u['uid']) for u in fetch_all('register', {})])
+        case 'all_arrived':
+            uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 1})])
+        case 'all_accommo':
+            uids = ','.join([str(u['uid']) for u in fetch_all('accommo', {})])
+        case 'all_volunteer':
+            uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {})])
+        case _:
+            uids = request.args['uids']
+    return render_template('notify.html', uids=uids, in_progress=in_progress, failed=failed)
 
 
 ########## ABOVE: Flask Part ##########
