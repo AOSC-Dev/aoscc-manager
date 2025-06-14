@@ -14,7 +14,7 @@ from .verify import sign_msg
 from .tg import send_telegram
 
 
-def send_email(email: str, title: str, msg: str) -> str:
+def send_email(email: str, title: str, msg: str) -> bool:
     try:
         host = email.split('@')[1]
         smtp_provider = EMAIL_PROVIDERS[DEFAULT_PROVIDER]
@@ -31,10 +31,12 @@ def send_email(email: str, title: str, msg: str) -> str:
         with smtplib.SMTP_SSL(smtp_provider.server, smtp_provider.port) as server:
             server.login(smtp_provider.login, smtp_provider.password)
             server.sendmail(smtp_provider.login, [email], message.as_string())
-        return f'via {smtp_provider.server} msgid {msgid}'
+        send_telegram(LOG_ID, f'#LOG title {title} to {email} ' \
+                              f'via {smtp_provider.server} msgid {escape(msgid)}')
+        return True
     except Exception as exc:
-        send_telegram(LOG_ID, repr(exc))
-        return ''
+        send_telegram(LOG_ID, f'#ERROR {repr(exc)}')
+        return False
 
 
 class TokenBucket:
@@ -72,8 +74,8 @@ def send_email_login(email: str) -> str:
 
 请勿回复此邮件，如需更多协助，请联系 aoscc@aosc.io 。
 """
-    if result := send_email(email, f'欢迎您注册 {TITLE} ！', msg):
-        send_telegram(LOG_ID, f'#SENT {addr} {email} {escape(result)}')
+    if send_email(email, f'欢迎您注册 {TITLE} ！', msg):
+        send_telegram(LOG_ID, f'#SENT {addr} {email}')
         return '验证邮件已发送到您的邮箱，请注意查收，并记得检查垃圾邮件箱。如果没有收到，请十分钟后再试。'
     else:
         send_telegram(LOG_ID, f'#FAILED {addr} {email}')
