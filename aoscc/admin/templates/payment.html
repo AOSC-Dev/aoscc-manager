@@ -76,6 +76,7 @@ span#hash {
         <tr>
             <th>日期</th>
             <th>用户</th>
+            <th>昵称</th>
             <th>支付方式</th>
             <th>金额</th>
         </tr>
@@ -85,6 +86,7 @@ span#hash {
         <tr>
             <td>{{ row['t'] | ts2dt | date }}</td>
             <td>{{ row['uid'] }}</td>
+            <td>{{ row['nick'] }}</td>
             <td>{{ row['item'] }}</td>
             <td>{{ -row['price'] | price | safe }}</td>
         </tr>
