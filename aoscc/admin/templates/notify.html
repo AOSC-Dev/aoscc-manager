@@ -1,0 +1,72 @@
+{% extends "admin.html" %}
+{% block title %}通知管理{% endblock %}
+
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block page %}
+
+<h2>发送通知</h2>
+<form method="post">
+    <div class="form-row">
+        <label for="uids">用户 ID</label>
+        <input type="text" id="uids" name="uids" required pattern="\d+(,\d+)*,?"
+            value="{{ request.args.get('uids', '') }}">
+        <div>使用逗号分隔一组收信用户 ID 。</div>
+    </div>
+    <div class="form-row">
+        <label for="title">标题</label>
+        <input type="text" id="title" name="title" maxlength="200">
+    </div>
+    <div class="form-row">
+        <label for="content">内容</label>
+        <textarea id="content" name="content" rows="10" required maxlength="1000">
+您好，
+
+</textarea>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">发送</button></div>
+    </div>
+</form>
+
+<h2>通知状态</h2>
+{% if in_progress %}
+<p>通知队列中有 {{ in_progress }} 个任务等待发送。</p>
+{% else %}
+<p>通知队列为空。</p>
+{% endif %}
+
+{% if failed %}
+<p>以下通知发送失败：</p>
+<table>
+    <thead>
+        <tr>
+            <th>用户</th>
+            <th>类型</th>
+            <th>身份</th>
+            <th>昵称</th>
+            <th>标题</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in failed %}
+        <tr>
+            <td>{{ row['uid'] }}</td>
+            <td>{{ row['type'] }}</td>
+            <td>{{ row['identity'] }}</td>
+            <td>{{ row['nick'] }}</td>
+            <td>{{ row['title'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form method="post" action="{{ url_for('.post_notify_flush') }}">
+    <p><button type="submit" class="danger">清空失败任务</button></p>
+</form>
+{% endif %}
+
+{% endblock %}

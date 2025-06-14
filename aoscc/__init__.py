@@ -11,6 +11,7 @@ from .util import bp as util_bp
 from .user import bp as user_bp
 from .admin import bp as admin_bp
 from .util.tg import bot_main
+from .admin.notify import notify_main
 
 
 def make_app() -> Flask:
@@ -56,7 +57,11 @@ def make_app() -> Flask:
 
 
 def main():
-    if len(sys.argv) == 2 and sys.argv[1] == 'tgbot':
-        bot_main()
-    else:
+    if len(sys.argv) < 2:
         make_app().run(debug=True)
+    else:
+        match sys.argv[1]:
+            case 'tgbot':
+                bot_main()
+            case 'notify':
+                notify_main()

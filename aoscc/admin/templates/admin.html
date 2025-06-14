@@ -10,11 +10,13 @@
         {% if has_role('payment') %}
         <a class="button" href="{{ url_for('.payment') }}">支付管理</a>
         {% endif %}
+        {% if has_role('notify') %}
+        <a class="button" href="{{ url_for('.notify') }}">通知管理</a>
+        {% endif %}
         {% if has_role('admin') %}
         <!-- TODO -->
         <a class="button" href="#">用户列表</a>
         <a class="button" href="#">会议签到</a>
-        <a class="button" href="#">通知管理</a>
         <a class="button" href="#">投票</a>
         <a class="button" href="#">抽奖</a>
         {% endif %}
