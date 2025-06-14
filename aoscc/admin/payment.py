@@ -52,8 +52,8 @@ def payment_hash():
 @bp.get('/payment')
 @check_role('payment')
 def payment():
-    recent = query_all('SELECT * FROM billing WHERE category = "支付" ORDER BY bid DESC LIMIT 10', ())
+    recent = query_all('SELECT * FROM billing WHERE category = "支付" ORDER BY bid DESC LIMIT 10')
     balance = query_all('SELECT b.uid, u.nick, SUM(b.quantity*b.price) AS balance ' \
-                        'FROM billing b JOIN user u ON b.uid = u.uid ' \
-                        'GROUP BY b.uid HAVING balance != 0 ORDER BY balance DESC', ())
+                        'FROM billing b JOIN user u USING(uid) ' \
+                        'GROUP BY b.uid HAVING balance != 0 ORDER BY balance DESC')
     return render_template('payment.html', recent=recent, balance=balance)

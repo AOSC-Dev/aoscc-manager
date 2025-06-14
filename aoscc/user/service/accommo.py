@@ -31,7 +31,7 @@ def is_booked():
 def _get_vacancy() -> dict[str, dict[str, int]]:
     try:
         v = {name: {'': room.vacancy} for name, room in ROOM_OFFERING.items()}
-        res = query_all('SELECT room, type, COUNT(*) AS cnt FROM accommo GROUP BY room, type', ())
+        res = query_all('SELECT room, type, COUNT(*) AS cnt FROM accommo GROUP BY room, type')
         for line in res:
             room = ROOM_OFFERING[line['room']]
             occupied_slots = line['cnt']

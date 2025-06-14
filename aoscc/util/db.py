@@ -18,7 +18,7 @@ def close_db(_):
     g.db.close()
 
 
-def query_all(sql: str, args: tuple) -> list[dict]:
+def query_all(sql: str, args: tuple = ()) -> list[dict]:
     cur = g.db.execute(sql, args)
     rows = cur.fetchall()
     return list(map(dict, rows))

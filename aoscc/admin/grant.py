@@ -31,5 +31,5 @@ def post_grant():
 @bp.get('/grant')
 @check_role('admin')
 def grant():
-    admins = query_all('SELECT id,roles FROM grant WHERE roles != ""', ())
+    admins = query_all('SELECT id,roles FROM grant WHERE roles != ""')
     return render_template('grant.html', admins=admins)
