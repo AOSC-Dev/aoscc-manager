@@ -1,0 +1,114 @@
+{% extends "admin.html" %}
+{% block title %}支付管理{% endblock %}
+
+{% block css %}
+<style>
+input#uid {
+    width: 5rem;
+}
+span#hash {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>支付录入</h2>
+<form method="post">
+    <div class="form-row">
+        <label for="date">支付日期</label>
+        <div>
+            <input type="date" id="date" name="date" required
+                value="{{ session.get('_payment_date') }}">
+        </div>
+    </div>
+    <div class="form-row">
+        <label>支付方式</label>
+        <div>
+            <input type="radio" id="provider-wechat" name="provider" required value="微信" 
+                {{ 'checked' if session.get('_payment_provider') == '微信' else ''}}>
+            <label for="provider-wechat">微信</label>
+            <input type="radio" id="provider-alipay" name="provider" required value="支付宝"
+                {{ 'checked' if session.get('_payment_provider') == '支付宝' else ''}}>
+            <label for="provider-alipay">支付宝</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="uid">用户 ID</label>
+        <div>
+            <input type="number" id="uid" name="uid" required maxlength="10">
+            : <span id="hash">HASH</span>
+        </div>
+        <div>请检查后缀匹配。</div>
+    </div>
+    <div class="form-row">
+        <label for="amount">金额</label>
+        <div>
+            ¥ <input type="text" id="amount" name="amount" required
+                maxlength="10" pattern="-?\d+(\.\d{1,2})?">
+        </div>
+        <div>录入负数可记录退款。</div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">提交</button></div>
+    </div>
+</form>
+<script>
+    document.getElementById('uid').addEventListener('input', async (event) => {
+        try {
+            const url = '{{ url_for(".payment_hash") }}?uid='+document.getElementById('uid').value;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("failed getting hash");
+            document.getElementById('hash').textContent = await response.text();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    })
+</script>
+
+<h2>最近支付记录</h2>
+<table>
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th>用户</th>
+            <th>支付方式</th>
+            <th>金额</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in recent %}
+        <tr>
+            <td>{{ row['t'] | ts2dt | date }}</td>
+            <td>{{ row['uid'] }}</td>
+            <td>{{ row['item'] }}</td>
+            <td>{{ -row['price'] | price | safe }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>账单非零用户</h2>
+<table>
+    <thead>
+        <tr>
+            <th>用户</th>
+            <th>金额</th>
+            <th>昵称</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in balance %}
+        <tr>
+            <td>{{ row['uid'] }}</td>
+            <td>{{ row['balance'] | price | safe }}</td>
+            <td>{{ row['nick'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

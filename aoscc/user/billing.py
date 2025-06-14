@@ -7,7 +7,7 @@ from ..util.db import fetch_all
 from . import bp
 
 
-def get_payment_hash(uid: int, type: str, identity: str) -> str:
+def get_payment_hash(uid: int, type: str, identity: str, **_) -> str:
     acct = f'{type}:{identity}'
     hash = hashlib.sha256(acct.encode()).digest().hex()[-4:].upper()
     return f'{uid}:{hash}'
