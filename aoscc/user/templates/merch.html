@@ -134,9 +134,11 @@ table button {
 
 
 <h2>收货信息</h2>
+{% if registered %}
 <div class="infobox">
-    <p>提示：{% if registered %}您已注册{% else %}如您计划参加{% endif %} {{ TITLE }}，可在会场签到时领取订购的纪念品。</p>
+    <p>提示：您已注册 {{ TITLE }}，如计划在会场领取订购的纪念品，无需填写地址。</p>
 </div>
+{% endif %}
 {% if items %}
 {% if not form and not registered %}
 <div class="infobox error">
@@ -149,6 +151,7 @@ table button {
 </div>
 {% endif %}
 {% endif %}
+<p>参加 {{ TITLE }} 的与会者可以在会场提货，如不计划参加或不便自提，您也可以填写地址选择邮寄送货，运费自付。</p>
 <form method="post" action="{{ url_for('.post_merch_address') }}">
     <div class="form-row">
         <label for="address">收货地址</label>
