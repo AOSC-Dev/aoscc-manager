@@ -113,4 +113,15 @@ span#hash {
         {% endfor %}
     </tbody>
 </table>
+<form method="post" id="notify" onsubmit="return confirm('此功能可能发送大量通知，您确定吗？')"></form>
+<p>
+    批量通知：
+    <button type="submit" form="notify" formaction="{{ url_for('.post_payment_notify_pay') }}" class="danger">
+        发送<strong>待支付</strong>提醒
+    </button>
+    <button type="submit" form="notify" formaction="{{ url_for('.post_payment_notify_refund') }}" class="danger">
+        发送<strong>溢缴款</strong>提醒
+    </button>
+</p>
+
 {% endblock %}
