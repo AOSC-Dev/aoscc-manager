@@ -17,7 +17,7 @@ def enqueue_notify(uid: int, title: str, content: str):
 def enqueue_notify_quick(uid: int, title_suf: str, content_body: str):
     return enqueue_notify(
         uid, f'{TITLE} {title_suf}',
-        f'您好，\n\n{content_body}\n\n\n{TITLE} 会务组'
+        f'您好，\n\n{content_body}\n\n\n此致，\n{TITLE} 会务组'
     )
 
 
