@@ -6,6 +6,21 @@ from ..util.form import Field, validate
 from . import bp, check_role
 
 
+def enqueue_notify(uid: int, title: str, content: str):
+    return insert_dict('notify', {
+        'uid': uid,
+        'title': title,
+        'content': content,
+    })
+
+
+def enqueue_notify_quick(uid: int, title_suf: str, content_body: str):
+    return enqueue_notify(
+        uid, f'{TITLE} {title_suf}',
+        f'您好，\n\n{content_body}\n\n\n{TITLE} 会务组'
+    )
+
+
 @bp.post('/notify')
 @check_role('notify')
 def post_notify():
@@ -17,11 +32,7 @@ def post_notify():
         uids = set(map(int, filter(bool, form['uids'].split(','))))
         for uid in uids:
             try:
-                insert_dict('notify', {
-                    'uid': uid,
-                    'title': form['title'] or f'{TITLE} 系统通知',
-                    'content': form['content'],
-                })
+                enqueue_notify(uid, form['title'] or f'{TITLE} 系统通知', form['content'])
             except Exception:
                 flash(f'用户 {uid} 不存在！')
         flash('提交的任务已加入队列！')
