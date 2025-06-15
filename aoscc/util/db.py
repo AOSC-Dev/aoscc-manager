@@ -38,12 +38,13 @@ def fetch_one(table: str, cond: dict) -> dict|None:
         return rows[0]
 
 
-def insert_dict(table: str, d: dict[str,str|int]) -> int:
+def insert_dict(table: str, d: dict[str,str|int], commit: bool = True) -> int:
     cur = g.db.execute(
         f'INSERT OR REPLACE INTO {table}({",".join(d.keys())}) VALUES({",".join(["?"]*len(d))})',
         tuple(d.values()),
     )
-    g.db.commit()
+    if commit:
+        g.db.commit()
     return cur.lastrowid
 
 

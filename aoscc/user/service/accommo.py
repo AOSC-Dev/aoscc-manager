@@ -95,7 +95,6 @@ def post_accommo():
     try:
         g.db.execute('BEGIN EXCLUSIVE')
         room = _get_vacancy()[form['room']]
-        print(room)
         if not ((room[''] > 0) or (room.get(form['type'], 0) > 0)):
             raise ValueError
         price = ROOM_OFFERING[form['room']].price*(checkout-checkin).days
@@ -108,10 +107,11 @@ def post_accommo():
             'spec': f'{form["room"]}-{form["type"]}',
             'quantity': 1,
             'price': price,
-        })
-        insert_dict('accommo', form|{'bid': bid, 'uid': g.uid})
+        }, commit=False)
+        insert_dict('accommo', form|{'bid': bid, 'uid': g.uid}, commit=False)
         flash('预订成功！房间已为您预留，请前往支付。')
     except Exception:
+        g.db.rollback()
         flash('预订失败！所选的房型和入住方式已订满。')
     finally:
         g.db.commit()
