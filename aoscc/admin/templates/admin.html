@@ -26,6 +26,7 @@
     <div class="spacer"></div>
     <div>
         {% if has_role('admin') %}
+        <a class="button" href="{{ url_for('.db') }}">数据库</a>
         <a class="button" href="{{ url_for('.grant') }}">权限</a>
         {% endif %}
         {% if g.roles %}

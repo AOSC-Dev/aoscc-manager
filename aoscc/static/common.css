@@ -60,6 +60,7 @@ button[disabled], .button[disabled] {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="email"],
 input[type="number"],
 input[type="tel"],

@@ -1,0 +1,86 @@
+{% extends "admin.html" %}
+{% block title %}数据库{% endblock %}
+
+{% block css %}
+<style>
+textarea#sql {
+    font-family: monospace;
+    font-size: 1.1rem;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>数据库</h2>
+<form method="post">
+    <div class="form-row">
+        <label>快速选择</label>
+        <select id="from">
+            <option></option>
+            {% for table in tables %}
+            <option value="{{ table }}">{{ table }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="sql">SQL</label>
+        <textarea id="sql" name="sql" rows="5" required maxlength="500">
+{{ form['sql'] or 'SELECT * FROM register JOIN user USING(uid)' }}
+</textarea>
+    </div>
+    <div class="form-row">
+        <label>解密密钥</label>
+        <input type="password" id="sk" name="sk" maxlength="64">
+    </div>
+    <div class="form-row">
+        <label>格式</label>
+        <div>
+            <input type="radio" id="format-display" name="format" value="display" checked>
+            <label for="format-display">直接显示</label>
+            <input type="radio" id="format-csv" name="format" value="csv">
+            <label for="format-csv">导出为 CSV</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">查询</button></div>
+    </div>
+</form>
+<script>
+    document.getElementById('from').addEventListener('change', (event) => {
+        document.getElementById('sql').textContent = (
+            'SELECT * FROM ' + event.currentTarget.value
+        );
+    })
+</script>
+
+{% if form %}
+<hr>
+<pre>
+{{ form['sql'] }}
+</pre>
+<hr>
+{% if results %}
+<table>
+    <thead>
+        <tr>
+            {% for column in results[0].keys() %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+        <tr>
+            {% for value in result.values() %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<p>共 {{ results | length }} 行。</p>
+{% endif %}
+
+{% endblock %}

@@ -46,18 +46,15 @@ def do_checkin(token: str):  # TODO
     raise NotImplementedError
 
 
-from . import grant, payment, notify, user
+from . import grant, payment, notify, user, db
 
 
 
 """
 TODO:
-roles = admin,cashier,checkin,vote,draw,notice
+roles = checkin,vote,draw
 
-收款系统
 签到子系统（志愿者登录，生成签到码，读取用户信息）
-管理后台（列用户，入替）
-通知子系统（队列重试，多选发送）
 抽奖子系统（熵源、生成报告）
 投票子系统（表决器）
 """
