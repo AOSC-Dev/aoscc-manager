@@ -46,4 +46,7 @@ def do_login(token: str):
 def logout():
     g.uid = None
     update_grant()
-    return redirect(url_for('.login'))
+    if g.roles:
+        return redirect(url_for('admin.index'))
+    else:
+        return redirect(url_for('.login'))

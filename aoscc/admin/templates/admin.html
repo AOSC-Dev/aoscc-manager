@@ -7,6 +7,9 @@
 <p>请求授权 ID ：<code id="session">{{ session['id'] }}</code></p>
 <nav>
     <div>
+        {% if has_role('admin') %}
+        <a class="button" href="{{ url_for('.user') }}">用户列表</a>
+        {% endif %}
         {% if has_role('payment') %}
         <a class="button" href="{{ url_for('.payment') }}">支付管理</a>
         {% endif %}
@@ -15,7 +18,6 @@
         {% endif %}
         {% if has_role('admin') %}
         <!-- TODO -->
-        <a class="button" href="#">用户列表</a>
         <a class="button" href="#">会议签到</a>
         <a class="button" href="#">投票</a>
         <a class="button" href="#">抽奖</a>

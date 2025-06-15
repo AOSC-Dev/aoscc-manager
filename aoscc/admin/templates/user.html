@@ -1,0 +1,69 @@
+{% extends "admin.html" %}
+{% block title %}用户列表{% endblock %}
+
+{% block page %}
+<h2>用户列表</h2>
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>类型</th>
+            <th>身份</th>
+            <th>昵称</th>
+            <th>Telegram</th>
+            <th>邮箱</th>
+            <th>手机</th>
+            <th>QQ</th>
+            <th>微信</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>
+                <input type="checkbox" id="user-{{ user['uid'] }}" value="{{ user['uid'] }}">
+            </td>
+            <td>
+                <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
+            </td>
+            <td>{{ user['type'] }}</td>
+            <td>{{ user['identity'] }}</td>
+            <td>{{ user['nick'] }}</td>
+            <td>{{ user['telegram'] }}</td>
+            <td>{{ user['email'] }}</td>
+            <td>{{ user['phone'] }}</td>
+            <td>{{ user['qq'] }}</td>
+            <td>{{ user['wechat'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form method="get" action="{{ url_for('.notify') }}">
+    <input type="hidden" id="uids" name="uids">
+    <p><button type="submit" class="primary">向选中的用户发送通知</button></p>
+</form>
+<script>
+document.querySelectorAll('input[type=checkbox]').forEach((elm) => {
+    elm.addEventListener('change', (event) => {
+        let uids = '';
+        document.querySelectorAll('input[type=checkbox]:checked').forEach((elm) => {
+            uids = uids + elm.value + ','
+        })
+        document.getElementById('uids').value = uids;
+    })
+})
+</script>
+
+<h2>登入用户</h2>
+<form method="post" action="{{ url_for('.post_user_login') }}">
+    <div class="form-row">
+        <label for="uid">用户 ID</label>
+        <div><input type="number" id="uid" name="uid" required maxlength="10"></div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="danger">登入指定用户</button></div>
+    </div>
+</form>
+{% endblock %}

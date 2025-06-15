@@ -46,7 +46,7 @@ def do_checkin(token: str):  # TODO
     raise NotImplementedError
 
 
-from . import grant, payment, notify
+from . import grant, payment, notify, user
 
 
 
