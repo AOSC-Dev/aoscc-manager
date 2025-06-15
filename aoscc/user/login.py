@@ -13,6 +13,8 @@ bp = Blueprint('login', __name__)
 
 @bp.get('/login')
 def login():
+    if g.uid:
+        return redirect(url_for('user.register'))
     return render_template('login.html')
 
 
