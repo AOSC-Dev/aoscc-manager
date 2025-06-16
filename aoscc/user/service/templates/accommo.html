@@ -58,7 +58,7 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
 <p>备注:</p>
 <p>{{ form['other'] }}</p>
 {% endif %}
-<p>请前往账单页面查看账单，并尽快支付住宿费用，未支付的预约随时可能被取消。</p>
+<p><strong>请前往账单页面查看账单，并尽快支付住宿费用，未支付的预约随时可能被取消。</strong></p>
 <p><a class="button primary" href="{{ url_for('user.billing') }}">去结算 &gt;</a></p>
 
 <h3>预订条款</h3>
@@ -66,9 +66,14 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
 <p>您已于预订时选择同意以上条款。</p>
 
 <h3>取消预订</h3>
+{% if NOW() < ACCOMMO_CLOSE %}
 <p>如需取消，请点击下方按钮，然后前往<a href="{{ url_for('user.billing') }}">账单</a>获取退款信息。</p>
+<p>如需修改，请取消后重新提交预订。</p>
 <form method="post" action="{{ url_for('.post_accommo_cancel') }}">
     <button type="submit" class="danger">取消预订</button>
+{% else %}
+住宿预订已截止，如需取消请{{ CONTACT_US | safe }}。
+{% endif %}
 </form>
 
 {% elif NOW() < ACCOMMO_CLOSE %}

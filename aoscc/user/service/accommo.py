@@ -19,7 +19,7 @@ def accommo_open(view):
     def wrapped(*args, **kwargs):
         if not is_accommo_open():
             flash('当前不在预订时间！')
-            return redirect(url_for('.acccmmo'))
+            return redirect(url_for('.accommo'))
         return view(*args, **kwargs)
     return wrapped
 
@@ -43,7 +43,6 @@ def _get_vacancy() -> dict[str, dict[str, int]]:
                 v[room.name][line['type']] = available_slots
         return v
     except Exception as exc:
-        print(exc)
         return {}
 
 
