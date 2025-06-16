@@ -11,6 +11,9 @@ span#hash {
     font-weight: bold;
     font-size: 1.2rem;
 }
+form:has(#provider-other:not(:checked)) #provider {
+    display: none;
+}
 </style>
 {% endblock %}
 
@@ -27,12 +30,17 @@ span#hash {
     <div class="form-row">
         <label>支付方式</label>
         <div>
-            <input type="radio" id="provider-wechat" name="provider" required value="微信" 
+            <input type="radio" id="provider-wechat" name="_provider" required value="微信"
                 {{ 'checked' if session.get('_payment_provider') == '微信' else ''}}>
             <label for="provider-wechat">微信</label>
-            <input type="radio" id="provider-alipay" name="provider" required value="支付宝"
+            <input type="radio" id="provider-alipay" name="_provider" required value="支付宝"
                 {{ 'checked' if session.get('_payment_provider') == '支付宝' else ''}}>
             <label for="provider-alipay">支付宝</label>
+            <input type="radio" id="provider-other" name="_provider" required value=""
+                {{ 'checked' if session.get('_payment_provider') not in ('微信', '支付宝') else ''}}>
+            <label for="provider-other">其他</label>
+            <input type="text" id="provider" name="provider" required maxlength="20"
+                placeholder="请输入..." value="{{ session.get('_payment_provider') }}">
         </div>
     </div>
     <div class="form-row">
@@ -67,6 +75,11 @@ span#hash {
         catch (err) {
             console.log(err);
         }
+    })
+    document.querySelectorAll('input[name=_provider]').forEach((elm) => {
+        elm.addEventListener('change', (event) => {
+            document.getElementById('provider').value = event.currentTarget.value;
+        })
     })
 </script>
 

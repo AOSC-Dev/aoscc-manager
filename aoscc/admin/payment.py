@@ -13,7 +13,7 @@ from . import bp, check_role
 def post_payment():
     if form := validate(
         Field('支付日期', 'date', 10, 10, parse_date, True),
-        Field('支付方式', 'provider', 1, 10, str, ('微信', '支付宝')),
+        Field('支付方式', 'provider', 1, 20, str, True),
         Field('用户 ID', 'uid', 1, 10, int, lambda x: x>0),
         Field('金额', 'amount', 1, 10, str, r'\-?\d+(\.\d{1,2})?'),
     ):
