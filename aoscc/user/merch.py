@@ -3,7 +3,7 @@ import functools
 from flask import render_template, flash, g, redirect, url_for
 
 from ..config import *
-from ..util.db import fetch_all, fetch_one, insert_dict
+from ..util.db import fetch_all, fetch_one, insert_dict, query_all
 from ..util.form import Field, validate
 from . import bp
 
@@ -25,7 +25,7 @@ def merch_open(view):
 def _validate_buy() -> dict | None:
     if not (form := validate(
         Field('商品名', 'name', 1, 999, str, True),
-        Field('型别', 'sku', 1, 100, str, True),
+        Field('型别', 'sku', 0, 100, str, True),
         Field('数量', 'quantity', 1, 3, int, lambda x: 0 < x < 100),
     )):
         return
@@ -42,15 +42,29 @@ def _validate_buy() -> dict | None:
 @merch_open
 def post_merch_buy():
     if form := _validate_buy():
-        insert_dict('billing', {
-            'uid': g.uid,
-            'category': '纪念品',
-            'item': form['name'],
-            'spec': form['sku'],
-            'quantity': form['quantity'],
-            'price': INVENTORY[form['name']].price
-        })
-        flash('已添加至购物车！')
+        stock = INVENTORY[form['name']].sku[form['sku']]
+        try:
+            g.db.execute('BEGIN EXCLUSIVE')
+            orders = query_all(
+                'SELECT SUM(quantity) AS cnt FROM billing WHERE category = "纪念品"'
+                ' AND item = ? AND spec = ?', (form['name'], form['sku'])
+            )
+            if (orders[0]['cnt'] or 0) + form['quantity'] > stock:
+                raise ValueError
+            insert_dict('billing', {
+                'uid': g.uid,
+                'category': '纪念品',
+                'item': form['name'],
+                'spec': form['sku'],
+                'quantity': form['quantity'],
+                'price': INVENTORY[form['name']].price
+            }, commit=False)
+            flash('已添加至订单！')
+        except Exception as e:
+            g.db.rollback()
+            flash('库存不足，订购失败！')
+        finally:
+            g.db.commit()
     return redirect(url_for('.merch'))
 
 

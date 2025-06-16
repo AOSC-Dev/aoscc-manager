@@ -101,7 +101,7 @@ table button {
             <p>{{ item.desc | safe }}</p>
             {% if is_open %}
             <form method="post" action="{{ url_for('.post_merch_buy') }}">
-                {% if item.sku %}
+                {% if item.sku and '' not in item.sku %}
                 <select name="sku">
                     {% for sku in item.sku %}
                     <option value="{{ sku }}">{{ sku }}</option>
@@ -175,8 +175,11 @@ table button {
 </form>
 
 
-<h2>购物车</h2>
+<h2>我的订单</h2>
 {% if items %}
+{% if is_open %}
+<p>在本轮订购截止前，无论是否已付款，您都可以随时在此修改您的订单。</p>
+{% endif %}
 <table>
     <thead>
         <tr>
@@ -210,7 +213,7 @@ table button {
 <p>订单批量交付制作后不支持退款。</p>
 <p><a class="button primary" href="{{ url_for('.billing') }}">去结算 &gt;</a></p>
 {% else %}
-<p>购物车为空。</p>
+<p>订单为空，在上方选购后再回来看看吧～</p>
 {% endif %}
 
 {% endblock %}
