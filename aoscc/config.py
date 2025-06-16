@@ -56,7 +56,7 @@ Item = namedtuple('Item', 'name,desc,img,sku,price')
 _tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。'
 _tshirt_zhipen = '使用<a href="javascript:alert(\'相较之前热转印烫画工艺，透气性及耐用度显著提升，浅色衣服透气性更佳。\')">数码直喷印制</a>'
 _tshirt_siyin = '使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
-_tshirt_sku = tuple('S,M,L,XL,2XL,3XL,4XL'.split(','))
+_tshirt_sku = {size: 9999 for size in 'S,M,L,XL,2XL,3XL,4XL'.split(',')}
 INVENTORY = {x.name: x for x in [
     Item(
         '《安啦》T 恤',
