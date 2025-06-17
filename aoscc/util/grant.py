@@ -40,6 +40,8 @@ def update_grant():
 
 
 def has_role(role: str) -> bool:
+    if role == '*':
+        return bool(g.roles)
     return role in g.roles or 'admin' in g.roles
 
 

@@ -6,7 +6,9 @@
 <table>
     <thead>
         <tr>
+            {% if has_role('notify') %}
             <th></th>
+            {% endif %}
             <th>ID</th>
             <th>类型</th>
             <th>身份</th>
@@ -21,9 +23,11 @@
     <tbody>
         {% for user in users %}
         <tr>
+            {% if has_role('notify') %}
             <td>
                 <input type="checkbox" id="user-{{ user['uid'] }}" value="{{ user['uid'] }}">
             </td>
+            {% endif %}
             <td>
                 <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
             </td>
@@ -39,6 +43,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% if has_role('notify') %}
 <form method="get" action="{{ url_for('.notify') }}">
     <input type="hidden" id="uids" name="uids">
     <p><button type="submit" class="primary">向选中的用户发送通知</button></p>
@@ -54,7 +59,9 @@ document.querySelectorAll('input[type=checkbox]').forEach((elm) => {
     })
 })
 </script>
+{% endif %}
 
+{% if has_role('admin') %}
 <h2>登入用户</h2>
 <form method="post" action="{{ url_for('.post_user_login') }}">
     <div class="form-row">
@@ -66,4 +73,6 @@ document.querySelectorAll('input[type=checkbox]').forEach((elm) => {
         <div><button type="submit" class="danger">登入指定用户</button></div>
     </div>
 </form>
+{% endif %}
+
 {% endblock %}

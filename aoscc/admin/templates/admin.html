@@ -7,7 +7,7 @@
 <p>请求授权 ID ：<code id="session">{{ session['id'] }}</code></p>
 <nav>
     <div>
-        {% if has_role('admin') %}
+        {% if has_role('*') %}
         <a class="button" href="{{ url_for('.user') }}">用户列表</a>
         {% endif %}
         {% if has_role('payment') %}
@@ -29,14 +29,14 @@
         <a class="button" href="{{ url_for('.db') }}">数据库</a>
         <a class="button" href="{{ url_for('.grant') }}">权限</a>
         {% endif %}
-        {% if g.roles %}
+        {% if has_role('*') %}
         <a class="button" href="{{ url_for('.revoke') }}">登出</a>
         {% endif %}
     </div>
 </nav>
 <hr>
 {% block page %}
-{% if g.roles %}
+{% if has_role('*') %}
 <p>请选择一个模块开始。</p>
 {% endif %}
 {% endblock %}

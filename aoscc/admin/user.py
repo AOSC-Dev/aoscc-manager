@@ -23,7 +23,7 @@ def post_user_login():
 
 
 @bp.get('/user')
-@check_role('admin')
+@check_role('*')
 def user():
     users = query_all('SELECT * FROM user JOIN info USING(uid)')
     return render_template('user.html', users=users)
