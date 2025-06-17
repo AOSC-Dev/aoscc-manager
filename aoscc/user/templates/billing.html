@@ -26,6 +26,7 @@
             <th>型别</th>
             <th>数量</th>
             <th>单价</th>
+            <th>状态</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +40,7 @@
             <td>{{ item['spec'] }}</td>
             <td>{{ item['quantity'] }}</td>
             <td>{{ item['price'] | price | safe }}</td>
+            <td>{{ {0:'已订购',1:'进行中',2:'已完成'}.get(item['status'], '') }}</td>
         </tr>
         {% endfor %}
     </tbody>

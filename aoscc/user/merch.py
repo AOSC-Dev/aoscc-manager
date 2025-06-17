@@ -73,7 +73,7 @@ def post_merch_buy():
 def post_merch_remove(bid: int):
     cur = g.db.execute(  # you must be very careful letting user delete billing item
         'DELETE FROM billing WHERE bid = ? AND uid = ? ' \
-        'AND category = "纪念品" AND t > ? AND t < ? AND fulfilled = 0',
+        'AND category = "纪念品" AND t > ? AND t < ? AND status = 0',
         (bid, g.uid, int(MERCH_OPEN.timestamp()), int(MERCH_CLOSE.timestamp()))
     )
     g.db.commit()

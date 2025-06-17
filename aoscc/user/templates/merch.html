@@ -187,6 +187,7 @@ table button {
             <th>型别</th>
             <th>数量</th>
             <th>单价</th>
+            <th>状态</th>
             <th>操作</th>
         </tr>
     </thead>
@@ -197,8 +198,9 @@ table button {
             <td>{{ item['spec'] }}</td>
             <td>{{ item['quantity'] }}</td>
             <td>{{ item['price'] | price | safe }}</td>
+            <td>{{ {0:'已订购',1:'制作中',2:'已发货'}.get(item['status'], '') }}</td>
             <td>
-                {% if is_open and not item['fulfilled'] %}
+                {% if is_open and not item['status'] %}
                 <form method="post" action="{{ url_for('.post_merch_remove', bid=item['bid']) }}">
                     <button type="submit">删除</button>
                 </form>

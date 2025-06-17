@@ -28,7 +28,7 @@ def post_payment():
                 'spec': '',
                 'quantity': 1,
                 'price': -amount,
-                'fulfilled': 1,
+                'status': 2,
             })
             if amount > 0:
                 enqueue_notify_quick(
