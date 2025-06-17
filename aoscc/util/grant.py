@@ -74,3 +74,22 @@ def add_role(client_id: str, role: str):
 
 def revoke_client(client_id: str):
     delete_from('grant', {'id': client_id})
+
+
+####################################################
+
+def enroll_admin():  # INTENDED FOR COMMAND-LINE
+    print('[ ENROLL NEW ADMIN ]')
+    if len(sys.argv) > 2:
+        client_id = sys.argv[2]
+    else:
+        client_id = input('Requesting Client ID: ')
+    if not re.fullmatch(r'[0-9a-f]{32}', client_id):
+        print('Invalid Client ID!')
+        return
+    from .. import make_app
+    app = make_app()
+    with app.test_request_context('/'):
+        app.preprocess_request() 
+        add_role(client_id, 'admin')
+        print('Success!')

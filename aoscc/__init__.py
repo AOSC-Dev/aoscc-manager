@@ -12,6 +12,7 @@ from .user import bp as user_bp
 from .admin import bp as admin_bp
 from .util.tg import bot_main
 from .admin.notify import notify_main
+from .util.grant import enroll_admin
 
 
 def make_app() -> Flask:
@@ -65,3 +66,5 @@ def main():
                 bot_main()
             case 'notify':
                 notify_main()
+            case 'admin':
+                enroll_admin()
