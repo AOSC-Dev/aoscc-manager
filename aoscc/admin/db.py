@@ -6,8 +6,9 @@ from ..config import *
 from ..util.db import fetch_all, query_all
 from ..util.form import Field, validate
 from ..util.tmpl import ts2dt, dt2datetime
+from ..util.grant import check_role
 from ..util.encrypt import decrypt
-from . import bp, check_role
+from . import bp
 
 
 @bp.route('/db', methods=['GET', 'POST'])

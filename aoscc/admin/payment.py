@@ -3,9 +3,10 @@ from flask import render_template, redirect, url_for, session, flash, request
 from ..config import *
 from ..util.db import query_all, insert_dict, fetch_one
 from ..util.form import Field, validate, parse_date
+from ..util.grant import check_role
 from ..user.billing import get_payment_hash
 from .notify import enqueue_notify_quick
-from . import bp, check_role
+from . import bp
 
 
 @bp.post('/payment')

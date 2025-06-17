@@ -3,7 +3,8 @@ from flask import render_template, flash, redirect, url_for, g, request
 from ..config import *
 from ..util.db import query_all, insert_dict, fetch_all
 from ..util.form import Field, validate
-from . import bp, check_role
+from ..util.grant import check_role
+from . import bp
 
 
 def enqueue_notify(uid: int, title: str, content: str):

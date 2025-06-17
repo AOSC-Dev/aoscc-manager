@@ -3,8 +3,8 @@ from flask import render_template, g, url_for, redirect, flash
 from ..config import *
 from ..util.db import query_all, fetch_one
 from ..util.form import Field, validate
-from ..util.grant import update_grant
-from . import bp, check_role
+from ..util.grant import check_role, update_grant
+from . import bp
 
 
 @bp.post('/user/login')

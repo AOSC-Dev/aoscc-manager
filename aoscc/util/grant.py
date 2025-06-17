@@ -1,10 +1,13 @@
+import re
+import sys
 import secrets
+import functools
 from time import time
 
-from flask import session, g
+from flask import session, g, flash, redirect, url_for
 
 from ..config import *
-from .db import fetch_one, insert_dict
+from .db import fetch_one, insert_dict, delete_from
 from . import bp
 
 
@@ -12,7 +15,7 @@ from . import bp
 def check_grant():
     # ensure basic attrs exist
     g.uid = None
-    g.roles = []
+    g.roles = set()
     try:
         if not (grant := fetch_one('grant', {'id': session['id']})):
             return  # not necessarily invalid, maybe just no grant
@@ -21,7 +24,7 @@ def check_grant():
         if grant['user'] and (user := fetch_one('user', {'uid': grant['user']})):
             for k, v in user.items():
                 setattr(g, k, v)  # load user info (uid, type, identity, nick)
-        g.roles = list(filter(bool, grant['roles'].split(',')))
+        g.roles = set(filter(bool, grant['roles'].split(',')))
     except Exception:
         # id not set or expired, reset new id
         session['id'] = secrets.token_hex(16)
@@ -34,3 +37,40 @@ def update_grant():
         'user': g.uid,
         'roles': ','.join(g.roles),
     })
+
+
+def has_role(role: str) -> bool:
+    return role in g.roles or 'admin' in g.roles
+
+
+@bp.app_context_processor
+def inject_has_role():
+    return dict(has_role=has_role)
+
+
+def check_role(role):
+    def wrapper(view):
+        @functools.wraps(view)
+        def wrapped(*args, **kwargs):
+            if not has_role(role):
+                flash('角色权限不足。')
+                return redirect(url_for('admin.index'))
+            return view(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+
+def add_role(client_id: str, role: str):
+    row = fetch_one('grant', {'id': client_id}) or {
+        'id': client_id,
+        'user': None,
+        'roles': ''
+    }
+    row['roles'] = ','.join(
+        set(filter(bool, row['roles'].split(','))) | {role}
+    )
+    insert_dict('grant', row)
+
+
+def revoke_client(client_id: str):
+    delete_from('grant', {'id': client_id})

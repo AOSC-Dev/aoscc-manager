@@ -1,31 +1,8 @@
-import functools
+from flask import Blueprint, render_template, redirect, url_for, session
 
-from flask import Blueprint, render_template, redirect, url_for, flash, g
-
-from ..util.grant import update_grant
+from ..util.grant import revoke_client
 
 bp = Blueprint('admin', __name__, template_folder='templates')
-
-
-def has_role(role: str) -> bool:
-    return role in g.roles or 'admin' in g.roles
-
-
-@bp.context_processor
-def inject_has_role():
-    return dict(has_role=has_role)
-
-
-def check_role(role):
-    def wrapper(view):
-        @functools.wraps(view)
-        def wrapped(*args, **kwargs):
-            if not has_role(role):
-                flash('角色权限不足。')
-                return redirect(url_for('.index'))
-            return view(*args, **kwargs)
-        return wrapped
-    return wrapper
 
 
 @bp.get('/')
@@ -35,9 +12,7 @@ def index():
 
 @bp.get('/revoke')
 def revoke():
-    g.uid = None
-    g.roles = []
-    update_grant()
+    revoke_client(session['id'])
     return redirect(url_for('.index'))
 
 
