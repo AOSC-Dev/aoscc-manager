@@ -15,8 +15,6 @@ bp = Blueprint('login', __name__)
 def login():
     if g.uid:
         return redirect(url_for('user.register'))
-    if g.roles:
-        return redirect(url_for('admin.index'))
     return render_template('login.html')
 
 
@@ -50,7 +48,4 @@ def do_login(token: str):
 def logout():
     g.uid = None
     update_grant()
-    if g.roles:
-        return redirect(url_for('admin.index'))
-    else:
-        return redirect(url_for('.login'))
+    return redirect(url_for('.login'))
