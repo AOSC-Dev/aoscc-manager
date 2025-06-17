@@ -22,9 +22,6 @@
     </div>
     <div class="spacer"></div>
     <div>
-        {% if g.roles %}
-        <a class="button" href="{{ url_for('admin.index') }}">管理</a>
-        {% endif %}
         {% if g.nick %}
         <a class="button{% if request.path == url_for('user.billing') %} primary{% endif %}" href="{{ url_for('user.billing') }}">账单</a>
         {% endif %}
