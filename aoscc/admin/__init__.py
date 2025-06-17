@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, session
 
-from ..util.grant import revoke_client
+from ..util.grant import check_role, revoke_client
 
 bp = Blueprint('admin', __name__, template_folder='templates')
 
@@ -17,6 +17,7 @@ def revoke():
 
 
 @bp.route('/checkin/<string:token>')
+@check_role('checkin')
 def do_checkin(token: str):  # TODO
     raise NotImplementedError
 
