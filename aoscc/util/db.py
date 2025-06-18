@@ -40,9 +40,12 @@ def fetch_one(table: str, cond: dict = None) -> dict|None:
 
 
 def insert_dict(table: str, d: dict[str,str|int], commit: bool = True) -> int:
-    cur = g.db.execute(
-        f'INSERT OR REPLACE INTO {table}({",".join(d.keys())}) VALUES({",".join(["?"]*len(d))})',
-        tuple(d.values()),
+    cur = g.db.execute(  # Note: do not use INSERT OR REPLACE due to foreign key
+        f'INSERT INTO {table}({",".join(d.keys())})'
+        f' VALUES({",".join(["?"]*len(d))})'
+        f' ON CONFLICT DO UPDATE SET'  # UPSERT clasue for "replacing"
+        f' {",".join(f'{k}=excluded.{k}' for k in d.keys())}',
+        tuple(d.values())
     )
     if commit:
         g.db.commit()

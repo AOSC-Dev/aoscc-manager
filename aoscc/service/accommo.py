@@ -68,6 +68,9 @@ def get_ngroupmate(room: str, type: str) -> int:
 @bp.post('/accommo')
 @accommo_open
 def post_accommo():
+    if is_booked():
+        flash('您已有酒店预订，请勿重复预订！')
+        return redirect(url_for('service.accommo'))
     try:
         form = validate(
             Field('入住房型', 'room', 1, 10, str, lambda x: x in ROOM_OFFERING),
