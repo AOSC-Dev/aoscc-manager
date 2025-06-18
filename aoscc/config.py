@@ -15,11 +15,12 @@ LOGIN_TOKEN_EXPIRY = 20  # minutes
 # see BOT_TOKEN in secret.py
 # forward questions to
 MGMT_ID = -1002609311064
-# used in URL of login message
-LOG_ID = -1002400222732
+# runtime error report
+LOG_ID = 263344415
 
 ## email
 # see EMAIL_PROVIDERS in secret.py
+MAIL_LOG_ID = -1002400222732
 DEFAULT_PROVIDER = 'mailgun'
 EMAIL_RULES = [
     (r'^((vip.)?qq|163|126|sina|foxmail)\.com$', 'txcloud'),

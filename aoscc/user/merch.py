@@ -60,7 +60,7 @@ def post_merch_buy():
                 'price': INVENTORY[form['name']].price
             }, commit=False)
             flash('已添加至订单！')
-        except Exception as e:
+        except Exception:
             g.db.rollback()
             flash('库存不足，订购失败！')
         finally:

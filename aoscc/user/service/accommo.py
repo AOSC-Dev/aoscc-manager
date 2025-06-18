@@ -42,7 +42,7 @@ def _get_vacancy() -> dict[str, dict[str, int]]:
             if available_slots and not line['type'].startswith('单独入住'):
                 v[room.name][line['type']] = available_slots
         return v
-    except Exception as exc:
+    except Exception:
         return {}
 
 

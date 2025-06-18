@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}错误{% endblock %}
+
+{% block main %}
+<h1>{{ error or '发生了错误。' }}</h1>
+<p>请检查访问的地址是否有误。</p>
+<p>您可以尝试返回之前的页面、清空浏览器缓存并重新登录，或者{{ CONTACT_US | safe }}寻求帮助。</p>
+<p>
+    <a class="button primary" href="javascript:history.back()">返回上一页</a>
+    <a class="button danger" href="{{ url_for('_util.clear_cache') }}">清除会话缓存</a>
+</p>
+{% endblock %}
