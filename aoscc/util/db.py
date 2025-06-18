@@ -24,16 +24,17 @@ def query_all(sql: str, args: tuple = ()) -> list[dict]:
     return list(map(dict, rows))
 
 
-def fetch_all(table: str, cond: dict) -> list[dict]:
+def fetch_all(table: str, cond: dict = None) -> list[dict]:
+    cond = cond or {}
     return query_all(
         f'SELECT * FROM {table} WHERE {(
             " AND ".join(f"{k} = ?" for k in cond.keys())
         ) if cond else '1'}',
-        tuple(cond.values())
+        tuple((cond or {}).values())
     )
 
 
-def fetch_one(table: str, cond: dict) -> dict|None:
+def fetch_one(table: str, cond: dict = None) -> dict|None:
     if rows := fetch_all(table, cond):
         return rows[0]
 

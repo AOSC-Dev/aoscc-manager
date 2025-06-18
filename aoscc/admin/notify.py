@@ -59,15 +59,15 @@ def notify():
         case '':
             uids = ''
         case 'all_user':
-            uids = ','.join([str(u['uid']) for u in fetch_all('user', {})])
+            uids = ','.join([str(u['uid']) for u in fetch_all('user')])
         case 'all_registered':
-            uids = ','.join([str(u['uid']) for u in fetch_all('register', {})])
+            uids = ','.join([str(u['uid']) for u in fetch_all('register')])
         case 'all_arrived':
             uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 1})])
         case 'all_accommo':
-            uids = ','.join([str(u['uid']) for u in fetch_all('accommo', {})])
+            uids = ','.join([str(u['uid']) for u in fetch_all('accommo')])
         case 'all_volunteer':
-            uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {})])
+            uids = ','.join([str(u['uid']) for u in fetch_all('volunteer')])
         case _:
             uids = request.args['uids']
     return render_template('notify.html', uids=uids, in_progress=in_progress, failed=failed)
