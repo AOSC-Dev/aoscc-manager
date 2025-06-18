@@ -10,10 +10,6 @@ from ...util.verify import sign_msg
 from . import bp
 
 
-def is_checked_in() -> bool:
-    return bool((fetch_one('register', {'uid': g.uid}) or {}).get('arrived'))
-
-
 @bp.get('/checkin')
 def checkin():
     token = sign_msg('checkin', str(g.uid), 0)

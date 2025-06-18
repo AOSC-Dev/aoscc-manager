@@ -31,10 +31,14 @@ h3 ~ p {
     <p>会议期间将同步进行分散式 PGP 签名派对：来与新老朋友们共织信任网 (Web of Trust) 吧！</p>
     <p><a href="{{ url_for('.pgp') }}">去填写 &gt;&gt;</a></p>
     </div>
+
+{% if not g.arrived %}
 <h2>取消注册</h2>
     <p>如需取消注册，请点击下方按钮，我们将立即删除您的实名信息。</p>
     <form method="post" action="{{ url_for('.post_cancel') }}"
         onsubmit="return confirm('取消注册将同时删除您已填写的注册及参会服务信息，您确定要取消注册吗？')">
         <button type="submit" class="danger">取消注册</button>
     </form>
+{% endif %}
+
 {% endblock %}

@@ -134,13 +134,13 @@ table button {
 
 
 <h2>收货信息</h2>
-{% if registered %}
+{% if g.registered %}
 <div class="infobox">
     <p>提示：您已注册 {{ TITLE }}，如计划在会场领取订购的纪念品，无需填写地址。</p>
 </div>
 {% endif %}
 {% if items %}
-{% if not form and not registered %}
+{% if not form and not g.registered %}
 <div class="infobox error">
     <p><strong>注意！</strong>您还未填写收货信息，也未注册会议！</p>
 </div>

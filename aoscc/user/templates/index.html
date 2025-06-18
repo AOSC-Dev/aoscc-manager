@@ -3,16 +3,20 @@
 {% block main %}
 <h1>
     您好<span class="nick">{% if g.nick %}，{{ g.nick }}{% endif %}</span>！
-    <span class="status {{ 'registered' if registered else 'not-registered'}}">
-        {{ '已注册' if registered else '尚未注册'}}
-    </span>
+    {% if g.arrived %}
+    <span class="status arrived">已签到</span>
+    {% elif g.registered %}
+    <span class="status registered">已注册</span>
+    {% else %}
+    <span class="status not-registered">尚未注册</span>
+    {% endif %}
 </h1>
 <p>欢迎您参加 {{ TITLE }} 。</p>
 <nav>
     <div>
         {% if g.nick %}
         <a class="button{% if request.path == url_for('user.info') %} primary{% endif %}" href="{{ url_for('user.info') }}">联络信息</a>
-        {% if not registered %}
+        {% if not g.registered %}
         <a class="button{% if request.path == url_for('user.register') %} primary{% endif %}" href="{{ url_for('user.register') }}">参会注册</a>
         {% else %}
         <a class="button{% if request.blueprint == 'user.service' %} primary{% endif %}" href="{{ url_for('user.service.index') }}">参会服务</a>

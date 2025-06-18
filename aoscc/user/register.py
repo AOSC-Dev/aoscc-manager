@@ -4,14 +4,10 @@ from datetime import date, timedelta
 from flask import render_template, flash, g, redirect, url_for
 
 from ..config import *
-from ..util.db import fetch_one, insert_dict
+from ..util.db import insert_dict
 from ..util.form import Field, validate
 from ..util.encrypt import encrypt
 from . import bp
-
-
-def is_registered() -> bool:
-    return bool(fetch_one('register', {'uid': g.uid}))
 
 
 def check_citizen_id(id: str) -> bool:
@@ -32,7 +28,7 @@ def check_citizen_id(id: str) -> bool:
 
 @bp.post('/register')
 def post_register():
-    if is_registered():  # no slience update, use cancellation
+    if g.registered:  # no slience update, use cancellation
         flash('信息已存在！')
     elif form := validate(
         Field('真实姓名', 'legal_name', 1, 20, str, True),
@@ -50,6 +46,6 @@ def post_register():
 
 @bp.get('/register')
 def register():
-    if is_registered():
+    if g.registered:
         return redirect(url_for('.service.index'))
     return render_template('register.html')

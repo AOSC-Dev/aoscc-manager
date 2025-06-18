@@ -198,6 +198,9 @@ h1 .status.registered {
 h1 .status.not-registered {
     background-color: #b00;
 }
+h1 .status.arrived {
+    background-color: #d70;
+}
 
 nav {
     display: flex;

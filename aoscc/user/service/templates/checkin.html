@@ -18,7 +18,7 @@ img {
 
 {% block page %}
 <h2>签到</h2>
-{% if False and form["arrived"] %}
+{% if g.arrived %}
 <p>签到状态：<strong>已签到</strong></p>
 {% else %}
 <p>签到状态：<strong>尚未签到</strong></p>

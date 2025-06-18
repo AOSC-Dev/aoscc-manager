@@ -1,5 +1,7 @@
 from flask import Blueprint, g, request, redirect, url_for
 
+from ..util.db import fetch_one
+
 bp = Blueprint('user', __name__, template_folder='templates')
 
 from . import info, register, merch, billing
@@ -11,13 +13,11 @@ def acl_check():
         return
     if not g.uid:  # all pages require logged in
         return redirect(url_for('user.login.login'))
+    register = fetch_one('register', {'uid': g.uid})
+    g.registered = bool(register)
+    g.arrived = bool(register) and bool(register['arrived'])
     if not g.nick and request.path != '/':  # provide nick before other service
         return redirect(url_for('user.info'))
-
-
-@bp.context_processor
-def check_registered():
-    return dict(registered=register.is_registered())
 
 
 from .login import bp as login_bp
