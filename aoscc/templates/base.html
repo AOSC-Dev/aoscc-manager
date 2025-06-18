@@ -11,7 +11,7 @@
         <link rel="icon" href="{{ url_for('static', filename='aosc.png') }}">
     </head>
     <body>
-        {% if TESTING %}
+        {% if config['DEBUG'] %}
         <header style="background-color:darkred;color:white;text-align:center;padding:1rem">当前为测试系统</header>
         {% endif %}
         <main>
