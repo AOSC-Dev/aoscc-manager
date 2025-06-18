@@ -1,0 +1,117 @@
+{% extends "user/base.html" %}
+{% block title %}投票{% endblock %}
+
+{% block css %}
+<style>
+.voting {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: fit-content;
+    max-width: 30rem;
+    border: 2px solid;
+    padding: 1rem;
+    margin: 1rem 0;
+    gap: 1rem;
+}
+@media screen and (max-width: 568px) {
+    .voting {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+h3 {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    word-break: break-all;
+}
+
+form {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1rem;
+}
+form button {
+    font-weight: bold;
+    font-size: 1.2em;
+    filter: brightness(80%) contrast(150%);
+}
+form button:nth-child(1) {
+    border: 2px solid #16ab3c;
+    background-color: #16ab3c;
+    color: white;
+}
+form button:nth-child(2) {
+    border: 2px solid red;
+    background-color: red;
+    color: white;
+}
+form button:nth-child(3) {
+    border: 2px solid yellow;
+    background-color: yellow;
+    color: black;
+}
+form button.active {
+    background-color: var(--bg);
+    color: var(--fg);
+}
+</style>
+{% endblock %}
+
+{% block page %}
+
+{% if actives %}
+<h2>正在进行的投票</h2>
+{% for active in actives %}
+<div class="voting">
+    <h3>{{ active['title'] }}</h3>
+    <form method="post" action="{{ url_for('service.post_vote', vid=active['vid']) }}">
+        <button type="submit" name="vote" value="1"
+            class="{{ 'active' if votes.get(active['vid'], {}).get('vote') == 1 }}">
+            赞成
+        </button>
+        <button type="submit" name="vote" value="-1"
+            class="{{ 'active' if votes.get(active['vid'], {}).get('vote') == -1 }}">
+            反对
+        </button>
+        <button type="submit" name="vote" value="0"
+            class="{{ 'active' if votes.get(active['vid'], {}).get('vote') == 0 }}">
+            弃权
+        </button>
+    </form>
+</div>
+{% endfor %}
+{% endif %}
+
+
+<h2>我的投票记录</h2>
+{% if votes %}
+<table>
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>选择</th>
+            <th>状态</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vote in votes.values() %}
+        <tr>
+            <td>{{ vote['title'] }}</td>
+            <td>{{ {1:'赞成',-1:'反对',0:'弃权'}[vote['vote']] }}</td>
+            {% if vote['ended'] %}
+            <td>已结束，{{ vote['favor'] }} 赞成 {{ vote['against'] }} 反对 {{ vote['abstain'] }} 弃权 </td>
+            {% else %}
+            <td>正在进行</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>还没有投票。</p>
+{% endif %}
+
+{% endblock %}

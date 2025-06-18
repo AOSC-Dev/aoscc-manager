@@ -44,7 +44,7 @@ h3 ~ p:not(.noindent) {
 {% macro vote() -%}
 <h3>代号投票</h3>
 <p>每年的 AOSCC ，我们都会投票产生下一个安同 OS 版本代号，请您按表决器！</p>
-<p><a href="{{ '#' or url_for('service.vote') }}">去投票 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.vote') }}">去投票 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro draw() -%}

@@ -6,7 +6,7 @@ bp = Blueprint('service', __name__)
 
 from ..util.db import delete_from
 from ..user import user_check
-from . import checkin, badge, volunteer, pgp, accommo
+from . import checkin, badge, volunteer, pgp, accommo, vote
 
 
 @bp.before_request
