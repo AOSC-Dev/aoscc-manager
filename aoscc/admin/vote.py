@@ -79,10 +79,9 @@ def vote_live(vid: int = None):
 
     voters = query_all(
         'SELECT nick,vote FROM register' \
-        ' JOIN user USING(uid)' \
-        ' LEFT JOIN vote_detail USING(uid)' \
-        ' WHERE vid = ? OR vid IS NULL' \
-        ' AND arrived = 1 ORDER BY nick',
+        ' JOIN user USING(uid) LEFT JOIN vote_detail' \
+        ' ON vote_detail.uid = register.uid AND vote_detail.vid = ?' \
+        ' WHERE arrived = 1 ORDER BY nick',
         (current['vid'],),
     )
 
