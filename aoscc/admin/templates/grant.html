@@ -49,7 +49,19 @@ td {
     </div>
     <div class="form-row">
         <label></label>
-        <div><button type="submit" class="danger">提交</button></div>
+        <div><button type="submit" class="danger">授权</button></div>
+    </div>
+</form>
+
+<h2>强制登入用户</h2>
+<form method="post" action="{{ url_for('.post_user_login') }}">
+    <div class="form-row">
+        <label for="uid">用户 ID</label>
+        <div><input type="number" id="uid" name="uid" required maxlength="10"></div>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="danger">登入</button></div>
     </div>
 </form>
 

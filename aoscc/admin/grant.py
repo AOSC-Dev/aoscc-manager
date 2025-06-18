@@ -1,9 +1,9 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, g
 
 from ..config import *
-from ..util.db import query_all
+from ..util.db import query_all, fetch_one
 from ..util.form import Field, validate
-from ..util.grant import check_role, add_role, revoke_client
+from ..util.grant import check_role, add_role, revoke_client, update_grant
 from . import bp
 
 
@@ -20,6 +20,21 @@ def post_grant():
         else:
             add_role(form['id'], form['role'])
             flash('授权成功！')
+    return redirect(url_for('.grant'))
+
+
+@bp.post('/grant/login')
+@check_role('admin')
+def post_user_login():
+    if form := validate(
+        Field('用户 ID', 'uid', 1, 10, int, lambda x: x>0),
+    ):
+        if fetch_one('user', {'uid': form['uid']}):
+            g.uid = form['uid']
+            update_grant()
+            return redirect(url_for('user.register'))
+        else:
+            flash('用户不存在！')        
     return redirect(url_for('.grant'))
 
 

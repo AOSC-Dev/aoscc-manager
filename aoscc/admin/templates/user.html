@@ -43,6 +43,7 @@
         {% endfor %}
     </tbody>
 </table>
+
 {% if has_role('notify') %}
 <form method="get" action="{{ url_for('.notify') }}">
     <input type="hidden" id="uids" name="uids">
@@ -59,20 +60,6 @@ document.querySelectorAll('input[type=checkbox]').forEach((elm) => {
     })
 })
 </script>
-{% endif %}
-
-{% if has_role('admin') %}
-<h2>登入用户</h2>
-<form method="post" action="{{ url_for('.post_user_login') }}">
-    <div class="form-row">
-        <label for="uid">用户 ID</label>
-        <div><input type="number" id="uid" name="uid" required maxlength="10"></div>
-    </div>
-    <div class="form-row">
-        <label></label>
-        <div><button type="submit" class="danger">登入指定用户</button></div>
-    </div>
-</form>
 {% endif %}
 
 {% endblock %}
