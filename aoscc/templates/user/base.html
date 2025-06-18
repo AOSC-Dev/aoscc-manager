@@ -19,7 +19,7 @@
         {% if not g.registered %}
         <a class="button{% if request.path == url_for('user.register') %} primary{% endif %}" href="{{ url_for('user.register') }}">参会注册</a>
         {% else %}
-        <a class="button{% if request.blueprint == 'user.service' %} primary{% endif %}" href="{{ url_for('service.index') }}">参会服务</a>
+        <a class="button{% if request.blueprint == 'service' %} primary{% endif %}" href="{{ url_for('service.index') }}">参会服务</a>
         {% endif %}
         <a class="button{% if request.path == url_for('user.merch') %} primary{% endif %}" href="{{ url_for('user.merch') }}">纪念品</a>
         {% endif %}
