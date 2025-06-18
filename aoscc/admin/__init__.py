@@ -22,7 +22,7 @@ def do_checkin(token: str):  # TODO
     raise NotImplementedError
 
 
-from . import grant, payment, notify, user, db
+from . import grant, payment, notify, user, db, vote
 
 
 

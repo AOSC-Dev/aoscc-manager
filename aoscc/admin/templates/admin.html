@@ -8,18 +8,21 @@
 <nav>
     <div>
         {% if has_role('*') %}
-        <a class="button" href="{{ url_for('.user') }}">用户列表</a>
+        <a class="button" href="{{ url_for('.user') }}">用户</a>
         {% endif %}
         {% if has_role('payment') %}
-        <a class="button" href="{{ url_for('.payment') }}">支付管理</a>
+        <a class="button" href="{{ url_for('.payment') }}">支付</a>
         {% endif %}
         {% if has_role('notify') %}
-        <a class="button" href="{{ url_for('.notify') }}">通知管理</a>
+        <a class="button" href="{{ url_for('.notify') }}">通知</a>
         {% endif %}
-        {% if has_role('admin') %}
-        <!-- TODO -->
-        <a class="button" href="#">会议签到</a>
-        <a class="button" href="#">投票</a>
+        {% if has_role('checkin') %}
+        <a class="button" href="#">签到</a>
+        {% endif %}
+        {% if has_role('vote') %}
+        <a class="button" href="{{ url_for('.vote') }}">投票</a>
+        {% endif %}
+        {% if has_role('draw') %}
         <a class="button" href="#">抽奖</a>
         {% endif %}
     </div>

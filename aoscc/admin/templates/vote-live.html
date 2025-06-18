@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}投票实时大屏{% endblock %}
+
+{% block css %}
+<style>
+main {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden;
+    z-index: 999;
+    background-color: black;
+    color: white;
+
+    display: flex;
+    flex-flow: column nowrap;
+    row-gap: 1vh;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 1vh;
+
+}
+main #header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 0.5em;
+    font-size: 2vh;
+}
+main #header span {
+    padding: 0.2em;
+    background-color: #f8f;
+    color: black;
+    text-align: center;
+}
+main #header span:first-child {
+    text-align: right;
+}
+main h3 {
+    font-size: 3vh;
+    margin: 0;
+}
+main #voters {
+    flex: 1 1;
+    height: 85vh;
+    display: flex;
+    flex-flow: column wrap;
+    gap: 0.2em;
+}
+main #voters span {
+    width: 10em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+main #voters img {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+main #footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 5em;
+    font-size: 3vh;
+}
+main #footer div span {
+    padding: 0 0.2em;
+    width: calc(100% - 5vh);
+    display: inline-block;
+}
+main #footer div:nth-child(1) span {
+    background-color: #16ab3c;
+}
+main #footer div:nth-child(2) span {
+    background-color: red;
+}
+main #footer div:nth-child(3) span {
+    background-color: yellow;
+    color: black;
+}
+main #footer img {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+</style>
+{% endblock %}
+
+{% macro vote_icon(icon) -%}
+<img alt="icon of a {{ icon }} vote" src="{{ url_for('static', filename='vote/'+icon+'.svg') }}">
+{%- endmacro -%}
+
+{% block main %}
+
+<div id="header">
+    {% if not current['ended'] %}
+    <span>Voting Started</span>
+    {% else %}
+    <span>Voting Ended</span>
+    {% endif %}
+    <span></span>
+    <span>{{ NOW().strftime('%-m/%-d/%Y') }}</span>
+    <span>{{ NOW().strftime('%-I:%M:%S %p') }}</span>
+</div>
+
+<h3>{{ TITLE }}: {{ current['title'] }}</h3>
+
+<div id="voters">
+    {% for voter in voters %}
+    <span>
+        {{ vote_icon({1:'favor',-1:'against',0:'abstain',None:'empty'}[voter['vote']]) }}
+        {{ voter['nick'] }}
+    </span>
+    {% endfor %}
+</div>
+
+<div id="footer">
+    <div>{{ vote_icon('favor') }} <span>IN FAVOUR: {{ count[1] }}</span></div>
+    <div>{{ vote_icon('against') }} <span>AGAINST: {{ count[-1] }}</span></div>
+    <div>{{ vote_icon('abstain') }} <span>ABSTENTION: {{ count[0] }}</span></div>
+</div>
+
+{% if not current['ended'] %}
+<script>setTimeout(() => { location.reload() }, 1000)</script>
+{% elif not request.view_args['vid'] %}
+<script>setTimeout(() => { location.reload() }, 5000)</script>
+{% endif %}
+
+{% endblock %}
