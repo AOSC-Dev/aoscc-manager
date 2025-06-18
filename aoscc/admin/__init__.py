@@ -2,18 +2,18 @@ from flask import Blueprint, render_template, redirect, url_for, session
 
 from ..util.grant import check_role, revoke_client
 
-bp = Blueprint('admin', __name__, template_folder='templates')
+bp = Blueprint('admin', __name__)
 
 
 @bp.get('/')
 def index():
-    return render_template('admin.html')
+    return render_template('admin/index.html')
 
 
 @bp.get('/revoke')
 def revoke():
     revoke_client(session['id'])
-    return redirect(url_for('.index'))
+    return redirect(url_for('admin.index'))
 
 
 @bp.route('/checkin/<string:token>')

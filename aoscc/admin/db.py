@@ -52,4 +52,4 @@ def db():
             resp.headers['Content-Disposition'] = f'attachment; filename={filename}'
             return resp
 
-    return render_template('db.html', tables=tables, form=form, results=results)
+    return render_template('admin/db.html', tables=tables, form=form, results=results)

@@ -4,9 +4,8 @@ from io import BytesIO
 from flask import render_template, g, url_for
 import qrcode
 
-from ...config import *
-from ...util.db import fetch_one
-from ...util.verify import sign_msg
+from ..config import *
+from ..util.verify import sign_msg
 from . import bp
 
 
@@ -18,4 +17,4 @@ def checkin():
     png = BytesIO()  # buffer in memory
     qr.save(png, format="png")
     b64png = base64.b64encode(png.getvalue()).decode()
-    return render_template('checkin.html', qr=b64png)
+    return render_template('service/checkin.html', qr=b64png)

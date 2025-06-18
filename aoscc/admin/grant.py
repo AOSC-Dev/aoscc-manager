@@ -20,7 +20,7 @@ def post_grant():
         else:
             add_role(form['id'], form['role'])
             flash('授权成功！')
-    return redirect(url_for('.grant'))
+    return redirect(url_for('admin.grant'))
 
 
 @bp.post('/grant/login')
@@ -35,11 +35,11 @@ def post_user_login():
             return redirect(url_for('user.register'))
         else:
             flash('用户不存在！')        
-    return redirect(url_for('.grant'))
+    return redirect(url_for('admin.grant'))
 
 
 @bp.get('/grant')
 @check_role('admin')
 def grant():
     admins = query_all('SELECT id,roles FROM grant WHERE roles != ""')
-    return render_template('grant.html', admins=admins)
+    return render_template('admin/grant.html', admins=admins)

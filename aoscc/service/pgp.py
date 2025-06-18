@@ -2,8 +2,8 @@ from itertools import batched
 
 from flask import render_template, redirect, url_for, flash, g, abort, request, session
 
-from ...util.db import fetch_all, fetch_one, insert_dict, delete_from
-from ...util.form import Field, validate
+from ..util.db import fetch_all, fetch_one, insert_dict, delete_from
+from ..util.form import Field, validate
 from . import bp
 
 
@@ -23,13 +23,13 @@ def post_pgp():
         form.pop('consent', None)
         insert_dict('pgp_info', form|{'uid': g.uid})
         flash('保存成功！')
-    return redirect(url_for('.pgp'))
+    return redirect(url_for('service.pgp'))
 
 
 @bp.post('/pgp/cancel')
 def post_pgp_cancel():
     delete_from('pgp_info', {'uid': g.uid})  # will CASCADE signees
-    return redirect(url_for('.pgp'))
+    return redirect(url_for('service.pgp'))
 
 
 def query_key(uid: int) -> dict:
@@ -70,7 +70,7 @@ def post_pgp_sign():
             insert_dict('pgp_sign', form|{'signer': g.uid})
             flash('保存成功！')
     session.pop('_last_query_key', None)
-    return redirect(url_for('.pgp'))
+    return redirect(url_for('service.pgp'))
 
 
 @bp.post('/pgp/sign/del')
@@ -80,7 +80,7 @@ def post_pgp_sign_del():
     ):
         delete_from('pgp_sign', form|{'signer': g.uid})
         flash('删除成功！')
-    return redirect(url_for('.pgp'))
+    return redirect(url_for('service.pgp'))
 
 
 @bp.app_template_filter('fpr')
@@ -95,4 +95,4 @@ def pgp():
         'pgp_sign JOIN pgp_info ON pgp_info.uid = pgp_sign.signee',
         {'signer': g.uid},
     )
-    return render_template('pgp.html', mykey=mykey, records=records)
+    return render_template('service/pgp.html', mykey=mykey, records=records)

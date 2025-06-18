@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "user/base.html" %}
 {% block title %}参会服务{% endblock %}
 
 {% block css %}
@@ -13,44 +13,44 @@ h3 ~ p:not(.noindent) {
 {% if VOLUNTEER_OPEN == true %}
 <h3>报名志愿者</h3>
 <p>{{ TITLE }}，有你更精彩！我们正在招募会务志愿者，欢迎有意协助现场工作的朋友报名。</p>
-<p><a href="{{ url_for('.volunteer') }}">去报名 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.volunteer') }}">去报名 &gt;&gt;</a></p>
 {% endif %}
 {%- endmacro -%}
 
 {% macro checkin() -%}
 <h3>签到</h3>
 <p>现场签到、领取纪念衫及纪念品礼包等请由此进。</p>
-<p><a href="{{ url_for('.checkin') }}">去签到 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.checkin') }}">去签到 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro badge() -%}
 <h3>定制胸牌</h3>
 <p>线下与会者可免费定制胸牌，欢迎您填入自定义昵称及自我介绍，或上传图片发挥您的创意。</p>
-<p><a href="{{ url_for('.badge') }}">去定制 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.badge') }}">去定制 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro accommo() -%}
 <h3>预订住宿</h3>
 <p>协议酒店预订、拼房登记由此进。</p>
-<p><a href="{{ url_for('.accommo') }}">去预订 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.accommo') }}">去预订 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro pgp() -%}
 <h3>PGP 签名派对</h3>
 <p>会议期间同步进行分散式 PGP 签名派对：来与新老朋友们共织信任网 (Web of Trust) 吧！</p>
-<p><a href="{{ url_for('.pgp') }}">去填写 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.pgp') }}">去填写 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro vote() -%}
 <h3>代号投票</h3>
 <p>每年的 AOSCC ，我们都会投票产生下一个安同 OS 版本代号，请您按表决器！</p>
-<p><a href="{{ '#' or url_for('.vote') }}">去投票 &gt;&gt;</a></p>
+<p><a href="{{ '#' or url_for('service.vote') }}">去投票 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro draw() -%}
 <h3>抽奖</h3>
 <p>会议期间我们将进行数场抽奖活动，来试试手气？</p>
-<p><a href="{{ '#' or url_for('.draw') }}">去参与 &gt;&gt;</a></p>
+<p><a href="{{ '#' or url_for('service.draw') }}">去参与 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 
@@ -80,7 +80,7 @@ h3 ~ p:not(.noindent) {
 {% if not g.arrived %}
 <h2>取消注册</h2>
     <p>如需取消注册，请点击下方按钮，我们将立即删除您的实名信息。</p>
-    <form method="post" action="{{ url_for('.post_cancel') }}"
+    <form method="post" action="{{ url_for('service.post_cancel') }}"
         onsubmit="return confirm('取消注册将同时删除您已填写的注册及参会服务信息，您确定要取消注册吗？')">
         <button type="submit" class="danger">取消注册</button>
     </form>

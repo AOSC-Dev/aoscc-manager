@@ -1,4 +1,4 @@
-{% extends "admin.html" %}
+{% extends "admin/index.html" %}
 {% block title %}支付管理{% endblock %}
 
 {% block css %}
@@ -67,7 +67,7 @@ form:has(#provider-other:not(:checked)) #provider {
 <script>
     document.getElementById('uid').addEventListener('input', async (event) => {
         try {
-            const url = '{{ url_for(".payment_hash") }}?uid='+document.getElementById('uid').value;
+            const url = '{{ url_for("admin.payment_hash") }}?uid='+document.getElementById('uid').value;
             const response = await fetch(url);
             if (!response.ok) throw new Error("failed getting hash");
             document.getElementById('hash').textContent = await response.text();
@@ -129,10 +129,10 @@ form:has(#provider-other:not(:checked)) #provider {
 <form method="post" id="notify" onsubmit="return confirm('此功能可能发送大量通知，您确定吗？')"></form>
 <p>
     批量通知：
-    <button type="submit" form="notify" formaction="{{ url_for('.post_payment_notify_pay') }}" class="danger">
+    <button type="submit" form="notify" formaction="{{ url_for('admin.post_payment_notify_pay') }}" class="danger">
         发送<strong>待支付</strong>提醒
     </button>
-    <button type="submit" form="notify" formaction="{{ url_for('.post_payment_notify_refund') }}" class="danger">
+    <button type="submit" form="notify" formaction="{{ url_for('admin.post_payment_notify_refund') }}" class="danger">
         发送<strong>溢缴款</strong>提醒
     </button>
 </p>

@@ -34,7 +34,7 @@ def post_vote_end(vid: int):
             flash('结束投票失败！')
         finally:
             g.db.commit()
-    return redirect(url_for('.vote'))
+    return redirect(url_for('admin.vote'))
 
 
 @bp.post('/vote/new')
@@ -44,7 +44,7 @@ def post_new_vote():
         Field('标题', 'title', 1, 50, str, True),
     ):
         insert_dict('vote_info', form)
-    return redirect(url_for('.vote'))
+    return redirect(url_for('admin.vote'))
 
 
 @bp.get('/vote/<int:vid>')
@@ -56,13 +56,13 @@ def vote(vid: int = None):
     if vid is not None:
         if not (current := fetch_one('vote_info', {'vid': vid})):
             flash('投票不存在！')
-            return redirect(url_for('.vote'))
+            return redirect(url_for('admin.vote'))
     elif votings:
         current = votings[-1]
     else:
         current = None
 
-    return render_template('vote.html', votings=votings, current=current)
+    return render_template('admin/vote.html', votings=votings, current=current)
 
 
 @bp.get('/vote/<int:vid>/live')
@@ -75,7 +75,7 @@ def vote_live(vid: int = None):
         current = (query_all('SELECT * FROM vote_info ORDER BY vid DESC LIMIT 1') or [None])[0]
     if not current:
         flash('投票不存在！')
-        return redirect(url_for('.vote'))
+        return redirect(url_for('admin.vote'))
 
     voters = query_all(
         'SELECT nick,vote FROM register' \
@@ -91,6 +91,7 @@ def vote_live(vid: int = None):
         for vote in (1,-1,0)
     }
 
-    return render_template('vote-live.html', current=current, voters=voters, count=count)
-
-
+    return render_template(
+        'admin/vote-live.html',
+        current=current, voters=voters, count=count,
+    )

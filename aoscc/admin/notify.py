@@ -37,7 +37,7 @@ def post_notify():
             except Exception:
                 flash(f'用户 {uid} 不存在！')
         flash('提交的任务已加入队列！')
-    return redirect(url_for('.notify'))
+    return redirect(url_for('admin.notify'))
 
 
 @bp.post('/notify/flush')
@@ -46,7 +46,7 @@ def post_notify_flush():
     g.db.execute('DELETE FROM notify WHERE retry >= 3')
     g.db.commit()
     flash('已清空！')
-    return redirect(url_for('.notify'))
+    return redirect(url_for('admin.notify'))
 
 
 @bp.get('/notify')
@@ -70,7 +70,10 @@ def notify():
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer')])
         case _:
             uids = request.args['uids']
-    return render_template('notify.html', uids=uids, in_progress=in_progress, failed=failed)
+    return render_template(
+        'admin/notify.html',
+        uids=uids, in_progress=in_progress, failed=failed
+    )
 
 
 ########## ABOVE: Flask Part ##########

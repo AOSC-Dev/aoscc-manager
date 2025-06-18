@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "user/base.html" %}
 {% block title %}志愿者招募{% endblock %}
 
 {% block page %}
@@ -17,7 +17,7 @@
 </ul>
 <p>
     为了帮助与会者迅速找到身边的志愿者，我们为志愿者定制了专属 T 恤和工作人员胸牌，如果您有意参与志愿工作，请完成
-    <a href="{{ url_for('.badge') }}">胸牌定制</a>
+    <a href="{{ url_for('service.badge') }}">胸牌定制</a>
     ，并在下方表单填写您的 T 恤尺码。
 </p>
 <p>我们将根据报名情况不定期邀请志愿者加入工作群组，报名后请留意系统通知。</p>
@@ -30,7 +30,7 @@
     {% else %}
     <p>您的报名<strong>已提交</strong>，请留意后续系统通知。</p>
     <p>如需修改或取消报名，请点击下方按钮。</p>
-    <form method="post" action="{{ url_for('.post_volunteer_cancel') }}">
+    <form method="post" action="{{ url_for('service.post_volunteer_cancel') }}">
         <button type="submit" class="danger">取消报名</button>
     </form>
     {% endif %}

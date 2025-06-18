@@ -1,8 +1,8 @@
 from flask import render_template, g, flash, redirect, url_for
 
-from ...config import *
-from ...util.db import fetch_one, insert_dict, delete_from
-from ...util.form import Field, validate
+from ..config import *
+from ..util.db import fetch_one, insert_dict, delete_from
+from ..util.form import Field, validate
 from . import bp
 
 
@@ -21,7 +21,7 @@ def post_volunteer():
     ):
         insert_dict('volunteer', form|{'uid': g.uid})
         flash('报名成功！请留意后续系统通知！')
-    return redirect(url_for('.volunteer'))
+    return redirect(url_for('service.volunteer'))
 
 
 def is_volunteer() -> bool:
@@ -35,10 +35,10 @@ def post_volunteer_cancel():
     else:
         delete_from('volunteer', {'uid': g.uid})
         flash('取消成功！')
-    return redirect(url_for('.volunteer'))
+    return redirect(url_for('service.volunteer'))
 
 
 @bp.get('/volunteer')
 def volunteer():
     form = fetch_one('volunteer', {'uid': g.uid})
-    return render_template('volunteer.html', form=form)
+    return render_template('service/volunteer.html', form=form)

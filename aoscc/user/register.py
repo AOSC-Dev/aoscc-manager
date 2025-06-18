@@ -40,12 +40,12 @@ def post_register():
             'legal_id': encrypt(f'{form['legal_name']}:{form['citizen_id']}')
         })
         flash('注册成功！')
-        return redirect(url_for('.service.index'))
-    return redirect(url_for('.register'))
+        return redirect(url_for('service.index'))
+    return redirect(url_for('user.register'))
 
 
 @bp.get('/register')
 def register():
     if g.registered:
-        return redirect(url_for('.service.index'))
-    return render_template('register.html')
+        return redirect(url_for('service.index'))
+    return render_template('user/register.html')

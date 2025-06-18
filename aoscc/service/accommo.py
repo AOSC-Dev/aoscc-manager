@@ -4,9 +4,9 @@ import functools
 
 from flask import render_template, flash, g, redirect, url_for, session
 
-from ...config import *
-from ...util.db import query_all, fetch_all, fetch_one, insert_dict, delete_from
-from ...util.form import Field, validate, parse_date
+from ..config import *
+from ..util.db import query_all, fetch_all, fetch_one, insert_dict, delete_from
+from ..util.form import Field, validate, parse_date
 from . import bp
 
 
@@ -19,7 +19,7 @@ def accommo_open(view):
     def wrapped(*args, **kwargs):
         if not is_accommo_open():
             flash('当前不在预订时间！')
-            return redirect(url_for('.accommo'))
+            return redirect(url_for('service.accommo'))
         return view(*args, **kwargs)
     return wrapped
 
@@ -89,7 +89,7 @@ def post_accommo():
         if session.get("_flashes"):
             raise ValueError
     except Exception:
-        return redirect(url_for('.accommo'))
+        return redirect(url_for('service.accommo'))
 
     try:
         g.db.execute('BEGIN EXCLUSIVE')
@@ -115,7 +115,7 @@ def post_accommo():
     finally:
         g.db.commit()
 
-    return redirect(url_for('.accommo'))
+    return redirect(url_for('service.accommo'))
 
 
 @bp.post('/accommo/cancel')
@@ -124,7 +124,7 @@ def post_accommo_cancel():
     delete_from('billing', {'uid': g.uid, 'category': '住宿'})
     # will CASCADE accommo
     flash('取消成功！')
-    return redirect(url_for('.accommo'))
+    return redirect(url_for('service.accommo'))
 
 
 @bp.get('/accommo')
@@ -132,13 +132,12 @@ def accommo():
     form = fetch_one('accommo', {'uid': g.uid})
     if form:
         return render_template(
-            'accommo.html', form=form,
+            'service/accommo.html', form=form,
             get_ngroupmate=get_ngroupmate,
         )
     else:
         return render_template(
-            'accommo.html', form=form,
-            vacancy=_get_vacancy(),
-            vacancy_str=_vacancy_str,
+            'service/accommo.html', form=form,
+            vacancy=_get_vacancy(), vacancy_str=_vacancy_str,
             random_token=secrets.token_hex(3).upper(),
         )

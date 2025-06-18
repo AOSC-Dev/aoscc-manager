@@ -1,4 +1,4 @@
-{% extends "admin.html" %}
+{% extends "admin/index.html" %}
 {% block title %}通知管理{% endblock %}
 
 {% block css %}
@@ -79,7 +79,7 @@
         {% endfor %}
     </tbody>
 </table>
-<form method="post" action="{{ url_for('.post_notify_flush') }}">
+<form method="post" action="{{ url_for('admin.post_notify_flush') }}">
     <p><button type="submit" class="danger">清空失败任务</button></p>
 </form>
 {% endif %}

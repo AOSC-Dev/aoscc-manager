@@ -8,19 +8,19 @@
 <nav>
     <div>
         {% if has_role('*') %}
-        <a class="button" href="{{ url_for('.user') }}">用户</a>
+        <a class="button" href="{{ url_for('admin.user') }}">用户</a>
         {% endif %}
         {% if has_role('payment') %}
-        <a class="button" href="{{ url_for('.payment') }}">支付</a>
+        <a class="button" href="{{ url_for('admin.payment') }}">支付</a>
         {% endif %}
         {% if has_role('notify') %}
-        <a class="button" href="{{ url_for('.notify') }}">通知</a>
+        <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
         {% endif %}
         {% if has_role('checkin') %}
         <a class="button" href="#">签到</a>
         {% endif %}
         {% if has_role('vote') %}
-        <a class="button" href="{{ url_for('.vote') }}">投票</a>
+        <a class="button" href="{{ url_for('admin.vote') }}">投票</a>
         {% endif %}
         {% if has_role('draw') %}
         <a class="button" href="#">抽奖</a>
@@ -29,11 +29,11 @@
     <div class="spacer"></div>
     <div>
         {% if has_role('admin') %}
-        <a class="button" href="{{ url_for('.db') }}">数据库</a>
-        <a class="button" href="{{ url_for('.grant') }}">权限</a>
+        <a class="button" href="{{ url_for('admin.db') }}">数据库</a>
+        <a class="button" href="{{ url_for('admin.grant') }}">权限</a>
         {% endif %}
         {% if has_role('*') %}
-        <a class="button" href="{{ url_for('.revoke') }}">登出</a>
+        <a class="button" href="{{ url_for('admin.revoke') }}">登出</a>
         {% endif %}
     </div>
 </nav>

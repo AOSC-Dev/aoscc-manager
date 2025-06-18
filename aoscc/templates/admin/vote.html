@@ -1,4 +1,4 @@
-{% extends "admin.html" %}
+{% extends "admin/index.html" %}
 {% block title %}投票{% endblock %}
 
 {% block page %}
@@ -19,7 +19,7 @@
         <tr>
             <td>{{ voting['vid'] }}</td>
             <td>{{ voting['title'] }}</td>
-            <td><a href="{{ url_for('.vote', vid=voting['vid']) }}">查看</a></td>
+            <td><a href="{{ url_for('admin.vote', vid=voting['vid']) }}">查看</a></td>
             {% if voting['ended'] %}
             <td>已结束，{{ voting['favor'] }} 赞成 {{ voting['against'] }} 反对 {{ voting['abstain'] }} 弃权 </td>
             {% else %}
@@ -37,19 +37,19 @@
 <h2>投票：{{ current['title'] }}</h2>
 <p>
     <a class="button primary" target="_blank"
-        href="{{ url_for('.vote_live', vid=current['vid']) }}">
+        href="{{ url_for('admin.vote_live', vid=current['vid']) }}">
         查看投票大屏
     </a>
 </p>
 {% if not current['ended'] %}
-<form method="post" action="{{ url_for('.post_vote_end', vid=current['vid']) }}">
+<form method="post" action="{{ url_for('admin.post_vote_end', vid=current['vid']) }}">
     <button type="submit" class="danger">结束投票</button>
 </form>
 {% endif %}
 {% endif %}
 
 <h2>新投票</h2>
-<form method="post" action="{{ url_for('.post_new_vote') }}">
+<form method="post" action="{{ url_for('admin.post_new_vote') }}">
     <div class="form-row">
         <label for="title">标题</label>
         <input type="text" id="title" name="title" required maxlength="50">

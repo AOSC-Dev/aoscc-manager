@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "user/base.html" %}
 {% block title %}定制胸牌{% endblock %}
 
 {% block css %}
@@ -94,7 +94,7 @@
                     line1: document.getElementById('line1').value,
                     line2: document.getElementById('line2').value
                 }).toString();
-                document.querySelector('img').src = '{{ url_for(".badge_live") }}?' + query;
+                document.querySelector('img').src = '{{ url_for("service.badge_live") }}?' + query;
             }, 300));
         </script>
         {% endif %}
@@ -102,10 +102,10 @@
 
     <aside>
         <h2>预览</h2>
-        <img src="{{ url_for('.badge_live') }}">
+        <img src="{{ url_for('service.badge_live') }}">
         {% if NOW() < BADGE_CLOSE %}
         {% if form or file_exists %}
-        <form method="post" action="{{ url_for('.post_badge_del') }}">
+        <form method="post" action="{{ url_for('service.post_badge_del') }}">
             <button type="submit" class="danger">取消定制</button>
         </form>
         {% endif %}

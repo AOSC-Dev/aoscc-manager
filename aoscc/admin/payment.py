@@ -48,7 +48,7 @@ def post_payment():
             session['_payment_provider'] = form['provider']
         except Exception:
             flash('录入失败！用户不存在？')
-    return redirect(url_for('.payment'))
+    return redirect(url_for('admin.payment'))
 
 
 @bp.get('/payment/hash')
@@ -81,7 +81,7 @@ def post_payment_notify_pay():
             '或者您在转账时忘记添加附言，请回复此消息提供转账回单，我们将尽快核对支付记录。'
         )
     flash('已加入通知队列。')
-    return redirect(url_for('.payment'))
+    return redirect(url_for('admin.payment'))
 
 
 @bp.post('/payment/notify/refund')
@@ -95,7 +95,7 @@ def post_payment_notify_refund():
             '如您需要退款，请回复此消息联系我们。'
         )
     flash('已加入通知队列。')
-    return redirect(url_for('.payment'))
+    return redirect(url_for('admin.payment'))
 
 
 @bp.get('/payment')
@@ -104,4 +104,4 @@ def payment():
     recent = query_all('SELECT * FROM billing JOIN user USING(uid) ' \
                        'WHERE category = "支付" ORDER BY bid DESC LIMIT 10')
     balance = _get_balance()
-    return render_template('payment.html', recent=recent, balance=balance)
+    return render_template('admin/payment.html', recent=recent, balance=balance)

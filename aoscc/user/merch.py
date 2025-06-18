@@ -17,7 +17,7 @@ def merch_open(view):
     def wrapped(*args, **kwargs):
         if not is_merch_open():
             flash('当前不在订购时间！')
-            return redirect(url_for('.merch'))
+            return redirect(url_for('user.merch'))
         return view(*args, **kwargs)
     return wrapped
 
@@ -65,7 +65,7 @@ def post_merch_buy():
             flash('库存不足，订购失败！')
         finally:
             g.db.commit()
-    return redirect(url_for('.merch'))
+    return redirect(url_for('user.merch'))
 
 
 @bp.post('/merch/remove/<int:bid>')
@@ -81,7 +81,7 @@ def post_merch_remove(bid: int):
         flash('删除成功！')
     else:
         flash('删除失败！商品已交付制作或记录不存在。')
-    return redirect(url_for('.merch'))
+    return redirect(url_for('user.merch'))
 
 
 @bp.post('/merch/address')
@@ -106,5 +106,5 @@ def merch():
     ))
     total = sum(item['price'] * item['quantity'] for item in items)
     return render_template(
-        'merch.html', is_open=is_open, items=items, total=total, form=form,
+        'user/merch.html', is_open=is_open, items=items, total=total, form=form,
     )

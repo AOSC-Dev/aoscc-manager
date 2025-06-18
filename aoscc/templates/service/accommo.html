@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "user/base.html" %}
 {% block title %}协议住宿预订{% endblock %}
 
 {% block css %}
@@ -69,7 +69,7 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
 {% if NOW() < ACCOMMO_CLOSE %}
 <p>如需取消，请点击下方按钮，然后前往<a href="{{ url_for('user.billing') }}">账单</a>获取退款信息。</p>
 <p>如需修改，请取消后重新提交预订。</p>
-<form method="post" action="{{ url_for('.post_accommo_cancel') }}">
+<form method="post" action="{{ url_for('service.post_accommo_cancel') }}">
     <button type="submit" class="danger">取消预订</button>
 {% else %}
 住宿预订已截止，如需取消请{{ CONTACT_US | safe }}。

@@ -18,7 +18,7 @@ def billing():
     items = fetch_all('billing', {'uid': g.uid})
     total = sum(item['price'] * item['quantity'] for item in items)
     return render_template(
-        'billing.html', items=items, total=total,
+        'user/billing.html', items=items, total=total,
         hash=get_payment_hash(g.uid, g.type, g.identity),
     )
 

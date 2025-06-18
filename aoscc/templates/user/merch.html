@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "user/base.html" %}
 {% block title %}纪念品{% endblock %}
 
 {% block css %}
@@ -100,7 +100,7 @@ table button {
             <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
             <p>{{ item.desc | safe }}</p>
             {% if is_open %}
-            <form method="post" action="{{ url_for('.post_merch_buy') }}">
+            <form method="post" action="{{ url_for('user.post_merch_buy') }}">
                 {% if item.sku and '' not in item.sku %}
                 <select name="sku">
                     {% for sku in item.sku %}
@@ -152,7 +152,7 @@ table button {
 {% endif %}
 {% endif %}
 <p>参加 {{ TITLE }} 的与会者可以在会场提货，如不计划参加或不便自提，您也可以填写地址选择邮寄送货，运费自付。</p>
-<form method="post" action="{{ url_for('.post_merch_address') }}">
+<form method="post" action="{{ url_for('user.post_merch_address') }}">
     <div class="form-row">
         <label for="address">收货地址</label>
         <textarea id="address" name="address" required rows="3"
@@ -201,7 +201,7 @@ table button {
             <td>{{ {0:'已订购',1:'制作中',2:'已发货'}.get(item['status'], '') }}</td>
             <td>
                 {% if is_open and not item['status'] %}
-                <form method="post" action="{{ url_for('.post_merch_remove', bid=item['bid']) }}">
+                <form method="post" action="{{ url_for('user.post_merch_remove', bid=item['bid']) }}">
                     <button type="submit">删除</button>
                 </form>
                 {% endif %}
@@ -213,7 +213,7 @@ table button {
 <p>小计：{{ total | price | safe }}</p>
 <p>该价格不含运费。运费可能为到付，或以发货时通知为准。</p>
 <p>订单批量交付制作后不支持退款。</p>
-<p><a class="button primary" href="{{ url_for('.billing') }}">去结算 &gt;</a></p>
+<p><a class="button primary" href="{{ url_for('user.billing') }}">去结算 &gt;</a></p>
 {% else %}
 <p>订单为空，在上方选购后再回来看看吧～</p>
 {% endif %}

@@ -1,4 +1,4 @@
-{% extends "admin.html" %}
+{% extends "admin/index.html" %}
 {% block title %}权限管理{% endblock %}
 
 {% block css %}
@@ -54,7 +54,7 @@ td {
 </form>
 
 <h2>强制登入用户</h2>
-<form method="post" action="{{ url_for('.post_user_login') }}">
+<form method="post" action="{{ url_for('admin.post_user_login') }}">
     <div class="form-row">
         <label for="uid">用户 ID</label>
         <div><input type="number" id="uid" name="uid" required maxlength="10"></div>

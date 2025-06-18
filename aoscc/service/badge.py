@@ -7,9 +7,9 @@ from contextlib import suppress
 from flask import render_template, flash, g, redirect, url_for, request, send_file, current_app, abort
 from PIL import Image, ImageDraw, ImageFont
 
-from ...config import *
-from ...util.db import fetch_one, insert_dict, delete_from
-from ...util.form import Field, validate
+from ..config import *
+from ..util.db import fetch_one, insert_dict, delete_from
+from ..util.form import Field, validate
 from . import bp
 
 
@@ -74,7 +74,7 @@ def badge_open(view):
     def wrapped(*args, **kwargs):
         if NOW() > BADGE_CLOSE:
             flash('定制已截止。')
-            return redirect(url_for('.badge'))
+            return redirect(url_for('service.badge'))
         return view(*args, **kwargs)
     return wrapped
 
@@ -106,7 +106,7 @@ def post_badge():
             else:
                 flash('图片生成失败！请重试！')
 
-    return redirect(url_for('.badge'))
+    return redirect(url_for('service.badge'))
 
 
 @bp.post('/badge/del')
@@ -116,7 +116,7 @@ def post_badge_del():
         os.remove(_my_badge_overlay())
     delete_from('badge', {'uid': g.uid})
     flash('已清除。')
-    return redirect(url_for('.badge'))
+    return redirect(url_for('service.badge'))
 
 
 @bp.get('/badge/live')
@@ -144,4 +144,4 @@ def badge_live():
 def badge():
     form = fetch_one('badge', {'uid': g.uid})
     file_exists = _my_badge_overlay().is_file()
-    return render_template('badge.html', form=form, file_exists=file_exists)
+    return render_template('service/badge.html', form=form, file_exists=file_exists)

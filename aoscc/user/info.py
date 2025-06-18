@@ -23,12 +23,12 @@ def post_info():
         g.db.commit()
         insert_dict('info', form|{'uid': g.uid})
         flash('保存成功！')
-        return redirect(url_for('.register'))
+        return redirect(url_for('user.register'))
     else:
-        return redirect(url_for('.info'))
+        return redirect(url_for('user.info'))
 
 
 @bp.get('/')
 def info():
     form = fetch_one('info', {'uid': g.uid})
-    return render_template('info.html', form=form)
+    return render_template('user/info.html', form=form)
