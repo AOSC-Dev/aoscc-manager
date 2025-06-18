@@ -25,7 +25,7 @@ def accommo_open(view):
 
 
 def is_booked():
-    bool(fetch_one('accommo', {'uid': g.uid}))
+    return bool(fetch_one('accommo', {'uid': g.uid}))
 
 
 def _get_vacancy() -> dict[str, dict[str, int]]:
