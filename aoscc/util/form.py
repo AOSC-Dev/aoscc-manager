@@ -20,12 +20,15 @@ def validate(*fields: Field, form: dict = None) -> dict | None:
             typed_val = field.factory(val)
             # 3. build cond func
             cond = field.condition
-            if not typed_val or cond is True:
+            if (field.minlen == 0 and not typed_val) or (cond is True):
                 cond = lambda _: True
             if isinstance(cond, str):
                 cond = (cond,)
             if isinstance(cond, tuple):
-                cond = lambda x, ptns=cond: any(re.fullmatch(ptn, x) for ptn in ptns)
+                if isinstance(typed_val, str):
+                    cond = lambda x, ptns=cond: any(re.fullmatch(ptn, x) for ptn in ptns)
+                else:
+                    cond = lambda x, cond=cond: x in cond
             # 4. cond check
             if not cond(typed_val):
                 raise ValueError()
