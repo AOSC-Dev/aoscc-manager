@@ -37,8 +37,15 @@ td {
     </div>
     <div class="form-row">
         <label for="role">授予角色</label>
-        <input type="text" id="role" name="role" maxlength="20" pattern="[a-z]+">
-        <div>留空将撤销其全部权限。</div>
+        <select id="role" name="role">
+            <option value="">撤销权限</option>
+            <option value="payment">支付管理 payment</option>
+            <option value="notify">通知管理 notify</option>
+            <option value="checkin">签到 checkin</option>
+            <option value="vote">投票 vote</option>
+            <option value="draw">抽奖 draw</option>
+            <option value="admin">全权管理员 admin</option>
+        </select>
     </div>
     <div class="form-row">
         <label></label>
