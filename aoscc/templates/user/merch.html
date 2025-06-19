@@ -99,7 +99,7 @@ table button {
         <div>
             <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
             <p>{{ item.desc | safe }}</p>
-            {% if is_open %}
+            {% if is_open and item.sku %}
             <form method="post" action="{{ url_for('user.post_merch_buy') }}">
                 {% if item.sku and '' not in item.sku %}
                 <select name="sku">
@@ -112,6 +112,8 @@ table button {
                 <input type="hidden" name="name" value="{{ item.name }}">
                 <button type="submit" class="primary">订购</button>
             </form>
+            {% else %}
+            <p><strong>当前不可购买。</strong></p>
             {% endif %}
         </div>
     </section>
