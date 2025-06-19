@@ -5,6 +5,9 @@ from ..util.grant import check_role, revoke_client
 bp = Blueprint('admin', __name__)
 
 
+from . import grant, payment, notify, user, db, vote
+
+
 @bp.get('/')
 def index():
     return render_template('admin/index.html')
@@ -22,15 +25,10 @@ def do_checkin(token: str):  # TODO
     raise NotImplementedError
 
 
-from . import grant, payment, notify, user, db, vote
-
-
-
 """
 TODO:
-roles = checkin,vote,draw
+roles = checkin,draw
 
 签到子系统（志愿者登录，生成签到码，读取用户信息）
 抽奖子系统（熵源、生成报告）
-投票子系统（表决器）
 """

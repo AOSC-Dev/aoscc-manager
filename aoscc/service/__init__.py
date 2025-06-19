@@ -6,7 +6,6 @@ bp = Blueprint('service', __name__)
 
 from ..util.db import delete_from
 from ..user import user_check
-from . import checkin, badge, volunteer, pgp, accommo, vote
 
 
 @bp.before_request
@@ -25,6 +24,9 @@ def check_arrived(view):
             return redirect(url_for('service.index'))
         return view(*args, **kwargs)
     return wrapped
+
+
+from . import checkin, badge, volunteer, pgp, accommo, vote
 
 
 @bp.get('/service')

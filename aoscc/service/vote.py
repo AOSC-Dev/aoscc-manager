@@ -3,10 +3,11 @@ from flask import render_template, g, flash, redirect, url_for
 from ..config import *
 from ..util.db import fetch_one, fetch_all, insert_dict
 from ..util.form import Field, validate
-from . import bp
+from . import bp, check_arrived
 
 
 @bp.post('/vote/<int:vid>')
+@check_arrived
 def post_vote(vid: int):
     if not (voting := fetch_one('vote_info', {'vid': vid})):
         flash('投票不存在！')
@@ -20,6 +21,7 @@ def post_vote(vid: int):
 
 
 @bp.get('/vote')
+@check_arrived
 def vote():
     actives = fetch_all('vote_info', {'ended': 0})
     votes = {

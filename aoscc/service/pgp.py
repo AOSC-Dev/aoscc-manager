@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, flash, g, abort, request, 
 
 from ..util.db import fetch_all, fetch_one, insert_dict, delete_from
 from ..util.form import Field, validate
-from . import bp
+from . import bp, check_arrived
 
 
 def is_in_pgp_party(uid: int = None) -> bool:
@@ -57,6 +57,7 @@ def pgp_key():
 
 
 @bp.post('/pgp/sign')
+@check_arrived
 def post_pgp_sign():
     if form := validate(
         Field('对方用户不存在！', 'signee', 1, 10, int, is_in_pgp_party),
