@@ -5,7 +5,7 @@ from ..util.grant import check_role, revoke_client
 bp = Blueprint('admin', __name__)
 
 
-from . import grant, payment, notify, user, db, vote
+from . import grant, payment, notify, user, db, vote, draw
 
 
 @bp.get('/')

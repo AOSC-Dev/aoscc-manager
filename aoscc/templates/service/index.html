@@ -50,7 +50,7 @@ h3 ~ p:not(.noindent) {
 {% macro draw() -%}
 <h3>抽奖</h3>
 <p>会议期间我们将进行数场抽奖活动，来试试手气？</p>
-<p><a href="{{ '#' or url_for('service.draw') }}">去参与 &gt;&gt;</a></p>
+<p><a href="{{ url_for('service.draw') }}">去参与 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 

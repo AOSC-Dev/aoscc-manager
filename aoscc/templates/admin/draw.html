@@ -1,0 +1,67 @@
+{% extends "admin/index.html" %}
+{% block title %}抽奖{% endblock %}
+
+{% block page %}
+
+<h2>抽奖列表</h2>
+{% if draws %}
+<p><a class="button primary" target="_blank" href="{{ url_for('admin.draw_live') }}">
+    最新抽奖实时大屏
+</a></p>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>奖品</th>
+            <th>份数</th>
+            <th>状态</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for draw in draws %}
+        <tr>
+            <td>{{ draw['did'] }}</td>
+            <td>{{ draw['title'] }}</td>
+            <td>{{ draw['count'] }}</td>
+            <td>{{ '已结束' if draw['ended'] else '正在进行' }}</td>
+            <td><a href="{{ url_for('admin.draw', did=draw['did']) }}">查看</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>还没有抽奖。</p>
+{% endif %}
+
+{% if current %}
+<h2>抽奖：{{ current['title'] }}（{{ current['count'] }} 人）</h2>
+<p>
+    <a class="button" target="_blank" href="{{ url_for('admin.draw_live', did=current['did']) }}">
+        查看本次抽奖大屏
+    </a>
+</p>
+{% if not current['ended'] %}
+<form method="post" action="{{ url_for('admin.post_draw_end', did=current['did']) }}">
+    <button type="submit" class="danger">截止并开奖</button>
+</form>
+{% endif %}
+{% endif %}
+
+<h2>新抽奖</h2>
+<form method="post" action="{{ url_for('admin.post_new_draw') }}">
+    <div class="form-row">
+        <label for="title">奖品</label>
+        <input type="text" id="title" name="title" required maxlength="50">
+    </div>
+    <div class="form-row">
+        <label for="count">份数</label>
+        <input type="number" id="count" name="count" required min="1" max="100" value="1">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <div><button type="submit" class="primary">添加</button></div>
+    </div>
+</form>
+
+{% endblock %}

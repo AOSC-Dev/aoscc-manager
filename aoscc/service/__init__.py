@@ -26,7 +26,7 @@ def check_arrived(view):
     return wrapped
 
 
-from . import checkin, badge, volunteer, pgp, accommo, vote
+from . import checkin, badge, volunteer, pgp, accommo, vote, draw
 
 
 @bp.get('/service')

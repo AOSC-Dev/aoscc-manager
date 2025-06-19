@@ -1,0 +1,108 @@
+{% extends "user/base.html" %}
+{% block title %}抽奖{% endblock %}
+
+{% block css %}
+<style>
+.draw {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: fit-content;
+    max-width: 30rem;
+    border: 2px solid;
+    padding: 1rem;
+    margin: 1rem 0;
+    gap: 1rem;
+}
+@media screen and (max-width: 568px) {
+    .draw {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+.draw h3 {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    word-break: break-all;
+}
+.draw p {
+    margin: 0;
+}
+
+table td:nth-child(3) {
+    font-family: monospace;
+}
+table td span {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+table td strong {
+    font-size: 1.5em;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+
+<h2>正在进行的抽奖</h2>
+<p><a class="button" href="javascript:location.reload()">刷新页面</a></p>
+{% if actives %}
+<p>选取一个随机的颜色并提交，参加抽奖的同时，为抽奖算法提供更高的随机熵。</p>
+<p>如果中奖，您的昵称也会以此颜色显示在大屏幕上。</p>
+{% for active in actives %}
+<div class="draw">
+    <h3>{{ active['title'] }}</h3>
+    <p>{{ active['count'] }} 人</p>
+    <form method="post" action="{{ url_for('service.post_draw', did=active['did']) }}">
+        选择颜色：
+        <input type="color" id="color" name="color" required
+            value="{{ mytkts.get(active['did'], {}).get('color', '#'+rand) }}">
+        &emsp;
+        <button type="submit" class="primary">参加</button>
+    </form>
+</div>
+{% endfor %}
+{% else %}
+<p>暂无正在进行的抽奖。</p>
+{% endif %}
+
+
+<h2>我的抽奖记录</h2>
+{% if mytkts %}
+<table>
+    <thead>
+        <tr>
+            <th>奖品</th>
+            <th>人数</th>
+            <th>颜色</th>
+            <th>结果</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tkt in mytkts.values() %}
+        <tr>
+            <td>{{ tkt['title'] }}</td>
+            <td>{{ tkt['count'] }}</td>
+            <td>
+                <span style="background-color:{{ tkt['color'] }}"></span>
+                {{ tkt['color'] }}
+            </td>
+            {% if tkt['win'] %}
+            <td><strong>恭喜中奖！</strong></td>
+            {% elif tkt['ended'] %}
+            <td>很遗憾，您未中奖</td>
+            {% else %}
+            <td>正在进行中</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>还没有抽奖。</p>
+{% endif %}
+
+{% endblock %}
