@@ -1,4 +1,4 @@
-from contextlib import suppress
+from html import escape
 
 import requests
 
@@ -6,17 +6,23 @@ from ..config import *
 from ..secret import BOT_TOKEN
 
 
-def send_telegram(uid: int, msg: str) -> bool:
-    with suppress(Exception):
+def send_telegram(uid: int, msg: str, **kwargs) -> bool:
+    try:
         r = requests.post(f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage', json={
             'chat_id': uid,
             'text': msg,
             'parse_mode': 'HTML',
-            'disable_web_page_preview': True
+            'disable_web_page_preview': True,
+            **kwargs,
         }, timeout=10)
-        if r.json()['ok']:
-            return True
-    return False
+        if not r.json()['ok']:
+            raise AssertionError(r.json())
+        return True
+    except Exception as exc:
+        print(repr(exc))
+        if uid != LOG_ID:
+            send_telegram(LOG_ID, f'#TELEGRAM\nError sending to {uid}\n{escape(repr(exc))}')
+        return False
 
 
 ########## ABOVE: Flask Synch Part ##########

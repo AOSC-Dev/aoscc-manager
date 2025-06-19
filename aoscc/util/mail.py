@@ -14,7 +14,7 @@ from .verify import sign_msg
 from .tg import send_telegram
 
 
-def send_email(email: str, title: str, msg: str) -> bool:
+def send_email(email: str, title: str, msg: str, addr: str = None) -> bool:
     try:
         host = email.split('@')[1]
         smtp_provider = EMAIL_PROVIDERS[DEFAULT_PROVIDER]
@@ -31,11 +31,13 @@ def send_email(email: str, title: str, msg: str) -> bool:
         with smtplib.SMTP_SSL(smtp_provider.server, smtp_provider.port) as server:
             server.login(smtp_provider.login, smtp_provider.password)
             server.sendmail(smtp_provider.login, [email], message.as_string())
-        send_telegram(MAIL_LOG_ID, f'#LOG title {title} to {email} ' \
-                              f'via {smtp_provider.server} msgid {escape(msgid)}')
+        send_telegram(MAIL_LOG_ID, f'#LOG {addr} to {email} title {title} ' \
+                                   f'via {smtp_provider.server} msgid {escape(msgid)}')
         return True
     except Exception as exc:
-        send_telegram(MAIL_LOG_ID, f'#ERROR {repr(exc)}')
+        print(repr(exc))
+        send_telegram(MAIL_LOG_ID, f'#ERROR {addr} to {email} title {title} '\
+                                   f'error {escape(repr(exc))}')
         return False
 
 
@@ -64,7 +66,7 @@ def send_email_login(email: str) -> str:
         return '不要输入示例地址呀...'
     addr = request.remote_addr
     if not global_bucket() or not perip_buckets[addr]():
-        send_telegram(MAIL_LOG_ID, f'#REJECTED {addr} {email}')
+        send_telegram(MAIL_LOG_ID, f'#RATE_LIMIT {addr} {email}')
         return '发送验证邮件频率过高，请稍后再试。'
     msg = f"""您好，
 
@@ -74,9 +76,7 @@ def send_email_login(email: str) -> str:
 
 请勿回复此邮件，如需更多协助，请联系 aoscc@aosc.io 。
 """
-    if send_email(email, f'欢迎您注册 {TITLE} ！', msg):
-        send_telegram(MAIL_LOG_ID, f'#SENT {addr} {email}')
+    if send_email(email, f'欢迎您注册 {TITLE} ！', msg, addr=addr):
         return '验证邮件已发送到您的邮箱，请注意查收，并记得检查垃圾邮件箱。如果没有收到，请十分钟后再试。'
     else:
-        send_telegram(MAIL_LOG_ID, f'#FAILED {addr} {email}')
         return '发送时遇到错误。'
