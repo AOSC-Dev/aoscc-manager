@@ -62,8 +62,9 @@ form button.active {
 
 {% block page %}
 
-{% if actives %}
 <h2>正在进行的投票</h2>
+<p><a class="button" href="javascript:location.reload()">刷新页面</a></p>
+{% if actives %}
 {% for active in actives %}
 <div class="voting">
     <h3>{{ active['title'] }}</h3>
@@ -83,6 +84,8 @@ form button.active {
     </form>
 </div>
 {% endfor %}
+{% else %}
+<p>暂无正在进行的投票。</p>
 {% endif %}
 
 
@@ -93,7 +96,7 @@ form button.active {
         <tr>
             <th>标题</th>
             <th>选择</th>
-            <th>状态</th>
+            <th>结果</th>
         </tr>
     </thead>
     <tbody>
@@ -102,7 +105,7 @@ form button.active {
             <td>{{ vote['title'] }}</td>
             <td>{{ {1:'赞成',-1:'反对',0:'弃权'}[vote['vote']] }}</td>
             {% if vote['ended'] %}
-            <td>已结束，{{ vote['favor'] }} 赞成 {{ vote['against'] }} 反对 {{ vote['abstain'] }} 弃权 </td>
+            <td>{{ vote['favor'] }} 赞成 {{ vote['against'] }} 反对 {{ vote['abstain'] }} 弃权 </td>
             {% else %}
             <td>正在进行</td>
             {% endif %}

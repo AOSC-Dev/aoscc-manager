@@ -34,7 +34,7 @@ def post_vote_end(vid: int):
             flash('结束投票失败！')
         finally:
             g.db.commit()
-    return redirect(url_for('admin.vote'))
+    return redirect(url_for('admin.vote', vid=vid))
 
 
 @bp.post('/vote/new')
@@ -43,8 +43,8 @@ def post_new_vote():
     if form := validate(
         Field('标题', 'title', 1, 50, str, True),
     ):
-        insert_dict('vote_info', form)
-    return redirect(url_for('admin.vote'))
+        rowid = insert_dict('vote_info', form)
+    return redirect(url_for('admin.vote', vid=rowid))
 
 
 @bp.get('/vote/<int:vid>')
@@ -52,15 +52,10 @@ def post_new_vote():
 @check_role('vote')
 def vote(vid: int = None):
     votings = fetch_all('vote_info')
-
-    if vid is not None:
-        if not (current := fetch_one('vote_info', {'vid': vid})):
-            flash('投票不存在！')
-            return redirect(url_for('admin.vote'))
-    elif votings:
-        current = votings[-1]
-    else:
-        current = None
+    current = None
+    if vid and not (current := fetch_one('vote_info', {'vid': vid})):
+        flash('投票不存在！')
+        return redirect(url_for('admin.vote'))
 
     return render_template('admin/vote.html', votings=votings, current=current)
 
