@@ -130,9 +130,12 @@ div.infobox.error {
 }
 
 table {
+    display: block;
     border-collapse: collapse;
     line-height: 2rem;
     text-align: left;
+    white-space: nowrap;
+    overflow-x: auto;
 }
 table tr {
     vertical-align: top;
@@ -149,6 +152,10 @@ table th {
 }
 table td {
     border-bottom: #bbb5 solid 1px;
+}
+table td.wrap {
+    word-break: break-all;
+    white-space: normal;
 }
 table tbody tr:hover {
     background-color: #bbb5;
