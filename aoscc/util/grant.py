@@ -7,7 +7,7 @@ from time import time
 from flask import session, g, flash, redirect, url_for
 
 from ..config import *
-from .db import fetch_one, insert_dict, delete_from
+from .db import fetch_one, fetch_all, insert_dict, delete_from
 from . import bp
 
 
@@ -21,6 +21,8 @@ def check_grant():
             return  # not necessarily invalid, maybe just no grant
         if time() > grant['t'] + SESSION_EXPIRY.total_seconds():
             raise ValueError('session expired')
+        # THE LINE BELOW IS FOR DEBUGGING ONLY
+        # grant['user'] = __import__('random').choice(fetch_all('register'))['uid']
         if grant['user'] and (user := fetch_one('user', {'uid': grant['user']})):
             for k, v in user.items():
                 setattr(g, k, v)  # load user info (uid, type, identity, nick)

@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, g, request
+from flask import render_template, flash, redirect, url_for, g
 
 from ..config import *
 from ..util.db import query_all, fetch_all, fetch_one, insert_dict
