@@ -185,6 +185,16 @@ body {
     color: var(--fg);
     background-color: var(--bg);
 }
+body.debug {
+    background-image:  linear-gradient(#f003 1px, transparent 1px), linear-gradient(to right, #f003 1px, transparent 1px);
+    background-size: 1rem 1rem;
+}
+body.debug > header {
+    background-color: darkred;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
 body > * {
     padding: 0 1rem;
 }

@@ -10,10 +10,11 @@
         {% endblock %}
         <link rel="icon" href="{{ url_for('static', filename='aosc.png') }}">
     </head>
+    {% if config['DEBUG'] %}
+    <body class="debug"><header>当前为测试系统</header>
+    {% else %}
     <body>
-        {% if config['DEBUG'] %}
-        <header style="background-color:darkred;color:white;text-align:center;padding:1rem">当前为测试系统</header>
-        {% endif %}
+    {% endif %}
         <main>
             {% block main %}
             {% endblock %}
