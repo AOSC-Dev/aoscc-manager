@@ -62,12 +62,24 @@ def notify():
             uids = ','.join([str(u['uid']) for u in fetch_all('user')])
         case 'all_registered':
             uids = ','.join([str(u['uid']) for u in fetch_all('register')])
+        case 'not_registered':
+            uids = ','.join([str(u['uid']) for u in query_all(
+                'SELECT uid FROM user WHERE uid NOT IN (SELECT uid FROM register)'
+            )])
         case 'all_arrived':
             uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 1})])
-        case 'all_accommo':
-            uids = ','.join([str(u['uid']) for u in fetch_all('accommo')])
-        case 'all_volunteer':
+        case 'not_arrived':
+            uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 0})])
+        case 'volunteer_apply':
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer')])
+        case 'volunteer_pass':
+            uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': 1})])
+        case 'volunteer_fail':
+            uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': -1})])
+        case 'accommo':
+            uids = ','.join([str(u['uid']) for u in fetch_all('accommo')])
+        case 'pgp':
+            uids = ','.join([str(u['uid']) for u in fetch_all('pgp_info')])
         case _:
             uids = request.args['uids']
     return render_template(
