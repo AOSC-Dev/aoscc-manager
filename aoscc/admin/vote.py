@@ -53,7 +53,7 @@ def post_new_vote():
 def vote(vid: int = None):
     votings = fetch_all('vote_info')
     current = None
-    if vid and not (current := fetch_one('vote_info', {'vid': vid})):
+    if (vid is not None) and not (current := fetch_one('vote_info', {'vid': vid})):
         flash('投票不存在！')
         return redirect(url_for('admin.vote'))
 

@@ -55,7 +55,7 @@ def post_new_draw():
 def draw(did: int = None):
     draws = fetch_all('draw_info')
     current = None
-    if did and not (current := fetch_one('draw_info', {'did': did})):
+    if (did is not None) and not (current := fetch_one('draw_info', {'did': did})):
         flash('抽奖不存在！')
         return redirect(url_for('admin.draw'))
 
