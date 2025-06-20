@@ -41,8 +41,8 @@ BADGE_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 ACCOMMO_CLOSE = datetime(2025, 7, 22, 12, 0, 0)
 Room = namedtuple('Room', 'name,nguest,price,vacancy')
 ROOM_OFFERING = {x.name: x for x in [
-    Room('标准间', 2, 28000, 35),
-    Room('大床房', 1, 28000, 5),
+    Room('标准间', 2, 28000, 30),
+    Room('大床房', 1, 28000, 10),
 ]}
 DATE_RANGE = (date(2025, 7, 25), date(2025, 7, 27))
 VOLUNTEER_OPEN = 'True'
