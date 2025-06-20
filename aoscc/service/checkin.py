@@ -12,7 +12,7 @@ from . import bp
 @bp.get('/checkin')
 def checkin():
     token = sign_msg('checkin', str(g.uid), 0)
-    url = URL_BASE + url_for('admin.do_checkin', token=token)
+    url = URL_BASE + url_for('admin.post_checkin', token=token)
     qr = qrcode.make(url, border=1)
     png = BytesIO()  # buffer in memory
     qr.save(png, format="png")

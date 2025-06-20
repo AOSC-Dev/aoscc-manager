@@ -49,6 +49,9 @@ td:empty::before {
                 {% else %}
                 已注册
                 {% endif %}
+                {% if has_role('checkin') %}
+                <a href="{{ url_for('admin.checkin', uid=user['uid']) }}">签到</a>
+                {% endif %}
                 {% endif %}
             </td>
             <td>{{ user['nick'] or '' }}</td>

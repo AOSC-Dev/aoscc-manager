@@ -67,7 +67,9 @@ def notify():
                 'SELECT uid FROM user WHERE uid NOT IN (SELECT uid FROM register)'
             )])
         case 'all_arrived':
-            uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 1})])
+            uids = ','.join([str(u['uid']) for u in query_all(
+                'SELECT * FROM register WHERE arrived > 0'
+            )])
         case 'not_arrived':
             uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 0})])
         case 'volunteer_apply':

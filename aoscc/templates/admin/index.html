@@ -17,7 +17,7 @@
         <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
         {% endif %}
         {% if has_role('checkin') %}
-        <a class="button" href="#">签到</a>
+        <a class="button" href="{{ url_for('admin.checkin') }}">签到</a>
         {% endif %}
         {% if has_role('vote') %}
         <a class="button" href="{{ url_for('admin.vote') }}">投票</a>

@@ -76,7 +76,7 @@ def vote_live(vid: int = None):
         'SELECT nick,vote FROM register' \
         ' JOIN user USING(uid) LEFT JOIN vote_detail' \
         ' ON vote_detail.uid = register.uid AND vote_detail.vid = ?' \
-        ' WHERE arrived = 1 ORDER BY nick',
+        ' WHERE arrived > 0 ORDER BY nick',
         (current['vid'],),
     )
 

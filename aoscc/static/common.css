@@ -58,6 +58,9 @@ button[disabled], .button[disabled] {
     cursor: not-allowed;
     pointer-events: none;
 }
+table button {
+    padding: 0.2rem 0.5rem;
+}
 
 input[type="text"],
 input[type="password"],
