@@ -22,7 +22,7 @@
     </thead>
     <tbody>
         {% for user in users %}
-        <tr>
+        <tr id="uid-{{ user['uid'] }}">
             {% if has_role('notify') %}
             <td>
                 <input type="checkbox" id="user-{{ user['uid'] }}" value="{{ user['uid'] }}">

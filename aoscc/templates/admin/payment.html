@@ -119,7 +119,7 @@ form:has(#provider-other:not(:checked)) #provider {
     <tbody>
         {% for row in balance %}
         <tr>
-            <td>{{ row['uid'] }}</td>
+            <td>{{ row['uid'] | uid_link | safe }}</td>
             <td>{{ row['balance'] | price | safe }}</td>
             <td>{{ row['nick'] }}</td>
         </tr>

@@ -39,3 +39,7 @@ def dt2date(dt: datetime) -> str:
 def dt2datetime(dt: datetime) -> str:
     return dt.strftime(r'%Y-%m-%d %H:%M:%S')
 
+
+@bp.app_template_filter('uid_link')
+def uid_link(uid: int|str) -> str:
+    return f'<a target="_blank" href="{url_for('admin.user')}#uid-{uid}">{uid}</a>'

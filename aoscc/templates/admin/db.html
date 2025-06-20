@@ -72,8 +72,12 @@ textarea#sql {
     <tbody>
         {% for result in results %}
         <tr>
-            {% for value in result.values() %}
+            {% for key, value in result.items() %}
+            {% if key == 'uid' %}
+            <td>{{ value | uid_link | safe }}</td>
+            {% else %}
             <td>{{ value }}</td>
+            {% endif %}
             {% endfor %}
         </tr>
         {% endfor %}

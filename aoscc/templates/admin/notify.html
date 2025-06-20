@@ -70,7 +70,7 @@
     <tbody>
         {% for row in failed %}
         <tr>
-            <td>{{ row['uid'] }}</td>
+            <td>{{ row['uid'] | uid_link | safe }}</td>
             <td>{{ row['type'] }}</td>
             <td>{{ row['identity'] }}</td>
             <td>{{ row['nick'] }}</td>
