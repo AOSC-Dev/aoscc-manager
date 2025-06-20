@@ -86,6 +86,7 @@ def post_badge():
         if file.filename.lower().endswith('.png'):
             file.save(_my_badge_overlay())
             if _enlarge_overlay():
+                insert_dict('badge', {'uid': g.uid})
                 flash('上传成功，请查看效果预览！')
             else:
                 with suppress(OSError):
