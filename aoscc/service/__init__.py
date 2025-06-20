@@ -36,14 +36,17 @@ def index():
 
 @bp.post('/service/cancel')
 def post_cancel():
-    if g.arrived:
-        flash('您已完成签到，无法取消注册！')
-        return redirect(url_for('service.index'))
-    if volunteer.is_volunteer():
-        flash('您是已确认的志愿者，无法取消注册！请先联系会务组取消志愿者状态。')
-        return redirect(url_for('service.index'))
-    if accommo.is_booked():
-        flash('您已预订协议酒店，无法取消注册！请先至预订页面取消。')
+    try:
+        if g.arrived:
+            raise AssertionError('您已完成签到，无法取消注册！')
+        if g.register['remarks'].startswith('HOLD'):
+            raise AssertionError('您的注册处于被标记状态，请联系会务组取消！')
+        if volunteer.is_volunteer():
+            raise AssertionError('您是已确认的志愿者，无法取消注册！请先联系会务组取消志愿者状态。')
+        if accommo.is_booked():
+            raise AssertionError('您已预订协议酒店，无法取消注册！请先至预订页面取消。')
+    except AssertionError as msg:
+        flash(msg.args[0])
         return redirect(url_for('service.index'))
     badge.post_badge_del()  # need to delete PNG file
     delete_from('register', {'uid': g.uid})  # most tables will CASCADE delete
