@@ -16,6 +16,12 @@ class _against_regex:
 def cache_policy(response: Response):
     cache = response.cache_control
     cache.clear()
+
+    if request.endpoint == 'admin.checkin_badge':
+        cache.max_age = 60*3
+        cache.must_revalidate = True
+        return response
+
     if request.endpoint != 'static':
         cache.no_store = True
         cache.no_cache = True
@@ -24,7 +30,7 @@ def cache_policy(response: Response):
     url = request.path.removeprefix(current_app.static_url_path+'/')
     cache.public = True
     match _against_regex(url):
-        case 'normalize.css' | 'aosc.png':
+        case 'normalize.css' | 'aosc.png' | r'vote/.+':
             cache.max_age = 60*60*24*30
         case r'tshirt25/.+' | r'badge/.+':
             cache.max_age = 60*60
