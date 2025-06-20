@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, session
+from flask import Blueprint, render_template, redirect, url_for
 
 from ..util.grant import check_role, revoke_client
 
@@ -15,7 +15,7 @@ def index():
 
 @bp.get('/revoke')
 def revoke():
-    revoke_client(session['id'])
+    revoke_client()
     return redirect(url_for('admin.index'))
 
 

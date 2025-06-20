@@ -76,8 +76,8 @@ def add_role(client_id: str, role: str):
     insert_dict('grant', row)
 
 
-def revoke_client(client_id: str):
-    delete_from('grant', {'id': client_id})
+def revoke_client(client_id: str = None):
+    delete_from('grant', {'id': client_id or session['id']})
 
 
 ####################################################
