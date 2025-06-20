@@ -25,7 +25,7 @@ def post_volunteer():
 
 
 def is_volunteer() -> bool:
-    return (fetch_one('register', {'uid': g.uid}) or {}).get('status') == 1
+    return (fetch_one('volunteer', {'uid': g.uid}) or {}).get('status') == 1
 
 
 @bp.post('/volunteer/cancel')
