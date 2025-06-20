@@ -9,5 +9,5 @@ from . import bp
 @bp.get('/user')
 @check_role('*')
 def user():
-    users = fetch_all('user JOIN info USING(uid)')
+    users = fetch_all('user LEFT JOIN info USING(uid) LEFT JOIN register USING(uid)')
     return render_template('admin/user.html', users=users)

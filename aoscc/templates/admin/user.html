@@ -1,6 +1,16 @@
 {% extends "admin/index.html" %}
 {% block title %}用户列表{% endblock %}
 
+{% block css %}
+<style>
+td:empty::before {
+    content: '(empty)';
+    font-style: italic;
+    color: #777;
+}
+</style>
+{% endblock %}
+
 {% block page %}
 <h2>用户列表</h2>
 <table>
@@ -10,9 +20,10 @@
             <th></th>
             {% endif %}
             <th>ID</th>
+            <th>注册</th>
+            <th>昵称</th>
             <th>类型</th>
             <th>身份</th>
-            <th>昵称</th>
             <th>Telegram</th>
             <th>邮箱</th>
             <th>手机</th>
@@ -31,14 +42,23 @@
             <td>
                 <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
             </td>
+            <td>
+                {% if user['t'] %}
+                {% if user['arrived'] %}
+                已签到
+                {% else %}
+                已注册
+                {% endif %}
+                {% endif %}
+            </td>
+            <td>{{ user['nick'] or '' }}</td>
             <td>{{ user['type'] }}</td>
             <td>{{ user['identity'] }}</td>
-            <td>{{ user['nick'] }}</td>
-            <td>{{ user['telegram'] }}</td>
-            <td>{{ user['email'] }}</td>
-            <td>{{ user['phone'] }}</td>
-            <td>{{ user['qq'] }}</td>
-            <td>{{ user['wechat'] }}</td>
+            <td>{{ user['telegram'] or '' }}</td>
+            <td>{{ user['email'] or '' }}</td>
+            <td>{{ user['phone'] or '' }}</td>
+            <td>{{ user['qq'] or '' }}</td>
+            <td>{{ user['wechat'] or '' }}</td>
         </tr>
         {% endfor %}
     </tbody>
