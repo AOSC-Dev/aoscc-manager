@@ -46,7 +46,7 @@
 <script>
     document.getElementById('session').addEventListener('click', (event) => {
         navigator.clipboard.writeText(event.currentTarget.textContent);
-        alert('已复制！');
+        setTimeout(() => {alert('已复制！')}, 200);
     })
 </script>
 {% endblock %}
