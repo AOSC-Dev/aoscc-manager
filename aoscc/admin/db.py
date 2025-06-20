@@ -1,6 +1,6 @@
 from io import StringIO
 from csv import DictWriter
-from flask import render_template, request, make_response, flash
+from flask import render_template, request, make_response, flash, g
 
 from ..config import *
 from ..util.db import fetch_all, query_all
@@ -27,6 +27,7 @@ def db():
     )):
         try:
             results = query_all(form['sql'])  # excute query
+            g.db.commit()
         except Exception:
             flash('执行时出错！')
             results = []
