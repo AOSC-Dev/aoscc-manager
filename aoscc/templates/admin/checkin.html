@@ -28,7 +28,8 @@ article aside img {
 <form method="post" action="{{ url_for('admin.post_checkin') }}">
     <div class="form-row">
         <label for="token">扫描签到码</label>
-        <input type="password" id="token" name="token" required maxlength="200">
+        <input type="password" id="token" name="token" required
+            maxlength="200" autocomplete="off">
         </div>
     </div>
     <div class="form-row">
