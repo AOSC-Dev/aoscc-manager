@@ -28,7 +28,7 @@ def fetch_all(table: str, cond: dict = None) -> list[dict]:
     cond = cond or {}
     return query_all(
         f'SELECT * FROM {table} WHERE {(
-            " AND ".join(f"{k} = ?" for k in cond.keys())
+            " AND ".join(f"`{k}` = ?" for k in cond.keys())
         ) if cond else '1'}',
         tuple((cond or {}).values())
     )
@@ -41,10 +41,10 @@ def fetch_one(table: str, cond: dict = None) -> dict|None:
 
 def insert_dict(table: str, d: dict[str,str|int], commit: bool = True) -> int:
     cur = g.db.execute(  # Note: do not use INSERT OR REPLACE due to foreign key
-        f'INSERT INTO {table}({",".join(d.keys())})'
+        f'INSERT INTO {table}(`{"`,`".join(d.keys())}`)'
         f' VALUES({",".join(["?"]*len(d))})'
         f' ON CONFLICT DO UPDATE SET'  # UPSERT clasue for "replacing"
-        f' {",".join(f'{k}=excluded.{k}' for k in d.keys())}',
+        f' {",".join(f'`{k}`=excluded.`{k}`' for k in d.keys())}',
         tuple(d.values())
     )
     if commit:
@@ -54,7 +54,7 @@ def insert_dict(table: str, d: dict[str,str|int], commit: bool = True) -> int:
 
 def delete_from(table: str, cond: dict) -> int:
     cur = g.db.execute(
-        f'DELETE FROM {table} WHERE {" AND ".join(f"{k} = ?" for k in cond.keys())}',
+        f'DELETE FROM {table} WHERE {" AND ".join(f"`{k}` = ?" for k in cond.keys())}',
         tuple(cond.values())
     )
     g.db.commit()
