@@ -37,6 +37,7 @@ button, .button {
     padding: 0.5em 1em;
     border: none;
     border-radius: 2px;
+    line-height: 1.15;
     text-align: center;
     color: black;
     background-color: #ccc;
@@ -58,7 +59,7 @@ button[disabled], .button[disabled] {
     cursor: not-allowed;
     pointer-events: none;
 }
-table button {
+table button, table .button {
     padding: 0.2rem 0.5rem;
 }
 

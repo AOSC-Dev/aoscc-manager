@@ -10,7 +10,7 @@ from ..util.grant import check_role
 from . import bp
 
 
-@bp.post('/draw/<int:did>/end')
+@bp.post('/draw/<int:did>')
 @check_role('draw')
 def post_draw_end(did: int):
     if not (current := fetch_one('draw_info', {'did': did})):
@@ -23,7 +23,8 @@ def post_draw_end(did: int):
             tkts = fetch_all('draw_detail', {'did': did})
             tkts = sorted(tkts, key=lambda x: x['uid'])
             seed = bytes.fromhex(''.join(tkt['color'][1:] for tkt in tkts))
-            win_tkts = random.Random(seed).sample(tkts, min(current['count'], len(tkts)))
+            current['count'] = min(current['count'], len(tkts))
+            win_tkts = random.Random(seed).sample(tkts, current['count'])
             for win_tkt in win_tkts:
                 win_tkt['win'] = 1
                 insert_dict('draw_detail', win_tkt, commit=False)
@@ -35,7 +36,7 @@ def post_draw_end(did: int):
         finally:
             g.db.commit()
 
-    return redirect(url_for('admin.draw', did=did))
+    return redirect(url_for('admin.draw_live', did=did))
 
 
 @bp.post('/draw/new')
@@ -46,31 +47,20 @@ def post_new_draw():
         Field('份数', 'count', 1, 3, int, lambda x: 1<=x<=100),
     ):
         rowid = insert_dict('draw_info', form)
-    return redirect(url_for('admin.draw', did=rowid))
+    return redirect(url_for('admin.draw_live', did=rowid))
+
+
+@bp.get('/draw')
+@check_role('draw')
+def draw():
+    draws = fetch_all('draw_info')
+    return render_template('admin/draw.html', draws=draws)
 
 
 @bp.get('/draw/<int:did>')
-@bp.get('/draw', defaults={'did': None})
 @check_role('draw')
-def draw(did: int = None):
-    draws = fetch_all('draw_info')
-    current = None
-    if (did is not None) and not (current := fetch_one('draw_info', {'did': did})):
-        flash('抽奖不存在！')
-        return redirect(url_for('admin.draw'))
-
-    return render_template('admin/draw.html', draws=draws, current=current)
-
-
-@bp.get('/draw/<int:did>/live')
-@bp.get('/draw/live', defaults={'did': None})
-@check_role('draw')
-def draw_live(did: int = None):
-    if did is not None:
-        current = fetch_one('draw_info', {'did': did})
-    else:
-        current = (query_all('SELECT * FROM draw_info ORDER BY did DESC LIMIT 1') or [None])[0]
-    if not current:
+def draw_live(did: int):
+    if not (current := fetch_one('draw_info', {'did': did})):
         flash('抽奖不存在！')
         return redirect(url_for('admin.draw'))
 
@@ -79,10 +69,11 @@ def draw_live(did: int = None):
         ' WHERE did = ? ORDER BY uid',
         (current['did'],),
     )
-    seed = bytes.fromhex(''.join(tkt['color'][1:] for tkt in tkts))
-    rowsize = ceil(sqrt(len(tkts)))
 
-    return render_template(
-        'admin/draw-live.html',
-        current=current, tkts=tkts, seed=seed, rowsize=rowsize,
-    )
+    if current['ended']:
+        return render_template('admin/draw-result.html', current=current, tkts=tkts)
+    else:
+        return render_template(
+            'admin/draw-live.html',
+            current=current, tkts=tkts, rowsize=ceil(sqrt(len(tkts))),
+        )
