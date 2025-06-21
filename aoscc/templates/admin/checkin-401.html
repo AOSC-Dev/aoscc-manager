@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}签到{% endblock %}
+
+{% block main %}
+<h1>签到 - 权限不足</h1>
+<p>当前会话无权处理签到，您可点击下方按钮复制本页面链接。</p>
+<p><button id="copyurl" class="primary">复制签到链接</button></p>
+<script>
+    document.getElementById('copyurl').addEventListener('click', (event) => {
+        navigator.clipboard.writeText(location.href);
+        setTimeout(() => {alert('已复制！')}, 200);
+    })
+</script>
+{% endblock %}

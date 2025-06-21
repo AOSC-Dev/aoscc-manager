@@ -65,13 +65,10 @@ def post_checkin_user(uid: int):
 #@check_role('checkin')  # see below
 def post_checkin(token: str):
     if not has_role('checkin'):
-        return '<script>' \
-            'navigator.clipboard.writeText(location.href);' \
-            'setTimeout(() => {' \
-            '   alert("当前会话无权限，签到链接已复制到剪贴板！");' \
-            '   close();' \
-            '}, 500);' \
-            '</script>'
+        if token and request.method == 'GET':
+            return render_template('admin/checkin-401.html')
+        flash('角色权限不足。')
+        return redirect(url_for('admin.index'))
     token = request.form.get('token', token)
     try:
         if not isinstance(token, str):
