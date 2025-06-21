@@ -16,11 +16,12 @@ def post_info():
         Field('QQ', 'qq', 0, 15, str, True),
         Field('微信', 'wechat', 0, 30, str, True),
     ):
-        g.db.execute(
-            'UPDATE user SET nick = ? WHERE uid = ?',
-            (form.pop('nick'), g.uid),
-        )
-        g.db.commit()
+        if not g.arrived:
+            g.db.execute(
+                'UPDATE user SET nick = ? WHERE uid = ?',
+                (form.pop('nick'), g.uid),
+            )
+            g.db.commit()
         insert_dict('info', form|{'uid': g.uid})
         flash('保存成功！')
         return redirect(url_for('user.register'))

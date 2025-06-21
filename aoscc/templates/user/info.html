@@ -6,8 +6,14 @@
     <h2>怎么称呼您？</h2>
     <div class="form-row">
         <label for="nick">昵称</label>
-        <input type="text" id="nick" name="nick" required maxlength="50" value="{{ g.nick }}">
-        <div>用于在公开和私下场合中提及您。</div>
+        <input type="text" id="nick" name="nick" required maxlength="50"
+            {{ 'disabled' if g.arrived else '' }} value="{{ g.nick }}">
+        <div>
+            用于在公开和私下场合中提及您。
+            {% if g.arrived %}
+            <br>您已签到，如需修改请{{ CONTACT_US | safe }}。
+            {% endif %}
+        </div>
     </div>
     <script>
         document.getElementById('nick').addEventListener('input', (event) => {

@@ -76,6 +76,9 @@ select, textarea {
     border-radius: 2px;
     padding: 0.4rem;
 }
+input:disabled {
+    background-color: #8888;
+}
 @media screen and (prefers-color-scheme: dark) {
     ::-webkit-calendar-picker-indicator {
         filter: invert(93.33);
