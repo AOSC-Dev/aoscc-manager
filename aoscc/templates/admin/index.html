@@ -13,6 +13,9 @@
         {% if has_role('payment') %}
         <a class="button" href="{{ url_for('admin.payment') }}">支付</a>
         {% endif %}
+        {% if has_role('accommo') %}
+        <a class="button" href="{{ url_for('admin.accommo') }}">住宿</a>
+        {% endif %}
         {% if has_role('notify') %}
         <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
         {% endif %}

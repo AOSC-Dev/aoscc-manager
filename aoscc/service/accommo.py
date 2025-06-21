@@ -101,7 +101,7 @@ def post_accommo():
             raise ValueError
         price = ROOM_OFFERING[form['type']].price*(checkout-checkin).days
         if not form['group'].startswith('单独入住'):
-            price /= 2
+            price /= ROOM_OFFERING[form['type']].nguest
         bid = insert_dict('billing', {
             'uid': g.uid,
             'category': '住宿',
