@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, session, flash, request, s
 from ..config import *
 from ..util.db import fetch_all, insert_dict, fetch_one
 from ..util.form import Field, validate
-from ..util.grant import check_role
+from ..util.grant import check_role, has_role
 from ..util.verify import verify_msg
 from . import bp
 
@@ -24,6 +24,7 @@ def _get_pickup(uid: int, bid: int = None):
 
 @bp.post('/checkin/<int:uid>/pickup/<int:bid>')
 @bp.post('/checkin/<int:uid>/pickup/all', defaults={'bid': None})
+@check_role('checkin')
 def post_merch_pickup(uid: int, bid: int):
     if bid:
         if not (item := _get_pickup(uid, bid).get(bid)):
@@ -39,6 +40,7 @@ def post_merch_pickup(uid: int, bid: int):
 
 
 @bp.post('/checkin/<int:uid>')
+@check_role('checkin')
 def post_checkin_user(uid: int):
     # if user not exist, error will arise after redirect anyway
     if (row := fetch_one('register', {'uid': uid})) and (form := validate(
@@ -60,8 +62,16 @@ def post_checkin_user(uid: int):
 
 @bp.get('/checkin/<string:token>')
 @bp.post('/checkin', defaults={'token': None})
-@check_role('checkin')
+#@check_role('checkin')  # see below
 def post_checkin(token: str):
+    if not has_role('checkin'):
+        return '<script>' \
+            'navigator.clipboard.writeText(location.href);' \
+            'setTimeout(() => {' \
+            '   alert("当前会话无权限，签到链接已复制到剪贴板！");' \
+            '   close();' \
+            '}, 500);' \
+            '</script>'
     token = request.form.get('token', token)
     try:
         if not isinstance(token, str):

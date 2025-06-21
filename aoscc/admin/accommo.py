@@ -6,6 +6,7 @@ from flask import render_template, flash
 from ..config import *
 from ..util.db import query_all
 from ..util.form import parse_date
+from ..util.grant import check_role
 from . import bp
 
 
@@ -40,6 +41,7 @@ def _process_shared_group(guests: list[dict], k: int) -> list[tuple[dict]]:
 
 
 @bp.get('/accommo')
+@check_role('accommo')
 def accommo():
     vacancy = {name: type.vacancy for name, type in ROOM_OFFERING.items()}
     booking = query_all(
