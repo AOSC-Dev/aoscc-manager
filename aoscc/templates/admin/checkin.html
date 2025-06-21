@@ -99,7 +99,7 @@ article aside img {
             <label>住宿</label>
             <div>
                 {% if accommo %}
-                <strong>{{ accommo['room'] }}</strong>（{{ accommo['type'] }}）
+                <strong>{{ accommo['type'] }}</strong>（{{ accommo['group'] }}）
                 <br>
                 {{ accommo['checkin'] }} 入住 {{ accommo['checkout'] }} 退房
                 {% else %}
