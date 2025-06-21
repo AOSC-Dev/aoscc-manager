@@ -9,7 +9,7 @@
 form:has(input.private-room:checked) .shared-only {
     display: none;
 }
-form:has(#type-roommate:not(:checked)) .roommate-only {
+form:has(#group-roommate:not(:checked)) .roommate-only {
     display: none;
 }
 </style>
@@ -47,11 +47,11 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
 {% if form %}
 
 <h2>您的预订详情</h2>
-<p>房型：{{ form['room'] }}</p>
+<p>房型：{{ form['type'] }}</p>
 <p>日期：{{ form['checkin'] }} 入住，{{ form['checkout'] }} 退房</p>
 <p>
-    入住组别：{{ form['type'] }}
-    （当前组内共有：{{ get_ngroupmate(form['room'], form['type']) }} 人）
+    入住组别：{{ form['group'] }}
+    （当前组内共有：{{ get_ngroupmate(form['type'], form['group']) }} 人）
 </p>
 <p>联系手机：{{ form['phone'] }}</p>
 {% if form['other'] %}
@@ -82,16 +82,16 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
     <div class="form-row">
         <label for="contrib">入住房型</label>
         <div>
-            {% for room in ROOM_OFFERING.values() %}
+            {% for type in ROOM_OFFERING.values() %}
             <div class="sub-row">
-                <input type="radio" id="room-{{ room.name }}"
-                    class="{{ 'shared-room' if room.nguest > 1 else 'private-room' }}"
-                    name="room" value="{{ room.name }}" required>
-                <label for="room-{{ room.name }}">
-                    {{ room.name }}
-                    （{{ room.price | price | safe }}/晚/间
-                    {% if room.nguest > 1 %}，可拼住{% endif %}
-                    ，{{ vacancy_str(vacancy[room.name]) }}）
+                <input type="radio" id="type-{{ type.name }}"
+                    class="{{ 'shared-room' if type.nguest > 1 else 'private-room' }}"
+                    name="type" value="{{ type.name }}" required>
+                <label for="type-{{ type.name }}">
+                    {{ type.name }}
+                    （{{ type.price | price | safe }}/晚/间
+                    {% if type.nguest > 1 %}，可拼住{% endif %}
+                    ，{{ vacancy_str(vacancy[type.name]) }}）
                 </label>
             </div>
             {% endfor %}
@@ -116,43 +116,43 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
         <label for="contrib">入住方式</label>
         <div>
             <div class="sub-row">
-                <input type="radio" id="type-single" name="_type" required>
-                <label for="type-single">单独入住</label>
+                <input type="radio" id="group-single" name="_group" required>
+                <label for="group-single">单独入住</label>
             </div>
             <div class="sub-row shared-only">
-                <input type="radio" id="type-roommate" name="_type" required>
-                <label for="type-roommate">指定室友拼住</label>
+                <input type="radio" id="group-roommate" name="_group" required>
+                <label for="group-roommate">指定室友拼住</label>
             </div>
             <div class="sub-row shared-only">
-                <input type="radio" id="type-male" name="_type" required>
-                <label for="type-male">男士随机拼住</label>
+                <input type="radio" id="group-male" name="_group" required>
+                <label for="group-male">男士随机拼住</label>
             </div>
             <div class="sub-row shared-only">
-                <input type="radio" id="type-female" name="_type" required>
-                <label for="type-female">女士随机拼住</label>
+                <input type="radio" id="group-female" name="_group" required>
+                <label for="group-female">女士随机拼住</label>
             </div>
         </div>
         <div class="shared-only"><strong>注意：</strong>如您是未成年人，请勿选择随机拼住。</div>
     </div>
     <div class="form-row shared-only roommate-only">
         <label for="contrib">同住人配对</label>
-        <input type="text" id="type" name="type" required maxlength="20">
+        <input type="text" id="group" name="group" required maxlength="20">
         <div>请每组同住人在该处<strong>填写相同的内容</strong>，但注意和其他与会者区分。</div>
         <div>建议一方使用随机字符串，比如我们为你生成的占位文本，然后告知另一方填写相同内容。</div>
     </div>
     <script>
-        const input_type = document.getElementById('type');
+        const input_group = document.getElementById('group');
         function clearAccoType() {
-            document.querySelectorAll('input[name=_type]').forEach((elm) => {
+            document.querySelectorAll('input[name=_group]').forEach((elm) => {
                 elm.checked = false;
             })
-            input_type.value = '';
+            input_group.value = '';
         }
         document.querySelectorAll('input[type=radio].private-room').forEach((elm) => {
             elm.addEventListener('change', (event) => {
                 clearAccoType();
-                document.getElementById('type-single').checked = true;
-                document.getElementById('type-single').dispatchEvent(new Event('change'));
+                document.getElementById('group-single').checked = true;
+                document.getElementById('group-single').dispatchEvent(new Event('change'));
             })
         })
         document.querySelectorAll('input[type=radio].shared-room').forEach((elm) => {
@@ -160,17 +160,17 @@ form:has(#type-roommate:not(:checked)) .roommate-only {
                 clearAccoType();
             })
         })
-        document.getElementById('type-single').addEventListener('change', (event) => {
-            input_type.value = '单独入住{{ random_token }}';
+        document.getElementById('group-single').addEventListener('change', (event) => {
+            input_group.value = '单独入住{{ random_token }}';
         })
-        document.getElementById('type-male').addEventListener('change', (event) => {
-            input_type.value = '男士随机';
+        document.getElementById('group-male').addEventListener('change', (event) => {
+            input_group.value = '男士随机';
         })
-        document.getElementById('type-female').addEventListener('change', (event) => {
-            input_type.value = '女士随机';
+        document.getElementById('group-female').addEventListener('change', (event) => {
+            input_group.value = '女士随机';
         })
-        document.getElementById('type-roommate').addEventListener('change', (event) => {
-            input_type.value = '自选分组{{ random_token }}';
+        document.getElementById('group-roommate').addEventListener('change', (event) => {
+            input_group.value = '自选分组{{ random_token }}';
         })
     </script>
     <div class="form-row">

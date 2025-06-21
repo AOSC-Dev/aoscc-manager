@@ -30,39 +30,39 @@ def is_booked():
 
 def _get_vacancy() -> dict[str, dict[str, int]]:
     try:
-        v = {name: {'': room.vacancy} for name, room in ROOM_OFFERING.items()}
-        res = query_all('SELECT room, type, COUNT(*) AS cnt FROM accommo GROUP BY room, type')
+        v = {name: {'': type.vacancy} for name, type in ROOM_OFFERING.items()}
+        res = query_all('SELECT type, "group", COUNT(*) AS cnt FROM accommo GROUP BY type, "group"')
         for line in res:
-            room = ROOM_OFFERING[line['room']]
+            type = ROOM_OFFERING[line['type']]
             occupied_slots = line['cnt']
-            allocated_rooms = math.ceil(occupied_slots / room.nguest)
-            allocated_slots = allocated_rooms * room.nguest
+            allocated_rooms = math.ceil(occupied_slots / type.nguest)
+            allocated_slots = allocated_rooms * type.nguest
             available_slots = allocated_slots - occupied_slots
-            v[room.name][''] -= allocated_rooms
-            if available_slots and not line['type'].startswith('单独入住'):
-                v[room.name][line['type']] = available_slots
+            v[type.name][''] -= allocated_rooms
+            if available_slots and not line['group'].startswith('单独入住'):
+                v[type.name][line['group']] = available_slots
         return v
     except Exception:
         return {}
 
 
-def _vacancy_str(room: dict[str, int]) -> str:
-    if room[''] > 0:
-        return f'余 {room[""]} 间'
-    if len(room) == 1:
+def _vacancy_str(type: dict[str, int]) -> str:
+    if type[''] > 0:
+        return f'余 {type[""]} 间'
+    if len(type) == 1:
         return '已订完'
     ret = ['已无空房']
-    if '男士随机' in room:
-        ret.append(f'男士拼房余 {room["男士随机"]} 位')
-    if '女士随机' in room:
-        ret.append(f'女士拼房余 {room["女士随机"]} 位')
-    if any(k not in ('', '男士随机', '女士随机') for k in room.keys()):
+    if '男士随机' in type:
+        ret.append(f'男士拼房余 {type["男士随机"]} 位')
+    if '女士随机' in type:
+        ret.append(f'女士拼房余 {type["女士随机"]} 位')
+    if any(k not in ('', '男士随机', '女士随机') for k in type.keys()):
         ret.append('部分指定室友待拼')
     return '，'.join(ret)
 
 
-def get_ngroupmate(room: str, type: str) -> int:
-    return len(fetch_all('accommo', {'room': room, 'type': type}))
+def get_ngroupmate(type: str, group: str) -> int:
+    return len(fetch_all('accommo', {'type': type, 'group': group}))
 
 
 @bp.post('/accommo')
@@ -73,10 +73,10 @@ def post_accommo():
         return redirect(url_for('service.accommo'))
     try:
         form = validate(
-            Field('入住房型', 'room', 1, 10, str, lambda x: x in ROOM_OFFERING),
+            Field('入住房型', 'type', 1, 10, str, lambda x: x in ROOM_OFFERING),
             Field('入住日期', 'checkin', 10, 10, str, True),
             Field('退房日期', 'checkout', 10, 10, str, True),
-            Field('入住方式组别', 'type', 1, 20, str, True),
+            Field('入住方式组别', 'group', 1, 20, str, True),
             Field('手机号', 'phone', 11, 11, str, r'1\d{10}'),
             Field('备注', 'other', 0, 500, str, True),
             Field('必须同意预订条款！', 'consent', 2, 2, str, 'on'),
@@ -96,17 +96,17 @@ def post_accommo():
 
     try:
         g.db.execute('BEGIN EXCLUSIVE')
-        room = _get_vacancy()[form['room']]
-        if not ((room[''] > 0) or (room.get(form['type'], 0) > 0)):
+        type = _get_vacancy()[form['type']]
+        if not ((type[''] > 0) or (type.get(form['group'], 0) > 0)):
             raise ValueError
-        price = ROOM_OFFERING[form['room']].price*(checkout-checkin).days
-        if not form['type'].startswith('单独入住'):
+        price = ROOM_OFFERING[form['type']].price*(checkout-checkin).days
+        if not form['group'].startswith('单独入住'):
             price /= 2
         bid = insert_dict('billing', {
             'uid': g.uid,
             'category': '住宿',
             'item': f'协议酒店住宿：{checkin.day}-{checkout.day}日',
-            'spec': f'{form["room"]}-{form["type"]}',
+            'spec': f'{form["type"]}-{form["group"]}',
             'quantity': 1,
             'price': price,
         }, commit=False)
@@ -124,9 +124,11 @@ def post_accommo():
 @bp.post('/accommo/cancel')
 @accommo_open
 def post_accommo_cancel():
-    delete_from('billing', {'uid': g.uid, 'category': '住宿'})
-    # will CASCADE accommo
-    flash('取消成功！')
+    if delete_from('billing', {'uid': g.uid, 'category': '住宿', 'status': 0}):
+        # will CASCADE accommo
+        flash('取消成功！')
+    else:
+        flash('预订不存在或被标记，请联系会务组变更！')
     return redirect(url_for('service.accommo'))
 
 

@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS "pgp_sign" (
 CREATE TABLE IF NOT EXISTS "accommo" (
 	"bid"	INTEGER NOT NULL,
 	"uid"	INTEGER NOT NULL UNIQUE,
-	"room"	TEXT NOT NULL,
 	"type"	TEXT NOT NULL,
+	"group"	TEXT NOT NULL,
 	"checkin"	TEXT NOT NULL,
 	"checkout"	TEXT NOT NULL,
 	"phone"	TEXT NOT NULL,
