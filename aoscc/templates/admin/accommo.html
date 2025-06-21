@@ -82,7 +82,9 @@ main:has(#summary:checked) .detail {
             <td class="detail">{{ guest['other'] }}</td>
         </tr>
         {% endfor %}
-        <tr><td colspan="100"><small>组别：{{ room[0]['group'] }}</small></td></tr>
+        <tr class="blank">
+            <td colspan="100"><small>组别：{{ room[0]['group'] }}</small></td>
+        </tr>
     </tbody>
     <tr class="blank"><td colspan="100">&nbsp;</td></tr>
     {% endfor %}
