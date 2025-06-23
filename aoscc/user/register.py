@@ -30,6 +30,8 @@ def check_citizen_id(id: str) -> bool:
 def post_register():
     if g.registered:  # no slience update, use cancellation
         flash('信息已存在！')
+    elif g.register:
+        flash('账号状态标记异常，请联系会务组！')
     elif form := validate(
         Field('真实姓名', 'legal_name', 1, 20, str, True),
         Field('身份证号', 'citizen_id', 18, 18, lambda x: str(x).upper(), check_citizen_id),

@@ -67,12 +67,14 @@ article aside img {
         <div class="form-row">
             <label>签到时间</label>
             <div>
-                {% if row['arrived'] %}
+                {% if row['arrived'] > 0 %}
                 {{ row['arrived'] | ts2dt | datetime }}
                 <button type="submit" class="danger" name="action" value="cancel"
                     onclick="return confirm('确定要撤销签到？')">
                     撤销签到
                 </button>
+                {% elif row['arrived'] < 0 %}
+                <strong style="color: red">状态异常</strong>
                 {% else %}
                 尚未签到
                 <button type="submit" class="primary" name="action" value="checkin">

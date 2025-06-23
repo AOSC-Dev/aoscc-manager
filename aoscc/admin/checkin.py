@@ -44,7 +44,7 @@ def post_merch_pickup(uid: int, bid: int):
 def post_checkin_user(uid: int):
     # if user not exist, error will arise after redirect anyway
     if (row := fetch_one('register', {'uid': uid})) and (form := validate(
-        Field('操作', 'action', 1, 10, str, ('checkin', 'cancel', 'save')),
+        Field('操作', 'action', 1, 20, str, ('checkin', 'cancel', 'save', 'set_abnormal')),
         Field('会务备注', 'remarks', 0, 500, str, True),
     )):
         match form['action']:
@@ -52,6 +52,8 @@ def post_checkin_user(uid: int):
                 row['arrived'] = int(time())
             case 'cancel':
                 row['arrived'] = 0
+            case 'set_abnormal':
+                row['arrived'] = -1
             case 'save':
                 row['remarks'] = form['remarks']
                 flash('已保存！')
