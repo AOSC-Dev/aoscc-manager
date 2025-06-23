@@ -15,8 +15,8 @@ from . import bp
 @check_role('admin')
 def db():
     tables = sorted([
-        row['name']
-        for row in fetch_all('sqlite_master', {'type': 'table'})
+        row['name'] for row in
+        fetch_all('sqlite_master', {'type': 'table'})
     ])
     form = {}
     results = []

@@ -25,7 +25,7 @@ def post_vote(vid: int):
 def vote():
     actives = fetch_all('vote_info', {'ended': 0})
     votes = {
-        row['vid']: row 
-        for row in fetch_all('vote_detail JOIN vote_info USING(vid)', {'uid': g.uid})
+        row['vid']: row for row in
+        fetch_all('vote_detail JOIN vote_info USING(vid)', {'uid': g.uid})
     }
     return render_template('service/vote.html', actives=actives, votes=votes)

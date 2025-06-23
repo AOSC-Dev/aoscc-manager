@@ -18,8 +18,8 @@ def post_vote_end(vid: int):
         try:
             g.db.execute('BEGIN EXCLUSIVE')
             result = {
-                row['vote']: row['cnt']
-                for row in query_all(
+                row['vote']: row['cnt'] for row in
+                query_all(
                     'SELECT vote, COUNT(*) AS cnt FROM vote_detail WHERE vid = ? GROUP BY vote',
                     (current['vid'],),
                 )

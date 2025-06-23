@@ -27,8 +27,8 @@ def post_draw(did: int):
 def draw():
     actives = fetch_all('draw_info', {'ended': 0})
     mytkts = {
-        row['did']: row 
-        for row in fetch_all('draw_detail JOIN draw_info USING(did)', {'uid': g.uid})
+        row['did']: row for row in
+        fetch_all('draw_detail JOIN draw_info USING(did)', {'uid': g.uid})
     }
     return render_template(
         'service/draw.html',

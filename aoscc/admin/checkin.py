@@ -13,8 +13,8 @@ from . import bp
 
 def _get_pickup(uid: int, bid: int = None):
     return {
-        row['bid']: row
-        for row in fetch_all('billing', {
+        row['bid']: row for row in
+        fetch_all('billing', {
             'uid': uid,
             'category': '纪念品',
             'status': 1,
