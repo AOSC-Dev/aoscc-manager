@@ -36,7 +36,8 @@ GLOBAL_LIMIT = (100, 50/60/60)
 PERIP_LIMIT = (2, 6/60/60)
 
 ## services
-REGISTER_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
+REGISTER_OPEN = False
+REGISTER_SOFT = datetime(2025, 7, 15, 21, 0, 0)
 BADGE_CLOSE = datetime(2025, 7, 15, 21, 0, 0)
 ACCOMMO_CLOSE = datetime(2025, 7, 22, 12, 0, 0)
 Room = namedtuple('Room', 'name,nguest,price,vacancy')

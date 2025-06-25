@@ -105,4 +105,5 @@ def checkin(uid: int):
         badge = fetch_one('badge', {'uid': uid})
         merch = _get_pickup(uid).values()
         shipped = fetch_all('billing', {'uid': uid, 'category': '纪念品', 'status': 2})
+        notready = fetch_all('billing', {'uid': uid, 'category': '纪念品', 'status': 0})
     return render_template('admin/checkin.html', **locals())

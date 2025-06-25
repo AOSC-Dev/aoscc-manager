@@ -2,8 +2,17 @@
 {% block title %}参会注册{% endblock %}
 
 {% block page %}
+
+{% if 'NOREG' in g.remarks %}
+<h2>错误</h2>
+<p>当前用户暂时无法注册，请{{ CONTACT_US | safe }}。</p>
+{% elif 'REGOK' not in g.remarks and not REGISTER_OPEN %}
+<h2>注册未开放</h2>
+<p>当前不在注册开放时间，注册开放信息请关注<a href="https://aosc.io/contact" target="_blank">社区各主要频道</a>。</p>
+<p>如有疑问，请{{ CONTACT_US | safe }}。</p>
+{% else %}
 <div class="infobox">
-    <p>提示：若要获取会议纪念品，请于 {{ REGISTER_CLOSE | datetime }} 之前完成注册。</p>
+    <p>提示：若要获取会议纪念品，请于 {{ REGISTER_SOFT | datetime }} 之前完成注册。</p>
 </div>
 <form method="post" autocomplete="off">
     <h2>实名登记</h2>
@@ -45,4 +54,6 @@
         </div>
     </div>
 </form>
+{% endif %}
+
 {% endblock %}

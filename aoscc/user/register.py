@@ -28,7 +28,11 @@ def check_citizen_id(id: str) -> bool:
 
 @bp.post('/register')
 def post_register():
-    if g.registered:  # no slience update, use cancellation
+    if 'NOREG' in g.remarks:
+        flash('当前用户禁止注册！')
+    elif 'REGOK' not in g.remarks and not REGISTER_OPEN:
+        flash('当前不在注册开放时间！')
+    elif g.registered:  # no slience update, use cancellation
         flash('信息已存在！')
     elif form := validate(
         Field('真实姓名', 'legal_name', 1, 20, str, True),
