@@ -44,10 +44,8 @@ td:empty::before {
             </td>
             <td>
                 {% if user['t'] %}
-                {% if user['arrived'] > 0 %}
+                {% if user['arrived'] %}
                 已签到
-                {% elif user['arrived'] < 0 %}
-                异常
                 {% else %}
                 已注册
                 {% endif %}

@@ -67,14 +67,12 @@ article aside img {
         <div class="form-row">
             <label>签到时间</label>
             <div>
-                {% if row['arrived'] > 0 %}
+                {% if row['arrived'] %}
                 {{ row['arrived'] | ts2dt | datetime }}
                 <button type="submit" class="danger" name="action" value="cancel"
                     onclick="return confirm('确定要撤销签到？')">
                     撤销签到
                 </button>
-                {% elif row['arrived'] < 0 %}
-                <strong style="color: red">状态异常</strong>
                 {% else %}
                 尚未签到
                 <button type="submit" class="primary" name="action" value="checkin">
@@ -122,7 +120,7 @@ article aside img {
         <div class="form-row">
             <label for="remarks">会务备注</label>
             <textarea id="remarks" name="remarks" rows="5" maxlength="500">{{ row['remarks'] }}</textarea>
-            <div>在第一行填写 HOLD 可阻止用户自行取消注册。</div>
+            <div>REGOK 允许用户注册 NOREG 禁止用户注册 HOLD 禁止取消注册</div>
         </div>
         <div class="form-row">
             <label></label>
