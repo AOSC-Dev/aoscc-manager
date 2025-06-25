@@ -25,7 +25,7 @@ def check_grant():
         # grant['user'] = __import__('random').choice(fetch_all('register'))['uid']
         if grant['user'] and (user := fetch_one('user', {'uid': grant['user']})):
             for k, v in user.items():
-                setattr(g, k, v)  # load user info (uid, type, identity, nick)
+                setattr(g, k, v)  # load user info (uid, type, identity, nick, remarks)
         g.roles = set(filter(bool, grant['roles'].split(',')))
     except Exception:
         # id not set or expired, reset new id

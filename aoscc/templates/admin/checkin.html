@@ -38,7 +38,7 @@ article aside img {
     </div>
 </form>
 
-{% if row %}
+{% if user %}
 <h2>用户信息</h2>
 <article>
     <form method="post">
@@ -50,25 +50,29 @@ article aside img {
         {% endif %}
         <div class="form-row">
             <label>用户 ID</label>
-            <div>{{ row['uid'] }}</div>
+            <div>{{ user['uid'] }}</div>
         </div>
         <div class="form-row">
             <label>昵称</label>
-            <div><strong>{{ row['nick'] }}</strong></div>
+            <div><strong>{{ user['nick'] }}</strong></div>
         </div>
         <div class="form-row">
             <label>登录身份</label>
-            <div>{{ row['type'] }}:{{ row['identity'] }}</div>
+            <div>{{ user['type'] }}:{{ user['identity'] }}</div>
         </div>
         <div class="form-row">
             <label>注册时间</label>
-            <div>{{ row['t'] | ts2dt | datetime }}</div>
+        {% if not register %}
+            <div>尚未注册</div>
+        </div>
+        {% else %}
+            <div>{{ register['t'] | ts2dt | datetime }}</div>
         </div>
         <div class="form-row">
             <label>签到时间</label>
             <div>
-                {% if row['arrived'] %}
-                {{ row['arrived'] | ts2dt | datetime }}
+                {% if register['arrived'] %}
+                {{ register['arrived'] | ts2dt | datetime }}
                 <button type="submit" class="danger" name="action" value="cancel"
                     onclick="return confirm('确定要撤销签到？')">
                     撤销签到
@@ -117,9 +121,10 @@ article aside img {
                 {% endif %}
             </div>
         </div>
+        {% endif %}
         <div class="form-row">
             <label for="remarks">会务备注</label>
-            <textarea id="remarks" name="remarks" rows="5" maxlength="500">{{ row['remarks'] }}</textarea>
+            <textarea id="remarks" name="remarks" rows="5" maxlength="500">{{ user['remarks'] }}</textarea>
             <div>REGOK 允许用户注册 NOREG 禁止用户注册 HOLD 禁止取消注册</div>
         </div>
         <div class="form-row">

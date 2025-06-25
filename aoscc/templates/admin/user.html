@@ -21,6 +21,7 @@ td:empty::before {
             {% endif %}
             <th>ID</th>
             <th>注册</th>
+            <th></th>
             <th>昵称</th>
             <th>类型</th>
             <th>身份</th>
@@ -43,16 +44,14 @@ td:empty::before {
                 <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
             </td>
             <td>
-                {% if user['t'] %}
                 {% if user['arrived'] %}
                 已签到
-                {% else %}
+                {% elif user['t'] %}
                 已注册
                 {% endif %}
-                {% if has_role('checkin') %}
-                <a href="{{ url_for('admin.checkin', uid=user['uid']) }}">签到</a>
-                {% endif %}
-                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('admin.checkin', uid=user['uid']) }}">详情</a>
             </td>
             <td>{{ user['nick'] or '' }}</td>
             <td>{{ user['type'] }}</td>

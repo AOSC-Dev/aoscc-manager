@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"uid"	INTEGER NOT NULL,
 	"type"	TEXT NOT NULL,
 	"identity"	TEXT NOT NULL,
-	"nick"	TEXT NOT NULL DEFAULT "",
+	"nick"	TEXT NOT NULL DEFAULT '',
+	"remarks"	TEXT NOT NULL DEFAULT '',
 	UNIQUE("type","identity"),
 	PRIMARY KEY("uid")
 );
@@ -58,7 +59,6 @@ CREATE TABLE IF NOT EXISTS "register" (
 	"legal_id"	BLOB NOT NULL,
 	"arrived"	INTEGER NOT NULL DEFAULT 0,
 	"t"	INTEGER NOT NULL DEFAULT (UNIXEPOCH()),
-	"remarks"	TEXT NOT NULL DEFAULT '',
 	PRIMARY KEY("uid"),
 	FOREIGN KEY("uid") REFERENCES "user"("uid") ON UPDATE CASCADE ON DELETE CASCADE
 );

@@ -39,8 +39,8 @@ def post_cancel():
     try:
         if g.arrived:
             raise AssertionError('您已完成签到，无法取消注册！')
-        if g.register['remarks'].startswith('HOLD'):
-            raise AssertionError('您的注册处于被标记状态，请联系会务组取消！')
+        if 'HOLD' in g.remarks:
+            raise AssertionError('您的注册被标记，请联系会务组取消！')
         if volunteer.is_volunteer():
             raise AssertionError('您是已确认的志愿者，无法取消注册！请先联系会务组取消志愿者状态。')
         if accommo.is_booked():

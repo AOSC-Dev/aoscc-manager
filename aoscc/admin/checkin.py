@@ -1,7 +1,7 @@
 from time import time
 from pathlib import Path
 
-from flask import render_template, redirect, url_for, session, flash, request, send_file, current_app
+from flask import render_template, redirect, url_for, session, flash, request, send_file, current_app, g
 
 from ..config import *
 from ..util.db import fetch_all, insert_dict, fetch_one
@@ -42,20 +42,19 @@ def post_merch_pickup(uid: int, bid: int):
 @bp.post('/checkin/<int:uid>')
 @check_role('checkin')
 def post_checkin_user(uid: int):
-    # if user not exist, error will arise after redirect anyway
-    if (row := fetch_one('register', {'uid': uid})) and (form := validate(
+    # if user not exist, nothing happen, and error will arise after redirect
+    if form := validate(
         Field('操作', 'action', 1, 10, str, ('checkin', 'cancel', 'save')),
         Field('会务备注', 'remarks', 0, 500, str, True),
-    )):
+    ):
         match form['action']:
             case 'checkin':
-                row['arrived'] = int(time())
+                g.db.execute('UPDATE register SET arrived = ? WHERE uid = ?', (int(time()), uid))
             case 'cancel':
-                row['arrived'] = 0
+                g.db.execute('UPDATE register SET arrived = 0 WHERE uid = ?', (uid,))
             case 'save':
-                row['remarks'] = form['remarks']
-                flash('已保存！')
-        insert_dict('register', row)
+                g.db.execute('UPDATE user SET remarks = ? WHERE uid = ?', (form['remarks'], uid))
+        g.db.commit()
 
     return redirect(url_for('admin.checkin', uid=uid))
 
@@ -97,9 +96,10 @@ def checkin_badge(uid: int):
 def checkin(uid: int):
     if uid is not None:
         scanned = (('checkin', str(uid)) == verify_msg(session.get('_last_checkin_token')))
-        if not (row := fetch_one('register JOIN user USING(uid)', {'uid': uid})):
+        if not (user := fetch_one('user', {'uid': uid})):
             flash('用户不存在！')
             return redirect(url_for('admin.checkin'))
+        register = fetch_one('register', {'uid': uid})
         volunteer = fetch_one('volunteer', {'uid': uid, 'status': 1})
         accommo = fetch_one('accommo', {'uid': uid})
         badge = fetch_one('badge', {'uid': uid})
