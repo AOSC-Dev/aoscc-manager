@@ -8,7 +8,7 @@
 <nav>
     <div>
         {% if has_role('*') %}
-        <a class="button" href="{{ url_for('admin.user') }}">用户</a>
+        <a class="button" href="{{ url_for('admin.users') }}">用户</a>
         {% endif %}
         {% if has_role('payment') %}
         <a class="button" href="{{ url_for('admin.payment') }}">支付</a>
@@ -20,7 +20,7 @@
         <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
         {% endif %}
         {% if has_role('checkin') %}
-        <a class="button" href="{{ url_for('admin.checkin') }}">签到</a>
+        <a class="button" href="{{ url_for('admin.user') }}">签到</a>
         {% endif %}
         {% if has_role('vote') %}
         <a class="button" href="{{ url_for('admin.vote') }}">投票</a>

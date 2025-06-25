@@ -17,7 +17,7 @@ def cache_policy(response: Response):
     cache = response.cache_control
     cache.clear()
 
-    if request.endpoint == 'admin.checkin_badge':
+    if request.endpoint == 'admin.user_badge':
         cache.max_age = 60*3
         cache.must_revalidate = True
         return response

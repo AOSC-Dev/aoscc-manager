@@ -1,13 +1,55 @@
-from flask import render_template
+from time import time
+from pathlib import Path
+
+from flask import render_template, flash, redirect, url_for, session, g, send_file, current_app
 
 from ..config import *
-from ..util.db import fetch_all
-from ..util.grant import check_role
+from ..util.db import fetch_all, fetch_one
+from ..util.form import Field, validate
+from ..util.grant import check_role, has_role
+from ..util.verify import verify_msg
 from . import bp
 
 
-@bp.get('/user')
+@bp.post('/user/<int:uid>')
 @check_role('*')
-def user():
+def post_user_remarks(uid: int):
+    if form := validate(
+        Field('会务备注', 'remarks', 0, 500, str, True),
+    ):
+        g.db.execute('UPDATE user SET remarks = ? WHERE uid = ?', (form['remarks'], uid))
+        g.db.commit()
+    return redirect(url_for('admin.user', uid=uid))
+
+
+@bp.get('/user/<int:uid>/badge')
+@check_role('*')
+def user_badge(uid: int):
+    return send_file(Path(current_app.instance_path) / 'badges' / f'{uid}.png', 'image/png')
+
+
+@bp.get('/user/<int:uid>')
+@bp.get('/user', defaults={'uid': None})
+@check_role('*')
+def user(uid: int):
+    if uid is not None:
+        scanned = (('checkin', str(uid)) == verify_msg(session.get('_last_checkin_token')))
+        if not (user := fetch_one('user', {'uid': uid})):
+            flash('用户不存在！')
+            return redirect(url_for('admin.user' if has_role('checkin') else 'admin.users'))
+        register = fetch_one('register', {'uid': uid})
+        volunteer = fetch_one('volunteer', {'uid': uid, 'status': 1})
+        accommo = fetch_one('accommo', {'uid': uid})
+        badge = fetch_one('badge', {'uid': uid})
+        merch = fetch_all('billing', {'uid': uid, 'category': '纪念品'})
+        ready    = list(filter(lambda x: x['status'] == 1, merch))
+        shipped  = list(filter(lambda x: x['status'] == 2, merch))
+        notready = list(filter(lambda x: x['status'] == 0, merch))
+    return render_template('admin/user.html', **locals())
+
+
+@bp.get('/list')
+@check_role('*')
+def users():
     users = fetch_all('user LEFT JOIN info USING(uid) LEFT JOIN register USING(uid)')
-    return render_template('admin/user.html', users=users)
+    return render_template('admin/list.html', users=users)

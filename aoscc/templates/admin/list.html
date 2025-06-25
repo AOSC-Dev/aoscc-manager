@@ -1,0 +1,89 @@
+{% extends "admin/index.html" %}
+{% block title %}用户列表{% endblock %}
+
+{% block css %}
+<style>
+td:empty::before {
+    content: '(empty)';
+    font-style: italic;
+    color: #777;
+}
+</style>
+{% endblock %}
+
+{% block page %}
+<h2>用户列表</h2>
+<table>
+    <thead>
+        <tr>
+            {% if has_role('notify') %}
+            <th></th>
+            {% endif %}
+            <th>ID</th>
+            <th>注册</th>
+            <th></th>
+            <th>昵称</th>
+            <th>类型</th>
+            <th>身份</th>
+            <th>Telegram</th>
+            <th>邮箱</th>
+            <th>手机</th>
+            <th>QQ</th>
+            <th>微信</th>
+            <th>会务备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr id="uid-{{ user['uid'] }}">
+            {% if has_role('notify') %}
+            <td>
+                <input type="checkbox" id="user-{{ user['uid'] }}" value="{{ user['uid'] }}">
+            </td>
+            {% endif %}
+            <td>
+                <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
+            </td>
+            <td>
+                {% if user['arrived'] %}
+                已签到
+                {% elif user['t'] %}
+                已注册
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('admin.user', uid=user['uid']) }}">详情</a>
+            </td>
+            <td>{{ user['nick'] or '' }}</td>
+            <td>{{ user['type'] }}</td>
+            <td>{{ user['identity'] }}</td>
+            <td>{{ user['telegram'] or '' }}</td>
+            <td>{{ user['email'] or '' }}</td>
+            <td>{{ user['phone'] or '' }}</td>
+            <td>{{ user['qq'] or '' }}</td>
+            <td>{{ user['wechat'] or '' }}</td>
+            <td>{{ user['remarks'] or '' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if has_role('notify') %}
+<form method="get" action="{{ url_for('admin.notify') }}">
+    <input type="hidden" id="uids" name="uids">
+    <p><button type="submit" class="primary">向选中的用户发送通知</button></p>
+</form>
+<script>
+document.querySelectorAll('input[type=checkbox]').forEach((elm) => {
+    elm.addEventListener('change', (event) => {
+        let uids = '';
+        document.querySelectorAll('input[type=checkbox]:checked').forEach((elm) => {
+            uids = uids + elm.value + ','
+        })
+        document.getElementById('uids').value = uids;
+    })
+})
+</script>
+{% endif %}
+
+{% endblock %}

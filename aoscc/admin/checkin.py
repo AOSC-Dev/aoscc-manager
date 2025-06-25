@@ -1,62 +1,39 @@
 from time import time
-from pathlib import Path
 
-from flask import render_template, redirect, url_for, session, flash, request, send_file, current_app, g
+from flask import render_template, redirect, url_for, session, flash, request, g
 
 from ..config import *
-from ..util.db import fetch_all, insert_dict, fetch_one
 from ..util.form import Field, validate
 from ..util.grant import check_role, has_role
 from ..util.verify import verify_msg
 from . import bp
 
 
-def _get_pickup(uid: int, bid: int = None):
-    return {
-        row['bid']: row for row in
-        fetch_all('billing', {
-            'uid': uid,
-            'category': '纪念品',
-            'status': 1,
-        } | ({'bid': bid} if bid else {}))
-    }
-
-
 @bp.post('/checkin/<int:uid>/pickup/<int:bid>')
 @bp.post('/checkin/<int:uid>/pickup/all', defaults={'bid': None})
 @check_role('checkin')
 def post_merch_pickup(uid: int, bid: int):
-    if bid:
-        if not (item := _get_pickup(uid, bid).get(bid)):
-            flash('指定的项目不存在或状态错误！')
-        else:
-            item['status'] = 2
-            insert_dict('billing', item)
-    else:
-        for item in _get_pickup(uid).values():
-            item['status'] = 2
-            insert_dict('billing', item)
-    return redirect(url_for('admin.checkin', uid=uid))
+    g.db.execute(
+        'UPDATE billing SET status = 2 WHERE category = "纪念品" AND status = 1'
+        ' AND uid = ?' + (' AND bid = ?' if bid else ''),
+        (uid,) + ((bid,) if bid else ())
+    )
+    g.db.commit()
+    return redirect(url_for('admin.user', uid=uid))
 
 
 @bp.post('/checkin/<int:uid>')
 @check_role('checkin')
-def post_checkin_user(uid: int):
-    # if user not exist, nothing happen, and error will arise after redirect
+def post_user_checkin(uid: int):
     if form := validate(
-        Field('操作', 'action', 1, 10, str, ('checkin', 'cancel', 'save')),
-        Field('会务备注', 'remarks', 0, 500, str, True),
+        Field('操作', 'action', 1, 10, str, ('checkin', 'cancel')),
     ):
-        match form['action']:
-            case 'checkin':
-                g.db.execute('UPDATE register SET arrived = ? WHERE uid = ?', (int(time()), uid))
-            case 'cancel':
-                g.db.execute('UPDATE register SET arrived = 0 WHERE uid = ?', (uid,))
-            case 'save':
-                g.db.execute('UPDATE user SET remarks = ? WHERE uid = ?', (form['remarks'], uid))
+        g.db.execute(
+            'UPDATE register SET arrived = ? WHERE uid = ?',
+            (int(time()) if (form['action'] == 'checkin') else 0, uid)
+        )
         g.db.commit()
-
-    return redirect(url_for('admin.checkin', uid=uid))
+    return redirect(url_for('admin.user', uid=uid))
 
 
 @bp.get('/checkin/<string:token>')
@@ -68,6 +45,7 @@ def post_checkin(token: str):
             return render_template('admin/checkin-401.html')
         flash('角色权限不足。')
         return redirect(url_for('admin.index'))
+
     token = request.form.get('token', token)
     try:
         if not isinstance(token, str):
@@ -78,32 +56,7 @@ def post_checkin(token: str):
             if typ != 'checkin':
                 raise AssertionError
             session['_last_checkin_token'] = token
-            return redirect(url_for('admin.checkin', uid=int(msg)))
+            return redirect(url_for('admin.user', uid=int(msg)))
     except AssertionError:
         flash('无效签到码！')
-        return redirect(url_for('admin.checkin'))
-
-
-@bp.get('/checkin/<int:uid>/badge')
-@check_role('checkin')
-def checkin_badge(uid: int):
-    return send_file(Path(current_app.instance_path) / 'badges' / f'{uid}.png', 'image/png')
-
-
-@bp.get('/checkin/<int:uid>')
-@bp.get('/checkin', defaults={'uid': None})
-@check_role('checkin')
-def checkin(uid: int):
-    if uid is not None:
-        scanned = (('checkin', str(uid)) == verify_msg(session.get('_last_checkin_token')))
-        if not (user := fetch_one('user', {'uid': uid})):
-            flash('用户不存在！')
-            return redirect(url_for('admin.checkin'))
-        register = fetch_one('register', {'uid': uid})
-        volunteer = fetch_one('volunteer', {'uid': uid, 'status': 1})
-        accommo = fetch_one('accommo', {'uid': uid})
-        badge = fetch_one('badge', {'uid': uid})
-        merch = _get_pickup(uid).values()
-        shipped = fetch_all('billing', {'uid': uid, 'category': '纪念品', 'status': 2})
-        notready = fetch_all('billing', {'uid': uid, 'category': '纪念品', 'status': 0})
-    return render_template('admin/checkin.html', **locals())
+        return redirect(url_for('admin.user'))

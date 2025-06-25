@@ -42,4 +42,4 @@ def dt2datetime(dt: datetime) -> str:
 
 @bp.app_template_filter('uid_link')
 def uid_link(uid: int|str) -> str:
-    return f'<a target="_blank" href="{url_for('admin.user')}#uid-{uid}">{uid}</a>'
+    return f'<a target="_blank" href="{url_for('admin.users')}#uid-{uid}">{uid}</a>'
