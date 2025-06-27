@@ -79,6 +79,11 @@ h3 ~ p:not(.noindent) {
 
 {% if not g.arrived %}
 <h2>取消注册</h2>
+    {% if not REGISTER_OPEN %}
+    <div class="infobox warning">
+        <p>注意！当前不在注册开放时间，取消后可能无法重新注册！</p>
+    </div>
+    {% endif %}
     <p>如需取消注册，请点击下方按钮，我们将立即删除您的实名信息。</p>
     <form method="post" action="{{ url_for('service.post_cancel') }}"
         onsubmit="return confirm('取消注册将同时删除您已填写的注册及参会服务信息，您确定要取消注册吗？')">
