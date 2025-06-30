@@ -4,10 +4,10 @@ import secrets
 import functools
 from time import time
 
-from flask import session, g, flash, redirect, url_for
+from flask import session, g, flash, redirect, url_for, Response
 
 from ..config import *
-from .db import fetch_one, fetch_all, insert_dict, delete_from
+from .db import fetch_one, insert_dict, delete_from
 from . import bp
 
 
@@ -31,6 +31,12 @@ def check_grant():
         # id not set or expired, reset new id
         session['id'] = secrets.token_hex(16)
         session.permanent = True
+
+
+@bp.after_app_request
+def log_trace_header(response: Response):
+    response.headers.add('X-Log-Trace', f'{session['id']}:{g.uid or 0}')
+    return response
 
 
 def update_grant():
