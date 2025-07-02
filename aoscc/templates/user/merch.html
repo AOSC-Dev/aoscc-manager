@@ -77,27 +77,16 @@ dialog img {
 {% block page %}
 
 <h2>橱窗</h2>
-<div class="infobox">
-    <p>
-        提示：
-        {% if is_open %}
-        本轮订购将于 {{ MERCH_CLOSE | datetime }} 结束。
-        {% else %}
-        纪念品订购已截止，请留意后续发布的社区资讯，参与纪念品与周边通贩。
-        {% endif %}
-    </p>
-</div>
-
 <article>
     {% for item in INVENTORY.values() %}
     <section>
-        <div><img src="{{ url_for('static', filename=item.img) }}"></div>
+        <div><img src="{{ url_for('static', filename='merch/'+item.img) }}"></div>
         <div>
             <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
             <p>{{ item.desc | safe }}</p>
-            {% if is_open and item.sku %}
+            {% if NOW() < item.cutoff and item.sku %}
             <form method="post" action="{{ url_for('user.post_merch_buy') }}">
-                {% if item.sku and '' not in item.sku %}
+                {% if '' not in item.sku %}
                 <select name="sku">
                     {% for sku in item.sku %}
                     <option value="{{ sku }}">{{ sku }}</option>
@@ -136,20 +125,14 @@ dialog img {
 <div class="infobox">
     <p>提示：您已注册 {{ TITLE }}，如计划在会场领取订购的纪念品，无需填写地址。</p>
 </div>
-{% endif %}
-{% if items %}
-{% if not form and not g.registered %}
+{% elif items and not form %}
 <div class="infobox error">
     <p><strong>注意！</strong>您还未填写收货信息，也未注册会议！</p>
 </div>
 {% endif %}
-{% if form and not is_open %}
-<div class="infobox warning">
-    <p>提示：纪念品订购已截止，我们已在处理商铺发货。若已寄出，上述收货信息修改可能无法生效，如有需要，请{{ CONTACT_US | safe }}。</p>
-</div>
-{% endif %}
-{% endif %}
 <p>参加 {{ TITLE }} 的与会者可以在会场提货，如不计划参加或不便自提，您也可以填写地址选择邮寄送货，运费自付。</p>
+<p>请填写准确的收货信息，如因收货信息不正确或不准确导致无法发货，产生的运费等损失由您自行承担。</p>
+<p>如果所预订的商品已经交付生产，收货信息修改可能无法生效，如有需要，请{{ CONTACT_US | safe }}。</p>
 <form method="post" action="{{ url_for('user.post_merch_address') }}">
     <div class="form-row">
         <label for="address">收货地址</label>
@@ -175,9 +158,9 @@ dialog img {
 
 <h2>我的订单</h2>
 {% if items %}
-{% if is_open %}
-<p>在本轮订购截止前，无论是否已付款，您都可以随时在此修改您的订单。该表格可能需要横向滚动以查看完整内容。</p>
-{% endif %}
+<p>我们将在各商品订购截止后交付工厂生产，之后您的订单状态将变更为「生产中」或「已发货」。</p>
+<p>在此之前，无论是否已付款，您都可以随时在此修改您的订单。交付生产后不支持退款。</p>
+<p>该表格可能需要横向滚动以查看完整内容。</p>
 <table>
     <thead>
         <tr>
@@ -196,9 +179,9 @@ dialog img {
             <td>{{ item['spec'] }}</td>
             <td>{{ item['quantity'] }}</td>
             <td>{{ item['price'] | price | safe }}</td>
-            <td>{{ {0:'已订购',1:'制作中',2:'已发货'}.get(item['status'], '') }}</td>
+            <td>{{ {0:'已订购',1:'生产中',2:'已发货'}.get(item['status'], '') }}</td>
             <td>
-                {% if is_open and not item['status'] %}
+                {% if not item['status'] %}
                 <form method="post" action="{{ url_for('user.post_merch_remove', bid=item['bid']) }}">
                     <button type="submit">删除</button>
                 </form>
@@ -210,7 +193,7 @@ dialog img {
 </table>
 <p>小计：{{ total | price | safe }}</p>
 <p>该价格不含运费。运费可能为到付，或以发货时通知为准。</p>
-<p>订单批量交付制作后不支持退款。</p>
+<p>订单交付生产后不支持退款。</p>
 <p><a class="button primary" href="{{ url_for('user.billing') }}">去结算 &gt;</a></p>
 {% else %}
 <p>订单为空，在上方选购后再回来看看吧～</p>

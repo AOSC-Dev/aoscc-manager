@@ -187,7 +187,7 @@ article > aside img {
 <h2>纪念品</h2>
 
 {% if ready %}
-<p>以下已交付制作但未邮寄发货的纪念品可供提货。</p>
+<p>以下已交付生产但未邮寄发货的纪念品可供提货。</p>
 {{ item_list(ready, has_role('checkin')) }}
 <form method="post" action="{{ url_for('admin.post_merch_pickup', uid=uid) }}"
     onsubmit="return confirm('确认已将全部物品，全部物品，全部物品交付与会者？？')">

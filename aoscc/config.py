@@ -50,46 +50,46 @@ VOLUNTEER_OPEN = 'True'
 VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))
 
 ## merch
-MERCH_OPEN = datetime(2025, 6, 7, 22, 0, 0)
-MERCH_CLOSE = datetime(2025, 7, 4, 0, 0, 0)
-# inventory
-Item = namedtuple('Item', 'name,desc,img,sku,price')
-_tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。'
-_tshirt_zhipen = '使用<a href="javascript:alert(\'相较之前热转印烫画工艺，透气性及耐用度显著提升，浅色衣服透气性更佳。\')">数码直喷印制</a>'
-_tshirt_siyin = '使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
+Item = namedtuple('Item', 'name,desc,img,sku,price,cutoff')
+_tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。' \
+               '<br><br><b style="outline: 1px solid; padding: 1px">订购将于 7 月 4 日中午 12 时截止！</b>'
+_tshirt_zhipen = '<br><br>使用<a href="javascript:alert(\'相较之前热转印烫画工艺，透气性及耐用度显著提升，浅色衣服透气性更佳。\')">数码直喷印制</a>'
+_tshirt_siyin = '<br><br>使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
 _tshirt_sku = {size: 9999 for size in 'S,M,L,XL,2XL,3XL,4XL'.split(',')}
+_tshirt_cutoff = datetime(2025, 7, 4, 12, 0, 0)
 INVENTORY = {x.name: x for x in [
     Item(
         '《安啦》T 恤',
-        _tshirt_zhipen+_tshirt_size,
-        'tshirt25/anan-calm.png',
-        _tshirt_sku, 5700,
+        '遇事学安安，安然如泰山！去年点着的软件工程之火今年也还没熄灭呢…… 那就让它接着烧吧，安啦！'+_tshirt_zhipen+_tshirt_size,
+        'tshirt/anan-calm.png',
+        _tshirt_sku, 5700, _tshirt_cutoff,
     ),
     Item(
         'AOSCC 十周年 T 恤',
-        _tshirt_zhipen+_tshirt_size,
-        'tshirt25/aoscc-10th.png',
-        _tshirt_sku, 6200
+        '自 2015 年以来，AOSCC 已经在大家的陪伴下走过了 10 个年头。我们将往年 AOSCC 及校园行活动的剪影与安同开源社区徽标结合，推出了这款纪念 T 恤。'+_tshirt_zhipen+_tshirt_size,
+        'tshirt/aoscc-10th.png',
+        _tshirt_sku, 6200, _tshirt_cutoff,
     ),
     Item(
         '《安安害怕》T 恤（黑）',
-        _tshirt_siyin+_tshirt_size,
-        'tshirt25/anan-panic-dark.png',
-        _tshirt_sku, 5200
+        'oma 乃是系统必备组件…… 喂！oma 1.17 发布贺图中的安安惊恐表情还在各群组传播，和大家一块 Σ(°△°ꪱꪱꪱ) 起来吧～ '+_tshirt_siyin+_tshirt_size,
+        'tshirt/anan-panic-dark.png',
+        _tshirt_sku, 5200, _tshirt_cutoff,
     ),
     Item(
         '《安安害怕》T 恤（米白）',
-        _tshirt_siyin+_tshirt_size,
-        'tshirt25/anan-panic-light.png',
-        _tshirt_sku, 6500
+        'oma 乃是系统必备组件…… 喂！这件 T 恤也提供浅色版本哦～'+_tshirt_siyin+_tshirt_size,
+        'tshirt/anan-panic-light.png',
+        _tshirt_sku, 6500, _tshirt_cutoff,
     ),
     Item(
         '安安 Minecraft 印象 T 恤',
-        _tshirt_zhipen+_tshirt_size,
-        'tshirt25/anan-minecraft.png',
-        _tshirt_sku, 6200
+        '*hrrrn* *发出村民的声音* ，是先造火柴盒还是先修包呢？我们以 @安慕希 为安安设计的 Minecraft 人物模型为主题推出了这款 T 恤，安安 & MC 双厨狂喜！'+_tshirt_zhipen+_tshirt_size,
+        'tshirt/anan-minecraft.png',
+        _tshirt_sku, 6200, _tshirt_cutoff,
     ),
 ]}
+
 
 NOW = datetime.now
 ONE_DAY = timedelta(days=1)
