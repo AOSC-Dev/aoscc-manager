@@ -1,6 +1,9 @@
 import re
 from datetime import date, datetime, timedelta
 from collections import namedtuple
+NOW = datetime.now
+ONE_DAY = timedelta(days=1)
+FAR_FUTURE = datetime(2100, 1, 1, 0, 0, 0)
 
 ## basic info
 TITLE = 'AOSCC 2025'
@@ -57,13 +60,8 @@ _tshirt_zhipen = '<br><br>使用<a href="javascript:alert(\'相较之前热转�
 _tshirt_siyin = '<br><br>使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
 _tshirt_sku = {size: 9999 for size in 'S,M,L,XL,2XL,3XL,4XL'.split(',')}
 _tshirt_cutoff = datetime(2025, 7, 4, 12, 0, 0)
+_retros = ('美商先进牌 9950 型','松山湖 920 型','西安 612 型','Santa Clara 14900 型','常熟 1901 甲型','国际商贸牌力量 11 型','星际牌 K1 型','电计算 103 型')
 INVENTORY = {x.name: x for x in [
-    Item(
-        '《安啦》T 恤',
-        '遇事学安安，安然如泰山！去年点着的软件工程之火今年也还没熄灭呢…… 那就让它接着烧吧，安啦！'+_tshirt_zhipen+_tshirt_size,
-        'tshirt/anan-calm.png',
-        _tshirt_sku, 5700, _tshirt_cutoff,
-    ),
     Item(
         'AOSCC 十周年 T 恤',
         '自 2015 年以来，AOSCC 已经在大家的陪伴下走过了 10 个年头。我们将往年 AOSCC 及校园行活动的剪影与安同开源社区徽标结合，推出了这款纪念 T 恤。'+_tshirt_zhipen+_tshirt_size,
@@ -71,13 +69,19 @@ INVENTORY = {x.name: x for x in [
         _tshirt_sku, 6200, _tshirt_cutoff,
     ),
     Item(
-        '《安安害怕》T 恤（黑）',
+        '《安啦！》T 恤',
+        '遇事学安安，安然如泰山！去年点着的软件工程之火今年也还没熄灭呢…… 那就让它接着烧吧，安啦！'+_tshirt_zhipen+_tshirt_size,
+        'tshirt/anan-calm.png',
+        _tshirt_sku, 5700, _tshirt_cutoff,
+    ),
+    Item(
+        '《安安惊恐.webp》T 恤（黑）',
         'oma 乃是系统必备组件…… 喂！oma 1.17 发布贺图中的安安惊恐表情还在各群组传播，和大家一块 Σ(°△°ꪱꪱꪱ) 起来吧～ '+_tshirt_siyin+_tshirt_size,
         'tshirt/anan-panic-dark.png',
         _tshirt_sku, 5200, _tshirt_cutoff,
     ),
     Item(
-        '《安安害怕》T 恤（米白）',
+        '《安安惊恐.webp》T 恤（米白）',
         'oma 乃是系统必备组件…… 喂！这件 T 恤也提供浅色版本哦～'+_tshirt_siyin+_tshirt_size,
         'tshirt/anan-panic-light.png',
         _tshirt_sku, 6500, _tshirt_cutoff,
@@ -88,11 +92,28 @@ INVENTORY = {x.name: x for x in [
         'tshirt/anan-minecraft.png',
         _tshirt_sku, 6200, _tshirt_cutoff,
     ),
+    Item(
+        '复古处理器铭牌机箱贴',
+        '我们为安同 OS 支持的 6 个处理器架构挑出了几款具有代表性（梗属性）的硬件制作了复古铭牌。<br><br>由于开模价格较高，我们选定其中三款制作了磁性冰箱贴，也可以用作机箱贴。<br><br>每款限量 50 个。',
+        'retro-magnet.png',
+        {x: 50 for x in _retros[:3]}, 1800, FAR_FUTURE,
+    ),
+    Item(
+        '复古处理器铭牌钥匙扣',
+        '我们为安同 OS 支持的 6 个处理器架构挑出了几款具有代表性（梗属性）的硬件制作了复古铭牌钥匙扣。<br><br>每款限量 20 个。',
+        'retro-keychain.png',
+        {x: 20 for x in _retros}, 235, FAR_FUTURE,
+    ),
+    Item(
+        '安安 Fumo 玩偶',
+        '由社区好友 LiarOnce 委托“番茄炒蛋”社团画师 Yukata 设计的安安 Fumo 布偶，总算开始量产，走入本次元了！安安笑嘻嘻，电脑哭唧唧，快抱一只回家辟邪吧～<br><br>限量 20 个。',
+        'anan-fumo.png',
+        {'': 20}, 13000, FAR_FUTURE,
+    ),
 ]}
 
 
-NOW = datetime.now
-ONE_DAY = timedelta(days=1)
+
 
 
 ALL_CONFIG = {k: v for k, v in locals().items() if re.fullmatch(r'[A-Z]+(_[A-Z]+)*', k)}
