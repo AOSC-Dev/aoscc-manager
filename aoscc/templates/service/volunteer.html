@@ -24,6 +24,10 @@
 <h2>报名</h2>
 {% if form %}
     {% if form['status'] > 0 %}
+    <p>
+        T 恤尺码：<strong>{{ form['tshirt'] }}</strong>
+        <a href="https://www.tshe.com/items/151" target="_blank">尺码表</a>
+    </p>
     <p>我们<strong>已确认</strong>您的报名，欢迎加入 {{ TITLE }} 工作组。</p>
     {% elif form['status'] < 0 %}
     <p>感谢您对 {{ TITLE }} 会务的支持和帮助，但我们目前人手已经足够，祝您参会愉快！</p>
