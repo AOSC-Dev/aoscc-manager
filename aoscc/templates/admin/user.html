@@ -207,6 +207,11 @@ article > aside img {
 {{ item_list(notready) }}
 {% endif %}
 
+{% if has_role('notify') %}
+<h2>通知</h2>
+<a class="button primary" href="{{ url_for('admin.notify', uids=uid) }}">发送通知</a>
+{% endif %}
+
 {% if has_role('admin') %}
 <h2>登入</h2>
 <form method="post" action="{{ url_for('admin.post_user_login') }}">
