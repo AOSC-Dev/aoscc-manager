@@ -207,5 +207,13 @@ article > aside img {
 {{ item_list(notready) }}
 {% endif %}
 
+{% if has_role('admin') %}
+<h2>登入</h2>
+<form method="post" action="{{ url_for('admin.post_user_login') }}">
+    <input type="hidden" name="uid" value="{{ uid }}">
+    <button type="submit" class="danger">强制登入</button>
+</form>
+{% endif %}
+
 {% endif %}
 {% endblock %}
