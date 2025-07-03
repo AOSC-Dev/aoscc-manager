@@ -60,7 +60,6 @@ _tshirt_zhipen = '<br><br>使用<a href="javascript:alert(\'相较之前热转�
 _tshirt_siyin = '<br><br>使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
 _tshirt_sku = {size: 9999 for size in 'S,M,L,XL,2XL,3XL,4XL'.split(',')}
 _tshirt_cutoff = datetime(2025, 7, 4, 12, 0, 0)
-_retros = ('美商先进牌 9950 型','松山湖 920 型','西安 612 型','Santa Clara 14900 型','常熟 1901 甲型','国际商贸牌力量 11 型','星际牌 K1 型','电计算 103 型')
 INVENTORY = {x.name: x for x in [
     Item(
         'AOSCC 十周年 T 恤',
@@ -96,13 +95,26 @@ INVENTORY = {x.name: x for x in [
         '复古处理器铭牌机箱贴',
         '我们为安同 OS 支持的 6 个处理器架构挑出了几款具有代表性（梗属性）的硬件制作了复古铭牌。<br><br>由于开模价格较高，我们选定其中三款制作了磁性冰箱贴，也可以用作机箱贴。<br><br>每款限量 50 个。',
         'retro-magnet.png',
-        {x: 50 for x in _retros[:3]}, 1800, FAR_FUTURE,
+        {
+            '美商先进牌 9950 型': 50,
+            '松山湖 920 型': 50,
+            '西安 612 型': 50,
+        }, 1800, FAR_FUTURE,
     ),
     Item(
         '复古处理器铭牌钥匙扣',
-        '我们为安同 OS 支持的 6 个处理器架构挑出了几款具有代表性（梗属性）的硬件制作了复古铭牌钥匙扣。<br><br>每款限量 20 个。',
+        '我们为安同 OS 支持的 6 个处理器架构挑出了几款具有代表性（梗属性）的硬件制作了复古铭牌钥匙扣。<br><br>每款限量 20~40 个。',
         'retro-keychain.png',
-        {x: 20 for x in _retros}, 235, FAR_FUTURE,
+        {
+            '美商先进牌 9950 型': 40,
+            'Santa Clara 14900 型': 40,
+            '松山湖 920 型': 20,
+            '西安 612 型': 20,
+            '常熟 1901 甲型': 20,
+            '国际商贸牌力量 11 型': 40,
+            '星际牌 K1 型': 20,
+            '电计算 103 型': 20,
+        }, 235, FAR_FUTURE,
     ),
     Item(
         '安安 Fumo 玩偶',
