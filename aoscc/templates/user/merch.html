@@ -57,6 +57,13 @@ article section form:has(select) button {
     grid-column-end: span 2;
 }
 
+details:not(:has(section)) {
+    display: none;
+}
+details summary {
+    margin: 1em 0;
+}
+
 dialog[open] {
     height: 100vh;
     padding: 0;
@@ -77,36 +84,50 @@ dialog img {
 </style>
 {% endblock %}
 
+{% macro merch_card(item) -%}
+<section>
+    <div><img src="{{ url_for('static', filename='merch/'+item.img) }}"></div>
+    <div>
+        <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
+        <p>{{ item.desc | safe }}</p>
+        {% if NOW() < item.cutoff %}
+        <form method="post" action="{{ url_for('user.post_merch_buy') }}">
+            {% if '' not in item.sku %}
+            <select name="sku">
+                {% for sku in item.sku %}
+                <option value="{{ sku }}">{{ sku }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            <input type="number" name="quantity" value="1" min="1" max="99">
+            <input type="hidden" name="name" value="{{ item.name }}">
+            <button type="submit" class="primary">订购</button>
+        </form>
+        {% endif %}
+    </div>
+</section>
+{%- endmacro -%}
+
 {% block page %}
 
 <h2>橱窗</h2>
 <article>
     {% for item in inventory %}
-    <section>
-        <div><img src="{{ url_for('static', filename='merch/'+item.img) }}"></div>
-        <div>
-            <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
-            <p>{{ item.desc | safe }}</p>
-            {% if NOW() < item.cutoff and item.sku %}
-            <form method="post" action="{{ url_for('user.post_merch_buy') }}">
-                {% if '' not in item.sku %}
-                <select name="sku">
-                    {% for sku in item.sku %}
-                    <option value="{{ sku }}">{{ sku }}</option>
-                    {% endfor %}
-                </select>
-                {% endif %}
-                <input type="number" name="quantity" value="1" min="1" max="99">
-                <input type="hidden" name="name" value="{{ item.name }}">
-                <button type="submit" class="primary">订购</button>
-            </form>
-            {% else %}
-            <p><strong>当前不可购买。</strong></p>
-            {% endif %}
-        </div>
-    </section>
+    {% if NOW() < item.cutoff %}
+    {{ merch_card(item) }}
+    {% endif %}
     {% endfor %}
 </article>
+<details>
+    <summary>展开不在售项目</summary>
+    <article>
+        {% for item in inventory %}
+        {% if NOW() > item.cutoff %}
+        {{ merch_card(item) }}
+        {% endif %}
+        {% endfor %}
+    </article>
+</details>
 <dialog><img></dialog>
 <script>
     let modal = document.querySelector('dialog');
