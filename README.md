@@ -41,11 +41,23 @@ gunicorn -w 4 --reload aoscc:make_app()
 NGINX 推荐设置：
 
 ```
-location / {
-    proxy_pass http://127.0.0.1:6000;
-    proxy_http_version 1.1;
-    proxy_set_header Host $http_host;
-    proxy_set_header X-Real-IP $remote_addr;
+limit_req_zone $binary_remote_addr zone=aoscc:10m rate=5r/s;
+log_format aoscc '$remote_addr - $upstream_http_x_log_trace [$time_local] '
+                 '"$request" $status $body_bytes_sent '
+                 '"$http_referer" "$http_user_agent"';
+server {
+    # listen
+    # set_real_ip_from ;
+    limit_req zone=aoscc burst=50;
+    limit_req_status 429;
+    location / {
+        proxy_pass http://127.0.0.1:6000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_hide_header X-Log-Trace;
+    }
+    access_log /var/log/nginx/aoscc.log aoscc;
 }
 ```
 
