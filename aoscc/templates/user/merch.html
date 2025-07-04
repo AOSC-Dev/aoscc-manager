@@ -78,7 +78,7 @@ dialog img {
 
 <h2>橱窗</h2>
 <article>
-    {% for item in INVENTORY.values() %}
+    {% for item in inventory %}
     <section>
         <div><img src="{{ url_for('static', filename='merch/'+item.img) }}"></div>
         <div>
