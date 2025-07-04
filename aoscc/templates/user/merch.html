@@ -47,7 +47,10 @@ article section form {
     gap: 1rem;
     margin-top: auto;
 }
-article section input[type="number"] {
+article section form:has(select) {
+    grid-template-columns: 2fr 1fr;
+}
+article section form > * {
     width: 100%;
 }
 article section form:has(select) button {
