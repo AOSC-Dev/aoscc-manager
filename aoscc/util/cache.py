@@ -32,7 +32,7 @@ def cache_policy(response: Response):
     match _against_regex(url):
         case 'normalize.css' | 'aosc.png' | r'vote/.+':
             cache.max_age = 60*60*24*30
-        case r'tshirt25/.+' | r'badge/.+':
+        case r'merch/.+' | r'badge/.+':
             cache.max_age = 60*60
         case 'alipay.jpg' | 'wechat.jpg':
             cache.max_age = 60*20
