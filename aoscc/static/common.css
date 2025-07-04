@@ -136,6 +136,10 @@ div.infobox.error {
     background-color: #d885;
 }
 
+details summary {
+    margin: 1em 0;
+}
+
 table {
     display: block;
     border-collapse: collapse;
@@ -164,7 +168,8 @@ table td.wrap {
     word-break: break-all;
     white-space: normal;
 }
-table tbody tr:hover {
+table tbody tr:hover,
+table tbody tr:target {
     background-color: #bbb5;
 }
 

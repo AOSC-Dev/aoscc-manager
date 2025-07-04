@@ -97,6 +97,16 @@ article > aside img {
             <div>{{ user['type'] }}:{{ user['identity'] }}</div>
         </div>
         <div class="form-row">
+            <label>账单结欠</label>
+            <div>
+                {% if balance > 0 %}
+                <strong style="color: red">{{ balance | price | safe }}</strong>
+                {% else %}
+                {{ balance | price | safe }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-row">
             <label>注册时间</label>
         {% if not register %}
             <div>尚未注册</div>
@@ -157,9 +167,9 @@ article > aside img {
             <label>志愿者</label>
             <div>
                 {% if volunteer %}
-                <strong style="color: #0f0">是</strong>（{{ volunteer['tshirt'] }}）
+                <strong style="color: green">是</strong>（{{ volunteer['tshirt'] }}）
                 {% else %}
-                <span style="color: #f00">否</strong>
+                <span style="color: red">否</strong>
                 {% endif %}
             </div>
         </div>
@@ -210,6 +220,12 @@ article > aside img {
 {% if has_role('notify') %}
 <h2>通知</h2>
 <a class="button primary" href="{{ url_for('admin.notify', uids=uid) }}">发送通知</a>
+<details>
+    <summary>备用联系方式</summary>
+    {% for k, v in info.items() %}
+    <p>{{ k }}: {{ v }}</p>
+    {% endfor %}
+</details>
 {% endif %}
 
 {% if has_role('admin') %}
