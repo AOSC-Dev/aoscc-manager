@@ -1,5 +1,5 @@
 {% extends "admin/index.html" %}
-{% block title %}签到{% endblock %}
+{% block title %}{{ '用户' if user else '签到' }}{% endblock %}
 
 {% macro item_list(items, show_buttons=False) -%}
 <table>
