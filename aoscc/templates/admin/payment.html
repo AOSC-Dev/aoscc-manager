@@ -98,7 +98,7 @@ form:has(#provider-other:not(:checked)) #provider {
         {% for row in recent %}
         <tr>
             <td>{{ row['t'] | ts2dt | date }}</td>
-            <td>{{ row['uid'] }}</td>
+            <td>{{ row['uid'] | uid_link | safe }}</td>
             <td>{{ row['nick'] }}</td>
             <td>{{ row['item'] }}</td>
             <td>{{ -row['price'] | price | safe }}</td>

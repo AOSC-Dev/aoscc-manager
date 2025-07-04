@@ -73,7 +73,7 @@ main:has(#summary:checked) .detail {
         </tr>
         {% for guest in room %}
         <tr class="guest">
-            <td class="detail">{{ guest['uid'] }}</td>
+            <td class="detail">{{ guest['uid'] | uid_link | safe }}</td>
             <td>{{ guest['nick'] }}</td>
             <td>{{ guest['phone'] }}</td>
             <td>{{ guest['checkin'][5:] }}</td>
