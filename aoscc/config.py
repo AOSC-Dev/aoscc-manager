@@ -54,8 +54,7 @@ VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))
 
 ## merch
 Item = namedtuple('Item', 'name,desc,img,sku,price,cutoff')
-_tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。' \
-               '<br><br><b style="outline: 1px solid; padding: 1px">订购将于 7 月 4 日中午 12 时截止！</b>'
+_tshirt_size = '，尺码表见<a href="https://www.tshe.com/items/youth108" target="_blank">此处</a>。'
 _tshirt_zhipen = '<br><br>使用<a href="javascript:alert(\'相较之前热转印烫画工艺，透气性及耐用度显著提升，浅色衣服透气性更佳。\')">数码直喷印制</a>'
 _tshirt_siyin = '<br><br>使用<a href="javascript:alert(\'颜色清晰艳丽且较为透气，多次洗濯均不易掉色。\')">丝网染印</a>'
 _tshirt_sku = {size: 9999 for size in 'S,M,L,XL,2XL,3XL,4XL'.split(',')}
