@@ -235,11 +235,12 @@ h1 .status.arrived {
     background-color: #d70;
 }
 
-nav {
+nav, nav > div {
     display: flex;
+    flex-flow: row wrap;
+    row-gap: 0.5rem;
 }
-nav div {
-    display: flex;
+nav > div {
     flex: 1 0 fit-content;
 }
 nav div.spacer {
@@ -252,11 +253,11 @@ nav a.button {
     padding: 0.6rem;
     flex: 1 0 fit-content;
 }
-nav a.button:first-child {
+nav a.button:first-of-type {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
-nav a.button:last-child {
+nav a.button:last-of-type {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-right: none;

@@ -31,9 +31,10 @@
         {% if has_role('draw') %}
         <a class="button" href="{{ url_for('admin.draw') }}">抽奖</a>
         {% endif %}
+        <div class="spacer"></div>
     </div>
-    <div class="spacer"></div>
     <div>
+        <div class="spacer"></div>
         {% if has_role('admin') %}
         <a class="button" href="{{ url_for('admin.db') }}">数据库</a>
         <a class="button" href="{{ url_for('admin.grant') }}">权限</a>
