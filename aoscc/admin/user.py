@@ -1,10 +1,9 @@
-from time import time
 from pathlib import Path
 
 from flask import render_template, flash, redirect, url_for, session, g, send_file, current_app
 
 from ..config import *
-from ..util.db import fetch_all, fetch_one
+from ..util.db import fetch_all, fetch_one, update_table
 from ..util.form import Field, validate
 from ..util.grant import check_role, has_role
 from ..util.verify import verify_msg
@@ -17,8 +16,7 @@ def post_user_remarks(uid: int):
     if form := validate(
         Field('会务备注', 'remarks', 0, 500, str, True),
     ):
-        g.db.execute('UPDATE user SET remarks = ? WHERE uid = ?', (form['remarks'], uid))
-        g.db.commit()
+        update_table('user', {'remarks': form['remarks']}, {'uid': uid})
     return redirect(url_for('admin.user', uid=uid))
 
 

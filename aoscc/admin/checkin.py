@@ -3,6 +3,7 @@ from time import time
 from flask import render_template, redirect, url_for, session, flash, request, g
 
 from ..config import *
+from ..util.db import update_table
 from ..util.form import Field, validate
 from ..util.grant import check_role, has_role
 from ..util.verify import verify_msg
@@ -28,11 +29,8 @@ def post_user_checkin(uid: int):
     if form := validate(
         Field('操作', 'action', 1, 10, str, ('checkin', 'cancel')),
     ):
-        g.db.execute(
-            'UPDATE register SET arrived = ? WHERE uid = ?',
-            (int(time()) if (form['action'] == 'checkin') else 0, uid)
-        )
-        g.db.commit()
+        t = int(time()) if (form['action'] == 'checkin') else 0
+        update_table('register', {'arrived': t}, {'uid': uid})
     return redirect(url_for('admin.user', uid=uid))
 
 

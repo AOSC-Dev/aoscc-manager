@@ -59,3 +59,12 @@ def delete_from(table: str, cond: dict) -> int:
     )
     g.db.commit()
     return cur.rowcount
+
+def update_table(table: str, d: dict[str,str|int], cond: dict) -> int:
+    cur = g.db.execute(
+        f'UPDATE {table} SET {",".join(f"`{k}` = ?" for k in d.keys())} '
+        f'WHERE {" AND ".join(f"`{k}` = ?" for k in cond.keys())}',
+        tuple(d.values())+tuple(cond.values()),
+    )
+    g.db.commit()
+    return cur.rowcount

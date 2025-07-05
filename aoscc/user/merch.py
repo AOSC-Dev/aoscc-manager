@@ -3,7 +3,7 @@ import functools
 from flask import render_template, flash, g, redirect, url_for
 
 from ..config import *
-from ..util.db import fetch_all, fetch_one, insert_dict, query_all
+from ..util.db import fetch_all, fetch_one, insert_dict, query_all, delete_from
 from ..util.form import Field, validate
 from . import bp
 
@@ -58,12 +58,8 @@ def post_merch_buy():
 
 @bp.post('/merch/remove/<int:bid>')
 def post_merch_remove(bid: int):
-    cur = g.db.execute(  # you must be very careful letting user delete billing item
-        'DELETE FROM billing WHERE bid = ? AND uid = ? ' \
-        'AND category = "纪念品" AND status = 0', (bid, g.uid),
-    )
-    g.db.commit()
-    if cur.rowcount:
+    # you must be very careful letting user delete billing item
+    if delete_from('billing', {'bid': bid, 'uid': g.uid, 'category': '纪念品', 'status': 0}):
         flash('取消成功！')
     else:
         flash('取消失败！商品已交付生产或记录不存在。')
