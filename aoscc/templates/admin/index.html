@@ -16,6 +16,9 @@
         {% if has_role('accommo') %}
         <a class="button" href="{{ url_for('admin.accommo') }}">住宿</a>
         {% endif %}
+        {% if has_role('merch') %}
+        <a class="button" href="{{ url_for('admin.merch') }}">订货</a>
+        {% endif %}
         {% if has_role('notify') %}
         <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
         {% endif %}
