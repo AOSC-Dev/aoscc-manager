@@ -84,16 +84,9 @@ form:has(#provider-other:not(:checked)) #provider {
 </script>
 
 <h2>最近支付记录</h2>
+{% if recent %}
 <table>
-    <thead>
-        <tr>
-            <th>日期</th>
-            <th>用户</th>
-            <th>昵称</th>
-            <th>支付方式</th>
-            <th>金额</th>
-        </tr>
-    </thead>
+    <thead><tr><th>日期</th><th>用户</th><th>昵称</th><th>支付方式</th><th>金额</th></tr></thead>
     <tbody>
         {% for row in recent %}
         <tr>
@@ -106,18 +99,16 @@ form:has(#provider-other:not(:checked)) #provider {
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p>空。</p>
+{% endif %}
 
 <h2>账单非零用户</h2>
+{% if unpaid %}
 <table>
-    <thead>
-        <tr>
-            <th>用户</th>
-            <th>金额</th>
-            <th>昵称</th>
-        </tr>
-    </thead>
+    <thead><tr><th>用户</th><th>金额</th><th>昵称</th></tr></thead>
     <tbody>
-        {% for row in balance %}
+        {% for row in unpaid %}
         <tr>
             <td>{{ row['uid'] | uid_link | safe }}</td>
             <td>{{ row['balance'] | price | safe }}</td>
@@ -136,5 +127,24 @@ form:has(#provider-other:not(:checked)) #provider {
         发送<strong>溢缴款</strong>提醒
     </button>
 </p>
+{% else %}
+<p>空。</p>
+{% endif %}
+
+{% if overdraft %}
+<h2>欠缴费用户</h2>
+<table>
+    <thead><tr><th>用户</th><th>欠费</th><th>昵称</th></tr></thead>
+    <tbody>
+        {% for row in overdraft %}
+        <tr>
+            <td>{{ row['uid'] | uid_link | safe }}</td>
+            <td>{{ -row['balance'] | price | safe }}</td>
+            <td>{{ row['nick'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 {% endblock %}

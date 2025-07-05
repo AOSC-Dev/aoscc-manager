@@ -4,10 +4,9 @@ from collections import defaultdict
 from flask import render_template, flash
 
 from ..config import *
-from ..util.db import query_all
+from ..util.db import query_all, fetch_all
 from ..util.form import parse_date
 from ..util.grant import check_role
-from .payment import get_balance
 from . import bp
 
 
@@ -49,7 +48,7 @@ def accommo():
         'SELECT * FROM accommo JOIN billing USING(bid) JOIN user USING(uid)' \
         ' ORDER BY `type`, `group`, `t`'
     )
-    balance = get_balance()
+    balance = {row['uid']: row['balance'] for row in fetch_all('balance')}
     pending = defaultdict(lambda: defaultdict(list))
     arrange = defaultdict(list)
     for row in booking:

@@ -9,14 +9,6 @@ from .notify import enqueue_notify_quick
 from . import bp
 
 
-def get_balance():
-    return {
-        row['uid']: row for row in 
-        query_all('SELECT user.*,IFNULL(SUM(quantity*price),0) AS balance ' \
-                     'FROM billing RIGHT JOIN user USING(uid) GROUP BY uid')
-    }
-
-
 @bp.post('/payment')
 @check_role('payment')
 def post_payment():
@@ -75,7 +67,7 @@ def payment_hash():
 @bp.post('/payment/notify/pay')
 @check_role('payment')
 def post_payment_notify_pay():
-    for row in filter(lambda x: x['balance'] > 0, get_balance().values()):
+    for row in query_all('SELECT * FROM unpaid_balance WHERE balance > 0'):
         enqueue_notify_quick(
             row['uid'], '待支付提醒',
             '您有已订购的纪念品或服务账单尚未付款，长时间未付款的订单可能被取消。\n\n'
@@ -89,7 +81,7 @@ def post_payment_notify_pay():
 @bp.post('/payment/notify/refund')
 @check_role('payment')
 def post_payment_notify_refund():
-    for row in filter(lambda x: x['balance'] < 0, get_balance().values()):
+    for row in query_all('SELECT * FROM unpaid_balance WHERE balance < 0'):
         enqueue_notify_quick(
             row['uid'], '溢缴款提醒',
             '您向我们支付的数额已超出账单应付金额，请您登入系统检查账单中的订购和支付记录。\n\n'
@@ -105,9 +97,8 @@ def post_payment_notify_refund():
 def payment():
     recent = query_all('SELECT * FROM billing JOIN user USING(uid) ' \
                        'WHERE category = "支付" ORDER BY bid DESC LIMIT 10')
-    balance = sorted(
-        filter(lambda x: x['balance'], get_balance().values()),
-        key=lambda x: x['balance'],
-        reverse=True,
-    )
-    return render_template('admin/payment.html', recent=recent, balance=balance)
+    unpaid = query_all('SELECT * FROM unpaid_balance JOIN user USING(uid) ' \
+                       'WHERE balance != 0 ORDER BY balance DESC')
+    overdraft = query_all('SELECT * FROM balance JOIN user USING(uid) ' \
+                          'WHERE balance < 0 ORDER BY balance')
+    return render_template('admin/payment.html', recent=recent, unpaid=unpaid, overdraft=overdraft)

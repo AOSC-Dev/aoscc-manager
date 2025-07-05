@@ -3,7 +3,7 @@ import hashlib
 from flask import render_template, g
 
 from ..config import *
-from ..util.db import fetch_all
+from ..util.db import fetch_all, fetch_one
 from . import bp
 
 
@@ -16,7 +16,7 @@ def get_payment_hash(uid: int, type: str, identity: str, **_) -> str:
 @bp.get('/billing')
 def billing():
     items = fetch_all('billing', {'uid': g.uid})
-    total = sum(item['price'] * item['quantity'] for item in items)
+    total = fetch_one('unpaid_balance', {'uid': g.uid})['balance']
     return render_template(
         'user/billing.html', items=items, total=total,
         hash=get_payment_hash(g.uid, g.type, g.identity),

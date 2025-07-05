@@ -162,4 +162,17 @@ CREATE TABLE IF NOT EXISTS "draw_detail" (
 	FOREIGN KEY("uid") REFERENCES "register"("uid") ON UPDATE CASCADE
 );
 
+CREATE VIEW IF NOT EXISTS confirmed_billing AS
+	SELECT * FROM billing WHERE status > 0;
+
+CREATE VIEW IF NOT EXISTS balance AS
+	SELECT uid,IFNULL(-SUM(quantity*price),0) AS balance
+	FROM confirmed_billing RIGHT JOIN user USING(uid)
+	GROUP BY uid;
+
+CREATE VIEW IF NOT EXISTS unpaid_balance AS
+	SELECT uid,IFNULL(SUM(quantity*price),0) AS balance
+	FROM billing RIGHT JOIN user USING(uid)
+	GROUP BY uid;
+
 COMMIT;
