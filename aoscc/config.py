@@ -49,7 +49,7 @@ ROOM_OFFERING = {x.name: x for x in [
     Room('大床房', 1, 28000, 10),
 ]}
 DATE_RANGE = (date(2025, 7, 25), date(2025, 7, 27))
-VOLUNTEER_OPEN = 'True'
+VOLUNTEER_OPEN = False
 VOLUNTEER_TSHIRT_SKU = tuple('S,M,L,XL,2XL,3XL,4XL,5XL'.split(','))
 
 ## merch
