@@ -13,7 +13,7 @@
 }
 
 /* basic elements */
-* {
+*, *::before, *::after {
     box-sizing: border-box;
 }
 

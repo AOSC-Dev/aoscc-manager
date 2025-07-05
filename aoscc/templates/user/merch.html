@@ -8,52 +8,75 @@ article {
     grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
     gap: 1rem;
 }
-article section {
+section {
     display: flex;
     flex-flow: column nowrap;
     background-color: #9992;
 }
-article section div:first-child {
+
+section div.img-loader {
     display: flex;
     aspect-ratio: 1 / 1;
     max-width: 100%;
 }
-article section img {
+section div.img-loader img {
     max-width: 100%;
     max-height: 100%;
     margin: auto;
 }
-article section div:last-child {
+section div.img-loader.loading img {
+    position: relative;
+    left: -100%;
+    filter: brightness(50%) blur(5px);
+    z-index: -1;
+}
+section div.img-loader.loading::before {
+    content: " ";
+    float: left;
+    margin: 30%;
+    width: 40%;
+    aspect-ratio: 1 / 1;
+    border: 20px solid;
+    border-radius: 50%;
+    border-color: var(--fg) transparent;
+    animation: loader 1s infinite;
+}
+@keyframes loader {
+    to{
+        transform: rotate(0.5turn);
+    }
+}
+
+section div.card-content {
     flex-grow: 1;
     display: flex;
     flex-flow: column nowrap;
     margin: 1rem;
     height: max-content;
-
 }
-article section h3 {
+section h3 {
     margin: 0;
     display: flex;
     justify-content: space-between;
 }
-article section h3 span {
+section h3 span {
     flex: 0 0 fit-content;
     color: mediumvioletred;
 }
 
-article section form {
+section form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-top: auto;
 }
-article section form:has(select) {
+section form:has(select) {
     grid-template-columns: 2fr 1fr;
 }
-article section form > * {
+section form > * {
     width: 100%;
 }
-article section form:has(select) button {
+section form:has(select) button {
     grid-column-end: span 2;
 }
 
@@ -83,8 +106,10 @@ dialog img {
 
 {% macro merch_card(item) -%}
 <section>
-    <div><img src="{{ url_for('static', filename='merch/'+item.img) }}"></div>
-    <div>
+    <div class="img-loader loading">
+        <img loading="lazy" src="{{ url_for('static', filename='merch/'+item.img) }}">
+    </div>
+    <div class="card-content">
         <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
         <p>{{ item.desc | safe }}</p>
         {% if NOW() < item.cutoff %}
@@ -132,11 +157,15 @@ dialog img {
     modal.addEventListener('click', (event) => {
         modal.close();
     });
-    document.querySelectorAll('article section img').forEach((elm) => {
+    document.querySelectorAll('section img').forEach((elm) => {
         elm.addEventListener('click', (event) => {
             img.src = event.currentTarget.src;
             modal.showModal();
         });
+        elm.addEventListener('load', (event) => {
+            event.currentTarget.parentElement.classList.remove('loading');
+        })
+        if (elm.complete) elm.dispatchEvent(new Event('load'));
     });
 </script>
 
