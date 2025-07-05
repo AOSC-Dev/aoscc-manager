@@ -10,19 +10,6 @@ from ..util.verify import verify_msg
 from . import bp
 
 
-@bp.post('/checkin/<int:uid>/pickup/<int:bid>')
-@bp.post('/checkin/<int:uid>/pickup/all', defaults={'bid': None})
-@check_role('checkin')
-def post_merch_pickup(uid: int, bid: int):
-    g.db.execute(
-        'UPDATE billing SET status = 2 WHERE category = "纪念品" AND status = 1'
-        ' AND uid = ?' + (' AND bid = ?' if bid else ''),
-        (uid,) + ((bid,) if bid else ())
-    )
-    g.db.commit()
-    return redirect(url_for('admin.user', uid=uid))
-
-
 @bp.post('/checkin/<int:uid>')
 @check_role('checkin')
 def post_user_checkin(uid: int):

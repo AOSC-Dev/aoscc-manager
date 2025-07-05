@@ -1,39 +1,6 @@
 {% extends "admin/index.html" %}
 {% block title %}{{ '用户' if user else '签到' }}{% endblock %}
 
-{% macro item_list(items, show_buttons=False) -%}
-<table>
-    <thead>
-        <tr>
-            <th>品项</th>
-            <th>型别</th>
-            <th>数量</th>
-            {% if show_buttons %}
-            <th>操作</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in items %}
-        <tr>
-            <td>{{ item['item'] }}</td>
-            <td>{{ item['spec'] }}</td>
-            <td>{{ item['quantity'] }}</td>
-            {% if show_buttons %}
-            <td>
-                <form method="post"
-                    action="{{ url_for('admin.post_merch_pickup', uid=uid, bid=item['bid']) }}"
-                    onsubmit="return confirm('确认已交付 {{ item['quantity'] }} 件{{ item['item'] }}（{{ item['spec'] }}）吗？')">
-                    <button type="submit" class="primary">确认交付</button>
-                </form>
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{%- endmacro %}
-
 {% block css %}
 <style>
 article {
@@ -200,28 +167,94 @@ article > aside img {
     {% endif %}
 </article>
 
+{% if has_role('merch') %}
 <h2>纪念品</h2>
 
+{% if not (ready or shipped or notready) %}
+<p>无订单。</p>
+{% endif %}
+
 {% if ready %}
-<p>以下已交付生产但未邮寄发货的纪念品可供提货。</p>
-{{ item_list(ready, has_role('checkin')) }}
-<form method="post" action="{{ url_for('admin.post_merch_pickup', uid=uid) }}"
-    onsubmit="return confirm('确认已将全部物品，全部物品，全部物品交付与会者？？')">
-    <p><button type="submit" class="danger">全部交付</button></p>
+<p>以下已交付生产的纪念品可供发货。</p>
+<form method="post" action="{{ url_for('admin.post_merch_ship', uid=uid) }}">
+    <table>
+        <thead><tr>
+            <th><button type="button" id="select-all">全选</button></th>
+            <th>品项</th><th>型别</th><th>数量</th>
+        </tr></thead>
+        <tbody>
+            {% for item in ready %}
+            <tr>
+                <td><input type="checkbox" name="bid" value="{{ item['bid'] }}"></td>
+                <td>{{ item['item'] }}</td>
+                <td>{{ item['spec'] }}</td>
+                <td>{{ item['quantity'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if address %}
+    <p>收货地址：{{ address['name'] }}，{{ address['phone'] }}，{{ address['address'] }}</p>
+    {% else %}
+    <p><i>未填写收货地址。</i></p>
+    {% endif %}
+    <input type="text" name="track" maxlength="50" placeholder="物流单号，当面交付留空">
+    <button type="submit" class="primary">发货</button>
 </form>
-{% else %}
-<p>无可提货项目。</p>
+<script>
+    document.getElementById('select-all').addEventListener('click', (event) => {
+        let elm = event.currentTarget;
+        while (elm.tagName != 'TABLE') elm = elm.parentElement;
+        elm.querySelectorAll('input[type=checkbox]').forEach((chk) => {
+            chk.checked = true;
+        })
+    })
+</script>
 {% endif %}
 
 {% if shipped %}
-<p>以下是已交付或邮寄发货的项目。</p>
-{{ item_list(shipped) }}
+<p>以下是已发货的项目。</p>
+<table>
+    <thead><tr><th>品项</th><th>型别</th><th>数量</th><th>物流追踪</th></tr></thead>
+    <tbody>
+        {% for item in shipped %}
+        <tr>
+            <td>{{ item['item'] }}</td>
+            <td>{{ item['spec'] }}</td>
+            <td>{{ item['quantity'] }}</td>
+            <td>{{ item['track'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}
 
 {% if notready %}
-<p>以下是尚未准备好的项目。</p>
-{{ item_list(notready) }}
+<p>以下是尚未生产的项目。</p>
+<table>
+    <thead><tr>
+        <th>品项</th><th>型别</th><th>数量</th><th>单价</th><th>操作</th>
+    </tr></thead>
+    <tbody>
+        {% for item in notready %}
+        <tr>
+            <td>{{ item['item'] }}</td>
+            <td>{{ item['spec'] }}</td>
+            <td>{{ item['quantity'] }}</td>
+            <td>{{ item['price'] | price | safe }}</td>
+            <td><form method="post"
+                    action="{{ url_for('admin.post_merch_cancel', uid=uid, bid=item['bid']) }}"
+                    onsubmit="return confirm('确认取消该订单？')">
+                <button type="submit">取消</button>
+            </form></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}
+
+{% endif %} {# has_role('merch') #}
+
 
 {% if has_role('notify') %}
 <h2>通知</h2>
@@ -245,5 +278,7 @@ article > aside img {
 </form>
 {% endif %}
 
-{% endif %}
+
+{% endif %} {# user #}
+
 {% endblock %}

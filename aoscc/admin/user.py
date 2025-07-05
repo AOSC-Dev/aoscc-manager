@@ -46,6 +46,7 @@ def user(uid: int):
         ready    = list(filter(lambda x: x['status'] == 1, merch))
         shipped  = list(filter(lambda x: x['status'] == 2, merch))
         notready = list(filter(lambda x: x['status'] == 0, merch))
+        address = fetch_one('address', {'uid': uid})
     return render_template('admin/user.html', **locals())
 
 
