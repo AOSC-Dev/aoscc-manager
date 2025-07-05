@@ -87,8 +87,5 @@ def merch():
     form = fetch_one('address', {'uid': g.uid})
     items = fetch_all('billing', {'uid': g.uid, 'category': '纪念品'})
     total = sum(item['price'] * item['quantity'] for item in items)
-    inventory = sorted(
-        INVENTORY.values(),
-        key=lambda x: (x.cutoff if (NOW()<x.cutoff) else (FAR_FUTURE+ONE_DAY))
-    )
+    inventory = sorted(INVENTORY.values(), key=lambda x: x.cutoff)
     return render_template('user/merch.html', **locals())

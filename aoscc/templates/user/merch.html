@@ -63,6 +63,11 @@ section h3 span {
     flex: 0 0 fit-content;
     color: mediumvioletred;
 }
+section p.cutoff strong {
+    display: inline-block;
+    outline: 1px solid;
+    padding: 1px;
+}
 
 section form {
     display: grid;
@@ -113,6 +118,7 @@ dialog img {
         <h3>{{ item.name }}<span>{{ item.price | price | safe }}</span></h3>
         <p>{{ item.desc | safe }}</p>
         {% if NOW() < item.cutoff %}
+        <p class="cutoff"><strong>{{ item.cutoff_str }}</strong></p>
         <form method="post" action="{{ url_for('user.post_merch_buy') }}">
             {% if '' not in item.sku %}
             <select name="sku">
