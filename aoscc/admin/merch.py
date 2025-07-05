@@ -12,8 +12,8 @@ from . import bp
 @check_role('merch')
 def merch():
     res = sorted(query_all(
-        'SELECT item,spec,SUM(quantity) AS count FROM billing ' \
-        'WHERE category = "纪念品" GROUP BY item,spec ORDER BY item, spec'
+        'SELECT item,spec,status,SUM(quantity) AS count FROM billing ' \
+        'WHERE category = "纪念品" GROUP BY item,spec,status'
     ), key=lambda x: (
         (
             list(INVENTORY.keys()).index(x['item']),
@@ -22,10 +22,19 @@ def merch():
         if (_ := INVENTORY.get(x['item'])) and _.sku.get(x['spec']) is not None
         else (-1, -1)
     ))
-
-    stat = defaultdict(dict)
+    stat = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
     for row in res:
-        stat[row['item']][row['spec']] = row['count']
-    overview = {k: sum(v.values()) for k, v in stat.items()}
+        # per spec
+        stat[row['item']][row['spec']][row['status']] += row['count']
+        stat[row['item']][row['spec']][None         ] += row['count']
+        # per item
+        stat[row['item']][None       ][row['status']] += row['count']
+        stat[row['item']][None       ][None         ] += row['count']
+        # overview
+        stat[None       ][row['item']][row['status']] += row['count']
+        stat[None       ][row['item']][None         ] += row['count']
+        # grand total
+        stat[None       ][None       ][row['status']] += row['count']
+        stat[None       ][None       ][None         ] += row['count']
 
-    return render_template('admin/merch.html', overview=overview, stat=stat)
+    return render_template('admin/merch.html', stat=stat)

@@ -153,16 +153,20 @@ table tr {
 }
 table tr > * {
     padding: 0 0.5rem;
+    border-bottom: #bbb5 solid 1px;
 }
-table tr td a {
+table tr a {
     padding: 0;
 }
 table th {
-    border-bottom: var(--link) solid 2px;
+    font-weight: bold;
     white-space: nowrap;
 }
-table td {
-    border-bottom: #bbb5 solid 1px;
+table thead tr > * {
+    border-bottom: var(--link) solid 2px;
+}
+table tfoot tr > * {
+    border-top: var(--link) solid 2px;
 }
 table td.wrap {
     word-break: break-all;
