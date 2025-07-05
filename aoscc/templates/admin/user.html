@@ -64,7 +64,7 @@ article > aside img {
     <div class="form-row">
         <label for="token">扫描签到码</label>
         <input type="password" id="token" name="token" required
-            maxlength="200" autocomplete="off">
+            maxlength="200" autocomplete="off" autofocus>
         </div>
     </div>
     <div class="form-row">
@@ -72,6 +72,12 @@ article > aside img {
         <div><button type="submit" class="primary">提交</button></div>
     </div>
 </form>
+<script>
+    document.addEventListener('keydown', (event) => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+        document.getElementById('token').focus();
+    })
+</script>
 {% endif %}
 
 {% if user %}
