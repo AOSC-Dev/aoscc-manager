@@ -242,11 +242,17 @@ article > aside img {
             <td>{{ item['spec'] }}</td>
             <td>{{ item['quantity'] }}</td>
             <td>{{ item['price'] | price | safe }}</td>
-            <td><form method="post"
+            <td>
+                <form method="post"
+                    action="{{ url_for('admin.post_merch_confirm', uid=uid, bid=item['bid']) }}">
+                    <button type="submit" class="primary">确认</button>
+                </form>
+                <form method="post"
                     action="{{ url_for('admin.post_merch_cancel', uid=uid, bid=item['bid']) }}"
                     onsubmit="return confirm('确认取消该订单？')">
-                <button type="submit">取消</button>
-            </form></td>
+                    <button type="submit" class="danger">取消</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

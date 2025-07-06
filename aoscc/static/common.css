@@ -176,6 +176,9 @@ table tbody tr:hover,
 table tbody tr:target {
     background-color: #bbb5;
 }
+table form {
+    display: inline-block;
+}
 
 span.price {
     display: inline-block;

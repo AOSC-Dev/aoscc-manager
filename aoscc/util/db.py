@@ -52,19 +52,21 @@ def insert_dict(table: str, d: dict[str,str|int], commit: bool = True) -> int:
     return cur.lastrowid
 
 
-def delete_from(table: str, cond: dict) -> int:
+def delete_from(table: str, cond: dict, commit: bool = True) -> int:
     cur = g.db.execute(
         f'DELETE FROM {table} WHERE {" AND ".join(f"`{k}` = ?" for k in cond.keys())}',
         tuple(cond.values())
     )
-    g.db.commit()
+    if commit:
+        g.db.commit()
     return cur.rowcount
 
-def update_table(table: str, d: dict[str,str|int], cond: dict) -> int:
+def update_table(table: str, d: dict[str,str|int], cond: dict, commit: bool = True) -> int:
     cur = g.db.execute(
         f'UPDATE {table} SET {",".join(f"`{k}` = ?" for k in d.keys())} '
         f'WHERE {" AND ".join(f"`{k}` = ?" for k in cond.keys())}',
         tuple(d.values())+tuple(cond.values()),
     )
-    g.db.commit()
+    if commit:
+        g.db.commit()
     return cur.rowcount
