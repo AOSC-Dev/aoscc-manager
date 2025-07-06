@@ -26,12 +26,22 @@ h3 ~ p:not(.noindent) {
 {% macro badge() -%}
 <h3>定制胸牌</h3>
 <p>线下与会者可免费定制胸牌，欢迎您填入自定义昵称及自我介绍，或上传图片发挥您的创意。</p>
+{% if NOW() < BADGE_CLOSE %}
+<p>定制将于 {{ BADGE_CLOSE | datetime }} 截止。</p>
+{% else %}
+<p>定制已截止，您可以在此查看已定制的胸牌。</p>
+{% endif %}
 <p><a href="{{ url_for('service.badge') }}">去定制 &gt;&gt;</a></p>
 {%- endmacro -%}
 
 {% macro accommo() -%}
 <h3>预订住宿</h3>
 <p>协议酒店预订、拼房登记由此进。</p>
+{% if NOW() < ACCOMMO_CLOSE %}
+<p>住宿预订将于 {{ ACCOMMO_CLOSE | datetime }} 结束，在此之前可自主预订或取消。</p>
+{% else %}
+<p>住宿预订已截止，如有预订可以在此查看详情。</p>
+{% endif %}
 <p><a href="{{ url_for('service.accommo') }}">去预订 &gt;&gt;</a></p>
 {%- endmacro -%}
 
