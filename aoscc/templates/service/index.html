@@ -79,7 +79,7 @@ h3 ~ p:not(.noindent) {
 
 {% if not g.arrived %}
 <h2>取消注册</h2>
-    {% if not REGISTER_OPEN %}
+    {% if 'REGOK' not in g.remarks and not REGISTER_OPEN %}
     <div class="infobox warning">
         <p>注意！当前不在注册开放时间，取消后可能无法重新注册！</p>
     </div>
