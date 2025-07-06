@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, redirect, url_for
+from flask import Blueprint, g, request, redirect, url_for, session
 
 from ..util.db import fetch_one
 
@@ -8,6 +8,7 @@ bp = Blueprint('user', __name__)
 @bp.before_request
 def user_check():
     if not g.uid:  # all pages require logged in
+        session['login_return'] = request.url
         return redirect(url_for('login.login'))
     g.register = fetch_one('register', {'uid': g.uid})
     g.registered = bool(g.register)

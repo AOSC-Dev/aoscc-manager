@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, redirect, url_for, flash, g
+from flask import Blueprint, render_template, redirect, url_for, flash, g, session
 
 from ..config import *
 from .db import fetch_one, insert_dict
@@ -37,6 +37,8 @@ def do_login(token: str):
         else:
             g.uid = insert_dict('user', d)
         update_grant()
+        if ret := session.pop('login_return', None):
+            return redirect(ret)
         return redirect(url_for('user.register'))
     else:
         flash('无效登录凭据。')
