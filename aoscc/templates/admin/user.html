@@ -40,7 +40,8 @@ article > aside img {
     </div>
 </form>
 <script>
-    document.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
         if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
         document.getElementById('token').focus();
     })
