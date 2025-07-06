@@ -14,10 +14,10 @@ from . import bp
 @bp.route('/db', methods=['GET', 'POST'])
 @check_role('admin')
 def db():
-    tables = sorted([
-        row['name'] for row in
-        fetch_all('sqlite_master', {'type': 'table'})
-    ])
+    tables = sorted([row['name'] for row in (
+        fetch_all('sqlite_master', {'type': 'table'}) +
+        fetch_all('sqlite_master', {'type': 'view'})
+    )])
     form = {}
     results = []
     if request.form and (form := validate(
