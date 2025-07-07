@@ -6,11 +6,16 @@
 img {
     max-width: 30rem;
     width: 100%;
-    filter: invert(6.66%);
+}
+button.dark-hider {
+    display: none;
 }
 @media screen and (prefers-color-scheme: dark) {
-    img {
-        filter: invert(93.33%);
+    button.dark-hider:has(+ :not(.dark-show)) {
+        display: initial;
+    }
+    button.dark-hider + *:not(.dark-show) {
+        display: none;
     }
 }
 </style>
@@ -23,9 +28,12 @@ img {
 {% else %}
 <p>签到状态：<strong>尚未签到</strong></p>
 {% endif %}
-<p>请向签到处的志愿者出示下面的二维码。</p>
+<p>请向签到处、提货区的志愿者出示下面的二维码。</p>
 <div class="infobox warning">
     <p>注意：该二维码可用领取您订购的纪念品，请勿将本页的截图或二维码发送给他人。</p>
 </div>
+<button class="dark-hider primary" onclick="this.nextElementSibling.classList.toggle('dark-show')">
+    显示签到码<small>（注意强光）</small>
+</button>
 <img src="data:image/png;base64,{{ qr | safe }}">
 {% endblock %}
