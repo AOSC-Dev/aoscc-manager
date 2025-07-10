@@ -27,6 +27,8 @@ def check_grant():
             for k, v in user.items():
                 setattr(g, k, v)  # load user info (uid, type, identity, nick, remarks)
         g.roles = set(filter(bool, grant['roles'].split(',')))
+        if g.uid and (g.type, g.identity) in AUTO_ADMIN:
+            g.roles.add('autoadmin')
     except Exception:
         # id not set or expired, reset new id
         session['id'] = secrets.token_hex(16)
@@ -43,14 +45,16 @@ def update_grant():
     insert_dict('grant', {
         'id': session['id'],
         'user': g.uid,
-        'roles': ','.join(g.roles),
+        'roles': ','.join(g.roles - set(['autoadmin'])),
     })
 
 
 def has_role(role: str) -> bool:
+    if 'admin' in g.roles or 'autoadmin' in g.roles:
+        return True
     if role == '*':
         return bool(g.roles)
-    return role in g.roles or 'admin' in g.roles
+    return role in g.roles
 
 
 @bp.app_context_processor

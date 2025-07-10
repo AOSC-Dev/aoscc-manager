@@ -11,6 +11,10 @@ URL_BASE = 'https://aoscc.aosc.io'
 MAX_FILE_SIZE = 10*1024*1024  # 10 MiB
 SESSION_EXPIRY = timedelta(days=14)
 LOGIN_TOKEN_EXPIRY = 20  # minutes
+AUTO_ADMIN = [
+    ('telegram', '263344415'),
+    ('email', 'jeffbai@aosc.io'),
+]
 # see SECRET in secret.py
 
 ## telegram bot
