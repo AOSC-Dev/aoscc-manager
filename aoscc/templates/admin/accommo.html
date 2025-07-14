@@ -69,7 +69,8 @@ main:has(#summary:checked) .detail {
             <th class="detail">状态</th>
             <th class="detail">价格</th>
             <th class="detail">余额</th>
-            <th class="detail">备注</th>
+            <th class="detail">预订备注</th>
+            <th class="detail">会务备注</th>
         </tr>
         {% for guest in room %}
         <tr class="guest">
@@ -86,6 +87,7 @@ main:has(#summary:checked) .detail {
             <td class="detail" style="color: red">{{ balance[guest['uid']] | price | safe }}</td>
             {% endif %}
             <td class="detail">{{ guest['other'] }}</td>
+            <td class="detail">{{ guest['remarks'] }}</td>
         </tr>
         {% endfor %}
         <tr class="blank">
