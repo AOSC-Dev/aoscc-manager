@@ -25,12 +25,12 @@ td:empty::before {
             <th>昵称</th>
             <th>类型</th>
             <th>身份</th>
+            <th>会务备注</th>
             <th>Telegram</th>
             <th>邮箱</th>
             <th>手机</th>
             <th>QQ</th>
             <th>微信</th>
-            <th>会务备注</th>
         </tr>
     </thead>
     <tbody>
@@ -57,12 +57,12 @@ td:empty::before {
             <td>{{ user['nick'] or '' }}</td>
             <td>{{ user['type'] }}</td>
             <td>{{ user['identity'] }}</td>
+            <td>{{ user['remarks'] or '' }}</td>
             <td>{{ user['telegram'] or '' }}</td>
             <td>{{ user['email'] or '' }}</td>
             <td>{{ user['phone'] or '' }}</td>
             <td>{{ user['qq'] or '' }}</td>
             <td>{{ user['wechat'] or '' }}</td>
-            <td>{{ user['remarks'] or '' }}</td>
         </tr>
         {% endfor %}
     </tbody>
