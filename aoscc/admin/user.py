@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import render_template, flash, redirect, url_for, session, g, send_file, current_app
 
 from ..config import *
+from ..secret import BOT_TOKEN
 from ..util.db import fetch_all, fetch_one, update_table
 from ..util.form import Field, validate
 from ..util.grant import check_role, has_role
@@ -24,6 +25,14 @@ def post_user_remarks(uid: int):
 @check_role('*')
 def user_badge(uid: int):
     return send_file(Path(current_app.instance_path) / 'badges' / f'{uid}.png', 'image/png')
+
+
+@bp.get('/user/<int:uid>/telegram')
+@check_role('admin')
+def user_telegram_info(uid: int):
+    if not (user := fetch_one('user', {'uid': uid})) or user['type'] != 'telegram':
+        return 404
+    return redirect(f'https://api.telegram.org/bot{BOT_TOKEN}/getChat?chat_id={user['identity']}')
 
 
 @bp.get('/user/<int:uid>')

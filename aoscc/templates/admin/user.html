@@ -69,6 +69,11 @@ article > aside img {
         <div class="form-row">
             <label>登录身份</label>
             <div>{{ user['type'] }}:{{ user['identity'] }}</div>
+            {% if has_role('admin') and user['type'] == 'telegram' %}
+            <a target="_blank" href="{{ url_for('admin.user_telegram_info', uid=user['uid']) }}">
+                账号信息
+            </a>
+            {% endif %}
         </div>
         <div class="form-row">
             <label>账单结欠</label>
