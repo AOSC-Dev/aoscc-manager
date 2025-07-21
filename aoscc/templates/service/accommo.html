@@ -49,11 +49,11 @@ form:has(#group-roommate:not(:checked)) .roommate-only {
 <h2>您的预订详情</h2>
 <p>房型：{{ form['type'] }}</p>
 <p>日期：{{ form['checkin'] }} 入住，{{ form['checkout'] }} 退房</p>
+<p>入住人：{{ form['name'] }} {{ form['phone'] }}</p>
 <p>
     入住组别：{{ form['group'] }}
     （当前组内共有：{{ get_ngroupmate(form['type'], form['group']) }} 人）
 </p>
-<p>联系手机：{{ form['phone'] }}</p>
 {% if form['other'] %}
 <p>备注:</p>
 <p>{{ form['other'] }}</p>
@@ -173,6 +173,11 @@ form:has(#group-roommate:not(:checked)) .roommate-only {
             input_group.value = '自选分组{{ random_token }}';
         })
     </script>
+    <div class="form-row">
+        <label for="name">入住人姓名</label>
+        <input type="text" id="name" name="name" required maxlength="50">
+        <div>将提供给酒店用于联络和入住。</div>
+    </div>
     <div class="form-row">
         <label for="phone">手机号</label>
         <input type="text" id="phone" name="phone" required minlength="11" maxlength="11" pattern="1\d{10}">

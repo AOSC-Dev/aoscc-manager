@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS "accommo" (
 	"group"	TEXT NOT NULL,
 	"checkin"	TEXT NOT NULL,
 	"checkout"	TEXT NOT NULL,
+	"name"	TEXT NOT NULL,
 	"phone"	TEXT NOT NULL,
 	"other"	TEXT NOT NULL,
 	PRIMARY KEY("bid"),

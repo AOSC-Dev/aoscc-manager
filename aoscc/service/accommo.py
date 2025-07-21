@@ -77,6 +77,7 @@ def post_accommo():
             Field('入住日期', 'checkin', 10, 10, str, True),
             Field('退房日期', 'checkout', 10, 10, str, True),
             Field('入住方式组别', 'group', 1, 20, str, True),
+            Field('入住人姓名', 'name', 1, 50, str, True),
             Field('手机号', 'phone', 11, 11, str, r'1\d{10}'),
             Field('备注', 'other', 0, 500, str, True),
             Field('必须同意预订条款！', 'consent', 2, 2, str, 'on'),
