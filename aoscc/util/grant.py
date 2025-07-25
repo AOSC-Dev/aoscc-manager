@@ -62,11 +62,11 @@ def inject_has_role():
     return dict(has_role=has_role)
 
 
-def check_role(role):
+def check_role(*roles):
     def wrapper(view):
         @functools.wraps(view)
         def wrapped(*args, **kwargs):
-            if not has_role(role):
+            if not any(has_role(role) for role in roles):
                 flash('角色权限不足。')
                 return redirect(url_for('admin.index'))
             return view(*args, **kwargs)

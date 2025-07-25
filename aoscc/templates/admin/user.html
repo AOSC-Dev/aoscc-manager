@@ -173,7 +173,7 @@ article > aside img {
     {% endif %}
 </article>
 
-{% if has_role('merch') %}
+{% if has_role('checkin') or has_role('merch') %}
 <h2>纪念品</h2>
 
 {% if not (ready or shipped or notready) %}
@@ -249,6 +249,7 @@ article > aside img {
             <td>{{ item['quantity'] }}</td>
             <td>{{ item['price'] | price | safe }}</td>
             <td>
+                {% if has_role('merch') %}
                 <form method="post"
                     action="{{ url_for('admin.post_merch_confirm', uid=uid, bid=item['bid']) }}">
                     <button type="submit" class="primary">确认</button>
@@ -258,6 +259,7 @@ article > aside img {
                     onsubmit="return confirm('确认取消该订单？')">
                     <button type="submit" class="danger">取消</button>
                 </form>
+		{% endif %}
             </td>
         </tr>
         {% endfor %}
@@ -265,7 +267,7 @@ article > aside img {
 </table>
 {% endif %}
 
-{% endif %} {# has_role('merch') #}
+{% endif %} {# has_role('checkin') or has_role('merch') #}
 
 
 {% if has_role('notify') %}

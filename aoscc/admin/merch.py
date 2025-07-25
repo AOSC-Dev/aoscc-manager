@@ -11,7 +11,7 @@ from . import bp
 
 
 @bp.post('/merch/<int:uid>/ship')
-@check_role('merch')
+@check_role('merch', 'checkin')
 def post_merch_ship(uid: int):
     track = request.form.get('track') or f'当面交付于 {dt2datetime(NOW())}'
     shipped = []
