@@ -30,7 +30,7 @@ def cache_policy(response: Response):
     url = request.path.removeprefix(current_app.static_url_path+'/')
     cache.public = True
     match _against_regex(url):
-        case 'normalize.css' | 'aosc.png' | r'vote/.+':
+        case 'normalize.css' | 'aosc.png' | r'vote/.+' | 'visitor_pass.png' | 'xibao.jpg':
             cache.max_age = 60*60*24*30
         case r'merch/.+' | r'badge/.+':
             cache.max_age = 60*60
