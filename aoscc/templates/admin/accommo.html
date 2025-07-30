@@ -83,10 +83,10 @@ main:has(#summary:checked) .detail {
             <td>{{ guest['checkout'][5:] }}</td>
             <td class="detail">{{ guest['status'] }}</td>
             <td class="detail">{{ guest['price'] | price | safe }}</td>
-            {% if balance[guest['uid']] >= guest['price'] %}
-            <td class="detail" style="color: gray">{{ balance[guest['uid']] | price | safe }}</td>
-            {% else %}
+	    {% if (guest['status'] == 0 and balance[guest['uid']] < guest['price']) or (guest['status'] > 0 and balance[guest['uid']] < 0) %}
             <td class="detail" style="color: red">{{ balance[guest['uid']] | price | safe }}</td>
+            {% else %}
+            <td class="detail" style="color: gray">{{ balance[guest['uid']] | price | safe }}</td>
             {% endif %}
             <td class="detail">{{ guest['other'] }}</td>
             <td class="detail">{{ guest['remarks'] }}</td>

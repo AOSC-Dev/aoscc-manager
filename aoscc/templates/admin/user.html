@@ -239,11 +239,12 @@ article > aside img {
 <p>以下是尚未生产的项目。</p>
 <table>
     <thead><tr>
-        <th>品项</th><th>型别</th><th>数量</th><th>单价</th><th>操作</th>
+        <th>日期</th><th>品项</th><th>型别</th><th>数量</th><th>单价</th><th>操作</th>
     </tr></thead>
     <tbody>
         {% for item in notready %}
         <tr>
+            <td>{{ item['t'] | ts2dt | datetime }}</td>
             <td>{{ item['item'] }}</td>
             <td>{{ item['spec'] }}</td>
             <td>{{ item['quantity'] }}</td>
