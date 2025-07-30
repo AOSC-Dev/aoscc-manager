@@ -52,20 +52,6 @@
 
 <details>
     <summary>待确认订单</summary>
-    <form method="post" action="{{ url_for('admin.post_merch_batch_confirm') }}"
-        onsubmit="return confirm('确认要批量确认订单吗？该操作可能耗时较长，请勿刷新！')">
-        <input type="hidden" name="item" value="{{ item }}">
-        <button type="submit" class="primary">确认该商品全部已缴费订单</button>
-    </form>
-    <details>
-        <summary>删除待确认订单（展开）</summary>
-        <form method="post" action="{{ url_for('admin.post_merch_batch_cancel') }}"
-            onsubmit="return confirm('你正在删除当前商品**全部**未确认订单！！真的继续吗？？')">
-            <input type="hidden" name="item" value="{{ item }}">
-            <button type="submit" class="danger">删除该商品全部待确认订单</button>
-        </form>
-    </details>
-   
     <table>
         <thead><tr><th>ID</th><th>UID</th><th>型别</th><th>数量</th><th>总价</th><th>用户余额</th><th>操作</th></tr></thead>
         <tbody>
@@ -94,6 +80,26 @@
                 </td>
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="6"></td>
+                <td>
+                    <form method="post" action="{{ url_for('admin.post_merch_batch_confirm') }}"
+                        onsubmit="return confirm('确认要批量确认订单吗？该操作可能耗时较长，请勿刷新！')">
+                        <input type="hidden" name="item" value="{{ item }}">
+                        <button type="submit" class="primary">确认全部已缴费</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6"></td>
+                <td>
+                    <form method="post" action="{{ url_for('admin.post_merch_batch_cancel') }}"
+                        onsubmit="return confirm('你正在删除当前商品**全部**未确认订单！！真的继续吗？？')">
+                        <input type="hidden" name="item" value="{{ item }}">
+                        <button type="submit" class="danger">删除全部待确认</button>
+                    </form>
+                </td>
+            </tr>
         </tbody>
     </table>
 </details>
