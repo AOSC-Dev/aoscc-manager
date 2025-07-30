@@ -20,6 +20,7 @@ def db():
     )])
     form = {}
     results = []
+    uids = set()
     if request.form and (form := validate(
         Field('SQL', 'sql', 1, 500, str, True),
         Field('解密密钥', 'sk', 0, 64, str, r'[0-9a-f]{64}'),
@@ -32,15 +33,18 @@ def db():
             flash('执行时出错！')
             results = []
 
-        if results and 'legal_id' in results[0]:  # decrypt legal ID
-            for row in results:
+        columns = results[0].keys() if results else set()
+        for row in results:
+            if 'legal_id' in columns:  # decrypt legal ID
                 if form['sk']:
                     row['legal_id'] = decrypt(row['legal_id'], form['sk'])
                 else:
                     row['legal_id'] = '[ENCRYPTED]'
-        if results and 't' in results[0]:  # format timestamp
-            for row in results:
+            if 't' in columns:  # format timestamp
                 row['t'] = dt2datetime(ts2dt(row['t']))
+            if 'uid' in columns:
+                uids.add(row['uid'])
+
 
         if results and form['format'] == 'csv':  # make csv resnponse
             buffer = StringIO()  # buffer and return from memory
@@ -53,4 +57,4 @@ def db():
             resp.headers['Content-Disposition'] = f'attachment; filename={filename}'
             return resp
 
-    return render_template('admin/db.html', tables=tables, form=form, results=results)
+    return render_template('admin/db.html', tables=tables, form=form, results=results, uids=uids)

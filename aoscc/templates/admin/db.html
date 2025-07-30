@@ -88,6 +88,9 @@ pre {
 </table>
 {% endif %}
 <p>共 {{ results | length }} 行。</p>
+{% if uids %}
+<a class="button" href="{{ url_for('admin.notify') }}?uids={{ uids | join(',') }}">向这些用户发送通知</a>
+{% endif %}
 {% endif %}
 
 {% endblock %}
