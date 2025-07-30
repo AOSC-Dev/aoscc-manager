@@ -51,6 +51,7 @@ def user(uid: int):
         badge = fetch_one('badge', {'uid': uid})
         billing = fetch_all('billing', {'uid': uid})
         balance = fetch_one('unpaid_balance', {'uid': uid})['balance']
+        payment  = list(filter(lambda x: x['category'] == '支付', billing))
         merch    = list(filter(lambda x: x['category'] == '纪念品', billing))
         ready    = list(filter(lambda x: x['status'] == 1, merch))
         shipped  = list(filter(lambda x: x['status'] == 2, merch))

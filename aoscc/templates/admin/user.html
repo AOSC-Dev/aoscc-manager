@@ -270,6 +270,21 @@ article > aside img {
 
 {% endif %} {# has_role('checkin') or has_role('merch') #}
 
+{% if payment and has_role('payment') %}
+<h2>支付记录</h2>
+<table>
+    <thead><tr><th>时间</th><th>支付方式</th><th>金额</th></tr></thead>
+    <tbody>
+        {% for item in payment %}
+        <tr>
+            <td>{{ item['t'] | ts2dt | datetime }}</td>
+            <td>{{ item['item'] }}</td>
+            <td>{{ item['price'] | price | safe }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 {% if has_role('notify') %}
 <h2>通知</h2>
