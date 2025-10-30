@@ -1,0 +1,272 @@
+/* colors */
+:root {
+    --bg: #eee;
+    --fg: black;
+    --link: #00a;
+}
+@media screen and (prefers-color-scheme: dark) {
+    :root {
+        --bg: #111;
+        --fg: #ddd;
+        --link: #66f;
+    }
+}
+
+/* basic elements */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+button, .button {
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none !important;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 2px;
+    line-height: 1.15;
+    text-align: center;
+    color: black;
+    background-color: #ccc;
+    white-space: nowrap;
+}
+button.primary, .button.primary {
+    background-color: var(--link);
+    color: white;
+}
+button.danger, .button.danger {
+    background-color: #a00;
+    color: white;
+}
+button:hover, .button:hover {
+    filter: brightness(90%);
+}
+button[disabled], .button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+table button, table .button {
+    padding: 0.2rem 0.5rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="search"],
+select, textarea {
+    background-color: var(--bg);
+    color: var(--fg);
+    border: var(--fg) 1px solid;
+    border-radius: 2px;
+    padding: 0.4rem;
+}
+input:disabled {
+    background-color: #8888;
+}
+@media screen and (prefers-color-scheme: dark) {
+    ::-webkit-calendar-picker-indicator {
+        filter: invert(93.33);
+    }
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: auto;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    margin: 0.5rem 0 1rem;
+}
+.form-row > label:first-child {
+    grid-column-start: 1;
+    font-size: 1.1rem;
+}
+@media screen and (min-width: 568px) {
+    .form-row {
+        grid-template-columns: 8rem auto;
+    }
+    .form-row > * {
+        grid-column-start: 2;
+    }
+    .form-row > label:first-child {
+        text-align: right;
+    }
+}
+.form-row > :nth-child(n+3) {
+    filter: contrast(0.5);
+    font-size: 0.9rem;
+}
+.form-row .sub-row {
+    margin-bottom: 0.5rem;
+}
+
+div.infobox {
+    background-color: #7ce5;
+    border-radius: 2px;
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+div.infobox > :first-child {
+    margin-top: 0;
+}
+div.infobox > :last-child {
+    margin-bottom: 0;
+}
+div.infobox.warning {
+    background-color: #fa75;
+}
+div.infobox.error {
+    background-color: #d885;
+}
+
+details summary {
+    margin: 1em 0;
+}
+
+table {
+    display: block;
+    border-collapse: collapse;
+    line-height: 2rem;
+    text-align: left;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+table tr {
+    vertical-align: top;
+}
+table tr > * {
+    padding: 0 0.5rem;
+    border-bottom: #bbb5 solid 1px;
+}
+table tr a {
+    padding: 0;
+}
+table th {
+    font-weight: bold;
+    white-space: nowrap;
+}
+table thead tr > * {
+    border-bottom: var(--link) solid 2px;
+}
+table tfoot tr > * {
+    border-top: var(--link) solid 2px;
+}
+table td.wrap {
+    word-break: break-all;
+    white-space: normal;
+}
+table tbody tr:hover,
+table tbody tr:target {
+    background-color: #bbb5;
+}
+table form {
+    display: inline-block;
+}
+
+span.price {
+    display: inline-block;
+    text-align: right;
+    white-space: nowrap;
+}
+table span.price {
+    width: 100%;
+}
+span.price span {
+    float: left;
+}
+
+/* layout */
+body {
+    min-height: 100vh;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--fg);
+    background-color: var(--bg);
+}
+body.debug {
+    background-image:  linear-gradient(#f003 1px, transparent 1px), linear-gradient(to right, #f003 1px, transparent 1px);
+    background-size: 1rem 1rem;
+}
+body.debug > header {
+    background-color: darkred;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+body > * {
+    padding: 0 1rem;
+}
+main {
+    margin: auto 0;
+}
+
+h1 .status {
+    display: inline-block;
+    border-radius: 2px;
+    padding: 0.2rem 0.5rem;
+    color: white;
+    font-size: 0.8rem;
+}
+h1 .status.registered {
+    background-color: #0b0;
+}
+h1 .status.not-registered {
+    background-color: #b00;
+}
+h1 .status.arrived {
+    background-color: #d70;
+}
+
+nav, nav > div {
+    display: flex;
+    flex-flow: row wrap;
+    row-gap: 0.5rem;
+}
+nav > div {
+    flex: 1 0 fit-content;
+}
+nav div.spacer {
+    flex: 10;
+    pointer-events: none;
+}
+nav a.button {
+    border-radius: 0;
+    border-right: black solid 1px;
+    padding: 0.6rem;
+    flex: 1 0 fit-content;
+}
+nav a.button:first-of-type {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+nav a.button:last-of-type {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: none;
+}
+
+footer {
+    font-style: italic;
+    filter: contrast(80%);
+}
