@@ -96,6 +96,7 @@ def notify():
 import secrets
 import sqlite3
 from time import sleep
+from html import escape
 from pathlib import Path
 
 from ..util.tg import send_telegram
@@ -107,7 +108,7 @@ def send_notify(task: dict):
         case 'telegram':
             return send_telegram(
                 int(task['identity']),
-                f'<b><u>{task['title']}</u></b>\n\n{task['content']}'
+                f'<b><u>{task['title']}</u></b>\n\n{escape(task['content'])}'
             )
         case 'email':
             return send_email(task['identity'], task['title'], task['content'])
