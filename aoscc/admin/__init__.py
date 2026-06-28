@@ -38,7 +38,7 @@ def check_role(*roles):
 
 @bp.get('/')
 def index():
-    return render_template('admin/index.html')
+    return render_template('admin/base.html')
 
 
 from . import notify, user, db, vote, draw, checkin
