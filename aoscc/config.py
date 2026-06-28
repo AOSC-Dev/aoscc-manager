@@ -10,7 +10,7 @@ SESSION_EXPIRY = timedelta(days=14)
 LOGIN_TOKEN_EXPIRY = 20  # minutes
 AUTO_ADMIN = [
     ('telegram', '263344415', ('admin',)),
-    ('email', 'jeffbai@aosc.io', ('admin',)),
+    ('telegram', '80332535', ('admin',)),
 ]
 # see SECRET in secret.py
 
