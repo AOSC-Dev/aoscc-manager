@@ -5,10 +5,8 @@ from flask import render_template, request, make_response, flash, g
 from ..config import *
 from ..util.db import fetch_all, query_all
 from ..util.form import Field, validate
-from ..util.tmpl import ts2dt, dt2datetime
-from ..util.grant import check_role
-from ..util.encrypt import decrypt
-from . import bp
+from ..util.crypt import decrypt
+from . import bp, check_role
 
 
 @bp.route('/db', methods=['GET', 'POST'])
@@ -40,8 +38,6 @@ def db():
                     row['legal_id'] = decrypt(row['legal_id'], form['sk'])
                 else:
                     row['legal_id'] = '[ENCRYPTED]'
-            if 't' in columns:  # format timestamp
-                row['t'] = dt2datetime(ts2dt(row['t']))
             if 'uid' in columns:
                 uids.add(row['uid'])
 

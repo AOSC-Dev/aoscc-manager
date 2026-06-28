@@ -8,13 +8,10 @@ from flask import Flask, render_template, request
 from .config       import *
 from .secret       import SECRET
 from .util         import bp as util_bp
-from .util.login   import bp as login_bp
 from .user         import bp as user_bp
-from .service      import bp as service_bp
 from .admin        import bp as admin_bp
 from .util.tg      import bot_main
 from .admin.notify import notify_main
-from .util.grant   import enroll_admin
 
 
 def make_app() -> Flask:
@@ -37,9 +34,7 @@ def make_app() -> Flask:
     db.close()
 
     app.register_blueprint(util_bp)
-    app.register_blueprint(login_bp)
     app.register_blueprint(user_bp)
-    app.register_blueprint(service_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
     @app.get("/robots.txt")
@@ -66,5 +61,3 @@ def main():
                 bot_main()
             case 'notify':
                 notify_main()
-            case 'admin':
-                enroll_admin()

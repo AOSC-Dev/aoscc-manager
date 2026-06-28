@@ -12,6 +12,7 @@ class _against_regex:
     def __eq__(self, pattern: str):
         return re.fullmatch(pattern, self.s) is not None
 
+
 @bp.after_app_request
 def cache_policy(response: Response):
     cache = response.cache_control
@@ -32,10 +33,8 @@ def cache_policy(response: Response):
     match _against_regex(url):
         case 'normalize.css' | 'aosc.png' | r'vote/.+' | 'visitor_pass.png' | 'xibao.jpg':
             cache.max_age = 60*60*24*30
-        case r'merch/.+' | r'badge/.+':
+        case r'badge/.+':
             cache.max_age = 60*60
-        case 'alipay.jpg' | 'wechat.jpg':
-            cache.max_age = 60*20
         case 'common.css':
             cache.max_age = 60*5
         case _:

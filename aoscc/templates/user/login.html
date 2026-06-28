@@ -61,9 +61,14 @@ form > img {
 {% block main %}
 <aside>
     <h1>{{ TITLE }} 与会者注册</h1>
-    <p>安同开源社区年度聚会 {{ TITLE }} 将于 7 月 26-27 日在上海交通大学举行。在为期两天的活动中，欢迎您来聆听行业一线人员分享知识经验、广交好友，泥头车即将发车，一起创起来、飞起来！</p>
-    <p>{{ TITLE }} 不设注册费，欢迎所有感兴趣的朋友注册参会！</p>
-    <p>更多会议相关信息，请见 <a href="https://aosc.io/aoscc/2025" target="_blank">社区门户 AOSCC 2025 专题</a>。</p>
+    {% if INTERNAL_ONLY %}
+    <div class="infobox warning">
+        <p><strong>注意！</strong>目前为社区贡献者封闭注册期，请使用指定账号注册。公众注册开放时间请见下方专题页。</p>
+    </div>
+    {% endif %}
+    <p>安同开源社区年度聚会 {{ TITLE }} 将于 8 月 15-16 日在杭州电子科技大学大学举行。在为期两天的活动中，欢迎您来聆听行业一线人员分享知识经验、广交好友。</p>
+    <p>{{ TITLE }} 不设注册费，欢迎感兴趣的朋友注册参会！</p>
+    <p>更多会议相关信息，请见 <a href="https://aosc.io/aoscc/{{ NOW().year }}" target="_blank">社区门户 {{ TITLE }} 专题</a>。</p>
     <p>注册时遇到问题？请{{ CONTACT_US | safe }}寻求帮助。</p>
 </aside>
 <form method="post">

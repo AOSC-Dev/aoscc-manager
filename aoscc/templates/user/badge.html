@@ -27,20 +27,20 @@
 <div id="badge">
     <article>
         <h2>定制胸牌</h2>
-        <p>线下与会者可免费定制胸牌，欢迎您填入自定义昵称及自我介绍，或上传透明背景的 PNG 图片，发挥您的创意。</p>
+        <p>{{ TITLE }} 免费为与会者提供定制的个性化胸牌，欢迎您填入自定义昵称及自我介绍，或上传透明背景的 PNG 图片，发挥您的创意。</p>
         <p>如果您未提交定制，我们将为您提供空白胸牌，届时可在现场使用记号笔绘制。</p>
         <p>请勿在定制胸牌时上传侵权或不恰当的内容，会务组保留判断并拒绝不适当内容的权力。</p>
         <div class="infobox">
             <p>
                 提示：
-                {% if NOW() < BADGE_CLOSE %}
-                定制将于 {{ BADGE_CLOSE | datetime }} 截止。
+                {% if NOW() < BADGE_CUTOFF %}
+                定制将于 {{ BADGE_CUTOFF | datetime }} 截止。
                 {% else %}
                 定制已截止。
                 {% endif %}
             </p>
         </div>
-        {% if NOW() < BADGE_CLOSE %}
+        {% if NOW() < BADGE_CUTOFF %}
         <form method="post" enctype="multipart/form-data">
             <div class="form-row">
                 <label for="line1">昵称</label>
@@ -95,7 +95,7 @@
                     line1: document.getElementById('line1').value,
                     line2: document.getElementById('line2').value
                 }).toString();
-                document.querySelector('img').src = '{{ url_for("service.badge_live") }}?' + query;
+                document.querySelector('img').src = '{{ url_for("user.badge_live") }}?' + query;
             }, 300));
         </script>
         {% endif %}
@@ -103,10 +103,10 @@
 
     <aside>
         <h2>预览</h2>
-        <img src="{{ url_for('service.badge_live') }}">
-        {% if NOW() < BADGE_CLOSE %}
+        <img src="{{ url_for('user.badge_live') }}">
+        {% if NOW() < BADGE_CUTOFF %}
         {% if form or file_exists %}
-        <form method="post" action="{{ url_for('service.post_badge_del') }}">
+        <form method="post" action="{{ url_for('user.post_badge_del') }}">
             <button type="submit" class="danger">取消定制</button>
         </form>
         {% endif %}

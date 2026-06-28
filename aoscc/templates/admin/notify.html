@@ -1,4 +1,4 @@
-{% extends "admin/index.html" %}
+{% extends "admin/base.html" %}
 {% block title %}通知管理{% endblock %}
 
 {% block css %}
@@ -17,6 +17,8 @@
             <a class="button" href="?uids=all_registered">已注册</a>
             <a class="button" href="?uids=not_registered">未注册</a>
             <br><br>
+            <a class="button" href="?uids=all_confirmed">已确认</a>
+            <a class="button" href="?uids=not_confirmed">未确认</a>
             <a class="button" href="?uids=all_arrived">已签到</a>
             <a class="button" href="?uids=not_arrived">未签到</a>
             <br><br>
@@ -24,7 +26,6 @@
             <a class="button" href="?uids=volunteer_pass">已通过</a>
             <a class="button" href="?uids=volunteer_fail">未通过</a>
             <br><br>
-            <a class="button" href="?uids=accommo">预订住宿</a>
             <a class="button" href="?uids=pgp">PGP 参与者</a>
         </div>
     </div>
@@ -69,8 +70,8 @@
     <thead>
         <tr>
             <th>用户</th>
-            <th>类型</th>
-            <th>身份</th>
+            <th>Telegram</th>
+            <th>邮箱</th>
             <th>昵称</th>
             <th>标题</th>
         </tr>
@@ -79,8 +80,8 @@
         {% for row in failed %}
         <tr>
             <td>{{ row['uid'] | uid_link | safe }}</td>
-            <td>{{ row['type'] }}</td>
-            <td>{{ row['identity'] }}</td>
+            <td>{{ row['telegram'] }}</td>
+            <td>{{ row['email'] }}</td>
             <td>{{ row['nick'] }}</td>
             <td>{{ row['title'] }}</td>
         </tr>

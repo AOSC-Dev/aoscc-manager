@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 from ..config import *
 from ..util.db import fetch_one, insert_dict, delete_from
 from ..util.form import Field, validate
-from . import bp
+from . import bp, registered_only
 
 
 def _my_badge_overlay() -> Path:
@@ -45,8 +45,8 @@ def _generate_overlay(line1: str, line2: str) -> Image.Image | None:
         font1 = ImageFont.truetype(Path(current_app.static_folder)/'badge'/'MiSans-Demibold.ttf', 250)
         font2 = ImageFont.truetype(Path(current_app.static_folder)/'badge'/'MiSans-Normal.ttf', 110)
 
-        draw1.text((0, -45), line1, (0xff,0xff,0xff), font1)
-        draw2.text((0, -20), line2, (0xe6,0xe6,0xe6), font2, spacing=32)
+        draw1.text((0, -45), line1, (0x5b,0x60,0x52), font1)
+        draw2.text((0, -20), line2, (0x82,0x8a,0x75), font2, spacing=32)
         bbox1 = text1.getbbox() or (0, 0, 0, 0)
         bbox2 = text2.getbbox() or (0, 0, 0, 0)
         text1 = text1.crop((bbox1[0], 0, bbox1[2], 290))
@@ -63,7 +63,7 @@ def _generate_overlay(line1: str, line2: str) -> Image.Image | None:
         overlay = Image.new("RGBA", (1575, 2362))  # 80x120mm dpi=500
         draw = ImageDraw.Draw(overlay)
         # draw the white line
-        draw.rectangle([(182, 1121), (1392, 1130)], fill=(0xff,0xff,0xff))
+        draw.rectangle([(182, 1121), (1392, 1130)], fill=(0x5b,0x60,0x52))
         overlay.paste(text1, (180, 1110-text1.height), text1)
         overlay.paste(text2, (180, 1170), text2)
         return overlay
@@ -72,15 +72,16 @@ def _generate_overlay(line1: str, line2: str) -> Image.Image | None:
 def badge_open(view):
     @functools.wraps(view)
     def wrapped(*args, **kwargs):
-        if NOW() > BADGE_CLOSE:
+        if NOW() > BADGE_CUTOFF:
             flash('定制已截止。')
-            return redirect(url_for('service.badge'))
+            return redirect(url_for('user.badge'))
         return view(*args, **kwargs)
     return wrapped
 
 
 @bp.post('/badge')
 @badge_open
+@registered_only
 def post_badge():
     if (file := request.files.get('overlay')) and file.filename:
         if file.filename.lower().endswith('.png'):
@@ -107,20 +108,22 @@ def post_badge():
             else:
                 flash('图片生成失败！请重试！')
 
-    return redirect(url_for('service.badge'))
+    return redirect(url_for('user.badge'))
 
 
 @bp.post('/badge/del')
 @badge_open
+@registered_only
 def post_badge_del():
     with suppress(OSError):
         os.remove(_my_badge_overlay())
     delete_from('badge', {'uid': g.uid})
     flash('已清除。')
-    return redirect(url_for('service.badge'))
+    return redirect(url_for('user.badge'))
 
 
 @bp.get('/badge/live')
+@registered_only
 def badge_live():
     line1 = request.args.get('line1', '')
     line2 = request.args.get('line2', '')
@@ -142,7 +145,8 @@ def badge_live():
 
 
 @bp.get('/badge')
+@registered_only
 def badge():
     form = fetch_one('badge', {'uid': g.uid})
     file_exists = _my_badge_overlay().is_file()
-    return render_template('service/badge.html', form=form, file_exists=file_exists)
+    return render_template('user/badge.html', form=form, file_exists=file_exists)

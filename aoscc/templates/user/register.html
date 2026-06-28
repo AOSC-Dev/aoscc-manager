@@ -3,33 +3,58 @@
 
 {% block page %}
 
-{% if 'NOREG' in g.remarks %}
-<h2>错误</h2>
-<p>当前用户暂时无法注册，请{{ CONTACT_US | safe }}。</p>
-{% elif 'REGOK' not in g.remarks and not REGISTER_OPEN %}
+{% if block_register %}
 <h2>注册未开放</h2>
-<p>当前不在注册开放时间，注册开放信息请关注<a href="https://aosc.io/contact" target="_blank">社区各主要频道</a>。</p>
-<p>您可以点击上方「纪念品」购买社区周边文创，我们将在会后邮寄发货。</p>
+<p>当前{{ block_register }}，注册开放信息请关注社区门户 <a href="https://aosc.io/aoscc/{{ NOW().year }}" target="_blank">{{ TITLE }} 专题页</a>或<a href="https://aosc.io/contact" target="_blank">社区各主要频道</a>。</p>
 <p>如有疑问，请{{ CONTACT_US | safe }}。</p>
 {% else %}
-<div class="infobox">
-    <p>提示：若要获取会议纪念品，请于 {{ REGISTER_SOFT | datetime }} 之前完成注册。</p>
-</div>
 <form method="post" autocomplete="off">
     <h2>实名登记</h2>
-    <p>因大型活动治安管理要求，我们需要对与会者进行实名登记。</p>
-    <p>这些信息将被<strong>非对称加密</strong>存储，仅限社区和承办社团代表有权查看，并将在会议结束后销毁。</p>
+    <p>应校方大型活动管理要求，我们需要对与会者进行实名登记，且有可能在入校参会时查验相关证件。</p>
+    <p>如果您无法提供相应信息，请{{ CONTACT_US | safe }}注册。</p>
+    <div class="infobox">
+        <details>
+            <summary>我们如何管理您的个人信息？</summary>
+            <ol>
+                <li>您提供的信息将经<strong>非对称加密</strong>后存储在服务器上</li>
+                <li>解密密钥由会务负责人离线管理，解密后的信息仅限社区和承办社团负责人查看</li>
+                <li>如您确认参会行程，您的实名信息将被提交给校方保卫部门备案</li>
+                <li>未经您单独同意，我们不会将您的信息用于其他目的</li>
+                <li>我们将在会议结束后一个月内销毁这些信息，并建议校方作同等处理</li>
+            </ol>
+        </details>
+    </div>
     <div class="form-row">
         <label for="legal_name">真实姓名</label>
         <input type="text" id="legal_name" name="legal_name" required minlength="2" maxlength="20">
-        <div>与证件保持一致。</div>
+        <div>必须与证件保持一致。</div>
     </div>
     <div class="form-row">
         <label for="citizen_id">公民身份号码</label>
         <input type="text"
             id="citizen_id" name="citizen_id" required
             minlength="18" maxlength="18" pattern="[0-9]{17}[0-9X]">
-        <div>含居民身份证、港澳台居民居住证。如果您没有以上证件，请{{ CONTACT_US | safe }}注册。</div>
+        <div>含居民身份证、港澳台居民居住证。</div>
+    </div>
+    <div class="form-row">
+        <label for="phone">手机号码</label>
+        <input type="tel" id="phone" name="phone" required
+            minlength="11" maxlength="11" pattern="1[0-9]{10}">
+        <div>请填写 11 位中国大陆手机号码，用于接收入校短信。</div>
+    </div>
+    <h2>行程状态</h2>
+    <p>由于参会席位有限，为避免浪费席位，我们需要您提供行程预订状态。</p>
+    <p>完成注册但尚未预订行程的与会者，<strong>我们将为您保留席位至 {{ RESERVE_CUTOFF | date }}</strong>，您可在此之前更新行程状态确认参会。</p>
+    <p>{{ RESERVE_CUTOFF | date }} 后，所有未确认行程的席位将被释放，并按先确认先锁定的方式继续开放注册。</p>
+    <div class="form-row">
+        <label>行程状态</label>
+        <div>
+            <input type="radio" id="confirmed-0" name="confirmed" value="0" required checked>
+            <label for="confirmed-0">我计划参会，但尚未预订行程</label>
+            <br><br>
+            <input type="radio" id="confirmed-1" name="confirmed" value="1" required>
+            <label for="confirmed-1">我已预订行程，并确认将现场参会</label>
+        </div>
     </div>
     <h2>参会须知</h2>
     <p>为了维护会场秩序和与会者的体验，请您阅知以下参会注意事项：</p>

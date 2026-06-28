@@ -41,5 +41,5 @@ def handle_500(exc):
          f'Exception: {repr(exc)}\n\n'
            + ''.join(format_exception(exc))
     ) + '</pre>'
-    send_telegram(LOG_ID, msg)
+    send_telegram(REPORTING_ID, msg)
     return make_response(render_template('error.html'), 500)

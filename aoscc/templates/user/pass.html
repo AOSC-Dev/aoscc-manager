@@ -5,7 +5,7 @@
 <style>
 section {
     position: relative;
-    max-width: 40rem;
+    max-width: 30rem;
     width: 100%;
 }
 img#bg {
@@ -23,21 +23,10 @@ img#fg {
 {% endblock %}
 
 {% block page %}
-<h2>参会证</h2>
-{% if g.arrived %}
-<p>签到状态：<strong>已签到</strong></p>
-{% else %}
-<p>签到状态：<strong>尚未签到</strong></p>
-{% endif %}
-<p>
-    该参会证可用于:
-    <ol>
-        <li>在校门随身份证件出示，以进入校园</li>
-        <li>在签到处扫描，以签到并领取免费会议纪念品</li>
-        <li>在提货区扫描，以提取预订的纪念品（请勿发送给他人）</li>
-    </ol>
-</p>
-<section>
+<div class="infobox warning">
+    <p>该参会证可用于签到及领取会议纪念品，可截图使用，但请勿发送给他人。</p>
+</div>
+<section id="pass">
     <img id="bg" src="{{ url_for("static", filename="visitor_pass.png") }}">
     <img id="fg" src="data:image/png;base64,{{ qr | safe }}">
 </section>

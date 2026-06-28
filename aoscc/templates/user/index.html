@@ -1,0 +1,61 @@
+{% extends "user/base.html" %}
+{% block title %}参会服务{% endblock %}
+
+{% block page %}
+<h2>您已{{ '签到' if g.arrived else '完成注册' }}！接下来……</h2>
+<p>查询议程、地址等会议相关信息，请见<a href="https://aosc.io/aoscc/{{ NOW().year }}" target="_blank">社区门户 {{ TITLE }} 专题</a>。</p>
+<div>
+
+{% if not g.confirmed %}
+<h2>行程确认</h2>
+<div class="infobox error">
+    <p><strong>请注意！</strong>您仍需在 {{ RESERVE_CUTOFF | date }} 前预订行程并确认参会！未及时确认将导致席位被释放！</p>
+</div>
+<p>如果您已经预订行程并确认线下参会，请点击下方按钮确认。</p>
+<form method="post" action="{{ url_for('user.post_register_confirm') }}">
+    <button type="submit" class="primary">我已预订行程并确认参会</button>
+</form>
+{% endif %}
+
+{% if g.arrived %}
+<h2>代号投票</h2>
+<p>每年的 AOSCC ，我们都会投票产生下一个安同 OS 版本代号，请您按表决器！</p>
+<p><a href="{{ url_for('user.vote') }}" class="button">去投票 &gt;&gt;</a></p>
+
+<h2>抽奖</h2>
+<p>会议期间我们将进行数场抽奖活动，来试试手气？</p>
+<p><a href="{{ url_for('user.draw') }}" class="button">去参与 &gt;&gt;</a></p>
+
+<h2>PGP 签名派对</h2>
+<p>会议期间同步进行分散式 PGP 签名派对：来与新老朋友们共织信任网 (Web of Trust) 吧！</p>
+<p><a href="{{ url_for('user.pgp') }}" class="button">去填写 &gt;&gt;</a></p>
+{% endif %}
+
+<h2>定制胸牌</h2>
+<p>{{ TITLE }} 免费为与会者提供定制的个性化胸牌，欢迎您填入自定义昵称及自我介绍，或上传图片发挥您的创意。</p>
+{% if NOW() < BADGE_CUTOFF %}
+<p>定制将于 {{ BADGE_CUTOFF | datetime }} 截止，请及时提交！</p>
+<p><a href="{{ url_for('user.badge') }}" class="button">去定制 &gt;&gt;</a></p>
+{% else %}
+<p>目前定制已截止，您可以在此查看已定制的胸牌。</p>
+<p><a href="{{ url_for('user.badge') }}" class="button">去查看 &gt;&gt;</a></p>
+{% endif %}
+
+{% if VOLUNTEER_OPEN == true %}
+<h2>志愿者招募</h2>
+<p>{{ TITLE }} ，有你更精彩！我们正在招募会务志愿者，欢迎有意协助现场工作的朋友报名。</p>
+<p><a href="{{ url_for('user.volunteer') }}" class="button">去报名 &gt;&gt;</a></p>
+{% endif %}
+
+</div>
+
+{% if not g.arrived %}
+<h2>取消注册</h2>
+<p>如果您不再计划参会，请点击下方按钮取消注册。</p>
+<form method="post" action="{{ url_for('user.post_cancel') }}"
+    onsubmit="return confirm('取消注册将同时删除您已填写的注册及参会服务信息，您确定要取消注册吗？')">
+    <button type="submit" class="danger">取消注册</button>
+</form>
+{% endif %}
+
+{% endblock %}

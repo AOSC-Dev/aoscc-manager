@@ -136,10 +136,6 @@ div.infobox.error {
     background-color: #d885;
 }
 
-details summary {
-    margin: 1em 0;
-}
-
 table {
     display: block;
     border-collapse: collapse;
@@ -228,13 +224,16 @@ h1 .status {
     color: white;
     font-size: 0.8rem;
 }
-h1 .status.registered {
+h1 .status.pink {
+    background-color: #b0b;
+}
+h1 .status.green {
     background-color: #0b0;
 }
-h1 .status.not-registered {
+h1 .status.red {
     background-color: #b00;
 }
-h1 .status.arrived {
+h1 .status.orange {
     background-color: #d70;
 }
 

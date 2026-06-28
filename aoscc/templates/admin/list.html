@@ -1,4 +1,4 @@
-{% extends "admin/index.html" %}
+{% extends "admin/base.html" %}
 {% block title %}用户列表{% endblock %}
 
 {% block css %}
@@ -23,14 +23,9 @@ td:empty::before {
             <th>注册</th>
             <th></th>
             <th>昵称</th>
-            <th>类型</th>
-            <th>身份</th>
-            <th>会务备注</th>
             <th>Telegram</th>
             <th>邮箱</th>
-            <th>手机</th>
-            <th>QQ</th>
-            <th>微信</th>
+            <th>会务备注</th>
         </tr>
     </thead>
     <tbody>
@@ -47,22 +42,19 @@ td:empty::before {
             <td>
                 {% if user['arrived'] %}
                 已签到
-                {% elif user['t'] %}
+                {% elif user['confirmed'] %}
                 已注册
+                {% elif user['registered'] %}
+                待确认
                 {% endif %}
             </td>
             <td>
                 <a href="{{ url_for('admin.user', uid=user['uid']) }}">详情</a>
             </td>
             <td>{{ user['nick'] or '' }}</td>
-            <td>{{ user['type'] }}</td>
-            <td>{{ user['identity'] }}</td>
-            <td>{{ user['remarks'] or '' }}</td>
             <td>{{ user['telegram'] or '' }}</td>
             <td>{{ user['email'] or '' }}</td>
-            <td>{{ user['phone'] or '' }}</td>
-            <td>{{ user['qq'] or '' }}</td>
-            <td>{{ user['wechat'] or '' }}</td>
+            <td>{{ user['remarks'] or '' }}</td>
         </tr>
         {% endfor %}
     </tbody>

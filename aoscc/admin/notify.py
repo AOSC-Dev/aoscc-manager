@@ -3,8 +3,7 @@ from flask import render_template, flash, redirect, url_for, g, request
 from ..config import *
 from ..util.db import query_all, insert_dict, fetch_all
 from ..util.form import Field, validate
-from ..util.grant import check_role
-from . import bp
+from . import bp, check_role
 
 
 def enqueue_notify(uid: int, title: str, content: str):
@@ -66,20 +65,26 @@ def notify():
             uids = ','.join([str(u['uid']) for u in query_all(
                 'SELECT uid FROM user WHERE uid NOT IN (SELECT uid FROM register)'
             )])
+        case 'all_confirmed':
+            uids = ','.join([str(u['uid']) for u in query_all(
+                'SELECT * FROM register WHERE confirmed > 0'
+            )])
+        case 'not_confirmed':
+            uids = ','.join([str(u['uid']) for u in fetch_all('register', {'confirmed': 0})])
         case 'all_arrived':
             uids = ','.join([str(u['uid']) for u in query_all(
                 'SELECT * FROM register WHERE arrived > 0'
             )])
         case 'not_arrived':
-            uids = ','.join([str(u['uid']) for u in fetch_all('register', {'arrived': 0})])
+            uids = ','.join([str(u['uid']) for u in query_all(
+                'SELECT * FROM register WHERE confirmed > 0 AND arrived = 0'
+            )])
         case 'volunteer_apply':
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer')])
         case 'volunteer_pass':
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': 1})])
         case 'volunteer_fail':
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': -1})])
-        case 'accommo':
-            uids = ','.join([str(u['uid']) for u in fetch_all('accommo')])
         case 'pgp':
             uids = ','.join([str(u['uid']) for u in fetch_all('pgp_info')])
         case _:
@@ -104,16 +109,17 @@ from ..util.mail import send_email
 
 
 def send_notify(task: dict):
-    match task['type']:
-        case 'telegram':
-            return send_telegram(
-                int(task['identity']),
-                f'<b><u>{task['title']}</u></b>\n\n{escape(task['content'])}'
-            )
-        case 'email':
-            return send_email(task['identity'], task['title'], task['content'])
-        case _:
-            return False
+    result = False
+    if task['telegram']:
+        result = send_telegram(
+            int(task['telegram']),  # type: ignore
+            f'<b><u>{task['title']}</u></b>\n\n{escape(task['content'])}'
+        ) or result
+    if task['email']:
+        result = send_email(
+            task['email'], task['title'], task['content']
+        ) or result
+    return result
 
 
 def notify_main():

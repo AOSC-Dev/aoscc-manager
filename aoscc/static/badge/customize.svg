@@ -7,7 +7,7 @@
    viewBox="0 0 60.960117 40.640118"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
    sodipodi:docname="customize.svg"
    inkscape:export-filename="customize.png"
    inkscape:export-xdpi="500"
@@ -18,7 +18,7 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
      id="namedview1"
-     pagecolor="#201a31"
+     pagecolor="#eff1eb"
      bordercolor="#000000"
      borderopacity="0.25"
      inkscape:showpageshadow="2"
@@ -26,13 +26,13 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="4.0738558"
-     inkscape:cx="127.15227"
-     inkscape:cy="26.755979"
+     inkscape:zoom="2.0369279"
+     inkscape:cx="126.66133"
+     inkscape:cy="-28.965188"
      inkscape:window-width="2554"
      inkscape:window-height="1355"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="38"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      inkscape:export-bgcolor="#201a3100" />
@@ -87,33 +87,33 @@
      transform="translate(-9.1839435,-38.099944)">
     <text
        xml:space="preserve"
-       style="font-size:12.7px;line-height:0;font-family:MiSans;-inkscape-font-specification:MiSans;text-decoration-color:#000000;letter-spacing:0px;display:inline;fill:#b00d12;stroke-width:0.372776;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-size:12.7px;line-height:0;font-family:MiSans;-inkscape-font-specification:MiSans;text-decoration-color:#000000;letter-spacing:0px;display:inline;fill:#5b6052;stroke-width:0.372776;stroke-linejoin:round;paint-order:stroke fill markers;fill-opacity:1"
        x="8.4216547"
        y="51.757683"
        id="text1-9"><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:450;font-stretch:normal;font-size:12.7px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=450';opacity:1;fill:#ffffff;fill-opacity:1;stroke-width:0.372777"
+         style="font-style:normal;font-variant:normal;font-weight:450;font-stretch:normal;font-size:12.7px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=450';opacity:1;fill:#5b6052;fill-opacity:1;stroke-width:0.372777"
          x="8.4216547"
          y="51.757683"
          id="tspan2-6">安同开源</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:5.64444px;line-height:0;font-family:MiSans;-inkscape-font-specification:MiSans;text-decoration-color:#000000;letter-spacing:0px;display:inline;fill:#b00d12;stroke-width:0.372776;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-size:5.64444px;line-height:0;font-family:MiSans;-inkscape-font-specification:MiSans;text-decoration-color:#000000;letter-spacing:0px;display:inline;fill:#828a75;stroke-width:0.372776;stroke-linejoin:round;paint-order:stroke fill markers;fill-opacity:1"
        x="8.8619194"
        y="64.482262"
        id="text1-9-7"><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:305;font-stretch:normal;font-size:5.64444px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=305';opacity:1;fill:#e6e6e6;fill-opacity:1;stroke-width:0.372777"
+         style="font-style:normal;font-variant:normal;font-weight:305;font-stretch:normal;font-size:5.64444px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=305';opacity:1;fill:#828a75;fill-opacity:1;stroke-width:0.372777"
          x="8.8619194"
          y="64.482262"
          id="tspan7">这是一个定制胸牌样例</tspan><tspan
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:305;font-stretch:normal;font-size:5.64444px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=305';opacity:1;fill:#e6e6e6;fill-opacity:1;stroke-width:0.372777"
+         style="font-style:normal;font-variant:normal;font-weight:305;font-stretch:normal;font-size:5.64444px;line-height:1.2;font-family:MiSans;-inkscape-font-specification:'MiSans weight=305';opacity:1;fill:#828a75;fill-opacity:1;stroke-width:0.372777"
          x="8.8619194"
          y="71.255592"
          id="tspan10">一行写不下也没关系</tspan></text>
     <rect
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.48976;paint-order:stroke markers fill"
+       style="display:inline;fill:#5b6052;fill-opacity:1;stroke:none;stroke-width:1.48976;paint-order:stroke markers fill"
        id="rect7"
        width="61.485001"
        height="0.50599998"

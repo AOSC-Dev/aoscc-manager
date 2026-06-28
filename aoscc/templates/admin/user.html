@@ -1,4 +1,4 @@
-{% extends "admin/index.html" %}
+{% extends "admin/base.html" %}
 {% block title %}{{ '用户' if user else '签到' }}{% endblock %}
 
 {% block css %}
@@ -67,31 +67,42 @@ article > aside img {
             <div><strong>{{ user['nick'] }}</strong></div>
         </div>
         <div class="form-row">
-            <label>登录身份</label>
-            <div>{{ user['type'] }}:{{ user['identity'] }}</div>
-            {% if has_role('admin') and user['type'] == 'telegram' %}
+            <label>Telegram</label>
+            <div>{{ user['telegram'] }}</div>
+            {% if has_role('admin') and user['telegram'] %}
             <a target="_blank" href="{{ url_for('admin.user_telegram_info', uid=user['uid']) }}">
                 账号信息
             </a>
             {% endif %}
         </div>
         <div class="form-row">
-            <label>账单结欠</label>
+            <label>邮箱</label>
+            <div>{{ user['email'] }}</div>
+        </div>
+        {% if has_role('notify') %}
+        <div class="form-row">
+            <label>通知</label>
             <div>
-                {% if balance > 0 %}
-                <strong style="color: red">{{ balance | price | safe }}</strong>
-                {% else %}
-                {{ balance | price | safe }}
-                {% endif %}
+                <a class="button" href="{{ url_for('admin.notify', uids=uid) }}">发送通知</a>
             </div>
         </div>
+        {% endif %}
         <div class="form-row">
             <label>注册时间</label>
-        {% if not register %}
+            {% if not register %}
             <div>尚未注册</div>
+            {% else %}
+            <div>{{ register['registered'] | ts2dt | datetime }}</div>
+            {% endif %}
         </div>
-        {% else %}
-            <div>{{ register['t'] | ts2dt | datetime }}</div>
+        {% if register %}
+        <div class="form-row">
+            <label>确认时间</label>
+            {% if not register['confirmed'] %}
+            <div>尚未确认</div>
+            {% else %}
+            <div>{{ register['confirmed'] | ts2dt | datetime }}</div>
+            {% endif %}
         </div>
         <form method="post" action="{{ url_for('admin.post_user_checkin', uid=user['uid']) }}">
             <div class="form-row">
@@ -131,18 +142,6 @@ article > aside img {
             </div>
         </div>
         <div class="form-row">
-            <label>住宿</label>
-            <div>
-                {% if accommo %}
-                <strong>{{ accommo['type'] }}</strong>（{{ accommo['group'] }}）
-                <br>
-                {{ accommo['checkin'] }} 入住 {{ accommo['checkout'] }} 退房
-                {% else %}
-                未预订
-                {% endif %}
-            </div>
-        </div>
-        <div class="form-row">
             <label>志愿者</label>
             <div>
                 {% if volunteer %}
@@ -157,7 +156,7 @@ article > aside img {
             <div class="form-row">
                 <label for="remarks">会务备注</label>
                 <textarea id="remarks" name="remarks" rows="5" maxlength="500">{{ user['remarks'] }}</textarea>
-                <div>REGOK 允许用户注册 NOREG 禁止用户注册 HOLD 禁止取消注册</div>
+                <div>REGOK 可允许用户注册</div>
             </div>
             <div class="form-row">
                 <label></label>
@@ -173,141 +172,13 @@ article > aside img {
     {% endif %}
 </article>
 
-{% if has_role('checkin') or has_role('merch') %}
-<h2>纪念品</h2>
-
-{% if not (ready or shipped or notready) %}
-<p>无订单。</p>
-{% endif %}
-
-{% if ready %}
-<p>以下已交付生产的纪念品可供发货。</p>
-<form method="post" action="{{ url_for('admin.post_merch_ship', uid=uid) }}">
-    <table>
-        <thead><tr>
-            <th><button type="button" id="select-all">全选</button></th>
-            <th>品项</th><th>型别</th><th>数量</th>
-        </tr></thead>
-        <tbody>
-            {% for item in ready %}
-            <tr>
-                <td><input type="checkbox" name="bid" value="{{ item['bid'] }}"></td>
-                <td>{{ item['item'] }}</td>
-                <td>{{ item['spec'] }}</td>
-                <td>{{ item['quantity'] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if address %}
-    <p>收货地址：{{ address['name'] }}，{{ address['phone'] }}，{{ address['address'] }}</p>
-    {% else %}
-    <p><i>未填写收货地址。</i></p>
-    {% endif %}
-    <input type="text" name="track" maxlength="50" placeholder="物流单号，当面交付留空">
-    <button type="submit" class="primary">发货</button>
-</form>
-<script>
-    document.getElementById('select-all').addEventListener('click', (event) => {
-        let elm = event.currentTarget;
-        while (elm.tagName != 'TABLE') elm = elm.parentElement;
-        elm.querySelectorAll('input[type=checkbox]').forEach((chk) => {
-            chk.checked = true;
-        })
-    })
-</script>
-{% endif %}
-
-{% if shipped %}
-<p>以下是已发货的项目。</p>
-<table>
-    <thead><tr><th>品项</th><th>型别</th><th>数量</th><th>物流追踪</th></tr></thead>
-    <tbody>
-        {% for item in shipped %}
-        <tr>
-            <td>{{ item['item'] }}</td>
-            <td>{{ item['spec'] }}</td>
-            <td>{{ item['quantity'] }}</td>
-            <td>{{ item['track'] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
-{% if notready %}
-<p>以下是尚未生产的项目。</p>
-<table>
-    <thead><tr>
-        <th>日期</th><th>品项</th><th>型别</th><th>数量</th><th>单价</th><th>操作</th>
-    </tr></thead>
-    <tbody>
-        {% for item in notready %}
-        <tr>
-            <td>{{ item['t'] | ts2dt | datetime }}</td>
-            <td>{{ item['item'] }}</td>
-            <td>{{ item['spec'] }}</td>
-            <td>{{ item['quantity'] }}</td>
-            <td>{{ item['price'] | price | safe }}</td>
-            <td>
-                {% if has_role('merch') %}
-                <form method="post"
-                    action="{{ url_for('admin.post_merch_confirm', uid=uid, bid=item['bid']) }}">
-                    <button type="submit" class="primary">确认</button>
-                </form>
-                <form method="post"
-                    action="{{ url_for('admin.post_merch_cancel', uid=uid, bid=item['bid']) }}"
-                    onsubmit="return confirm('确认取消该订单？')">
-                    <button type="submit" class="danger">取消</button>
-                </form>
-		{% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
-{% endif %} {# has_role('checkin') or has_role('merch') #}
-
-{% if payment and has_role('payment') %}
-<h2>支付记录</h2>
-<table>
-    <thead><tr><th>时间</th><th>支付方式</th><th>金额</th></tr></thead>
-    <tbody>
-        {% for item in payment %}
-        <tr>
-            <td>{{ item['t'] | ts2dt | datetime }}</td>
-            <td>{{ item['item'] }}</td>
-            <td>{{ item['price'] | price | safe }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
-{% if has_role('notify') %}
-<h2>通知</h2>
-<a class="button" href="{{ url_for('admin.notify', uids=uid) }}">发送通知</a>
-{% if info %}
-<details>
-    <summary>备用联系方式</summary>
-    {% for k, v in info.items() %}
-    <p>{{ k }}: {{ v }}</p>
-    {% endfor %}
-</details>
-{% endif %}
-{% endif %}
-
-
 {% if has_role('admin') %}
 <h2>登入</h2>
-<form method="post" action="{{ url_for('admin.post_user_login') }}">
-    <input type="hidden" name="uid" value="{{ uid }}">
+<form method="post" action="{{ url_for('admin.post_force_login', uid=uid) }}"
+    onsubmit="return confirm('当前管理员账号将会被登出，确定要强制登入该用户吗？')">
     <button type="submit" class="danger">强制登入</button>
 </form>
 {% endif %}
-
 
 {% endif %} {# user #}
 

@@ -2,64 +2,21 @@ PRAGMA foreign_keys = ON;
 BEGIN TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS "user" (
-	"uid"	INTEGER NOT NULL,
-	"type"	TEXT NOT NULL,
-	"identity"	TEXT NOT NULL,
+	"uid"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"telegram"	TEXT,
+	"email"	TEXT,
 	"nick"	TEXT NOT NULL DEFAULT '',
 	"remarks"	TEXT NOT NULL DEFAULT '',
-	UNIQUE("type","identity"),
-	PRIMARY KEY("uid")
-);
-
-CREATE TABLE IF NOT EXISTS "grant" (
-	"id"	TEXT NOT NULL,
-	"user"	INTEGER,
-	"roles"	TEXT NOT NULL,
-	"t"	INTEGER NOT NULL DEFAULT (UNIXEPOCH()),
-	PRIMARY KEY("id"),
-	FOREIGN KEY("user") REFERENCES "user"("uid") ON UPDATE SET NULL ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS "info" (
-	"uid"	INTEGER NOT NULL,
-	"telegram"	TEXT NOT NULL,
-	"email"	TEXT NOT NULL,
-	"phone"	TEXT NOT NULL,
-	"qq"	TEXT NOT NULL,
-	"wechat"	TEXT NOT NULL,
-	PRIMARY KEY("uid"),
-	FOREIGN KEY("uid") REFERENCES "user"("uid") ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS "address" (
-	"uid"	INTEGER NOT NULL,
-	"address"	TEXT NOT NULL,
-	"phone"	TEXT NOT NULL,
-	"name"	TEXT NOT NULL,
-	PRIMARY KEY("uid"),
-	FOREIGN KEY("uid") REFERENCES "user"("uid") ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS "billing" (
-	"bid"	INTEGER NOT NULL,
-	"uid"	INTEGER NOT NULL,
-	"category"	TEXT NOT NULL DEFAULT '',
-	"item"	TEXT NOT NULL,
-	"spec"	TEXT NOT NULL DEFAULT '',
-	"quantity"	INTEGER NOT NULL DEFAULT 1,
-	"price"	INTEGER NOT NULL,
-	"status"	INTEGER NOT NULL DEFAULT 0,
-	"track"	TEXT NOT NULL DEFAULT '',
-	"t"	INTEGER NOT NULL DEFAULT (UNIXEPOCH()),
-	PRIMARY KEY("bid"),
-	FOREIGN KEY("uid") REFERENCES "user"("uid") ON UPDATE CASCADE
+	UNIQUE("telegram"),
+	UNIQUE("email")
 );
 
 CREATE TABLE IF NOT EXISTS "register" (
 	"uid"	INTEGER NOT NULL,
 	"legal_id"	BLOB NOT NULL,
+	"registered"	INTEGER NOT NULL DEFAULT (UNIXEPOCH()),
+	"confirmed"	INTEGER NOT NULL DEFAULT 0,
 	"arrived"	INTEGER NOT NULL DEFAULT 0,
-	"t"	INTEGER NOT NULL DEFAULT (UNIXEPOCH()),
 	PRIMARY KEY("uid"),
 	FOREIGN KEY("uid") REFERENCES "user"("uid") ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -99,21 +56,6 @@ CREATE TABLE IF NOT EXISTS "pgp_sign" (
 	PRIMARY KEY("signer","signee"),
 	FOREIGN KEY("signee") REFERENCES "pgp_info"("uid") ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY("signer") REFERENCES "register"("uid") ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS "accommo" (
-	"bid"	INTEGER NOT NULL,
-	"uid"	INTEGER NOT NULL UNIQUE,
-	"type"	TEXT NOT NULL,
-	"group"	TEXT NOT NULL,
-	"checkin"	TEXT NOT NULL,
-	"checkout"	TEXT NOT NULL,
-	"name"	TEXT NOT NULL,
-	"phone"	TEXT NOT NULL,
-	"other"	TEXT NOT NULL,
-	PRIMARY KEY("bid"),
-	FOREIGN KEY("bid") REFERENCES "billing"("bid") ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY("uid") REFERENCES "register"("uid") ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS "notify" (
@@ -163,18 +105,5 @@ CREATE TABLE IF NOT EXISTS "draw_detail" (
 	FOREIGN KEY("did") REFERENCES "draw_info"("did") ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY("uid") REFERENCES "register"("uid") ON UPDATE CASCADE
 );
-
-CREATE VIEW IF NOT EXISTS confirmed_billing AS
-	SELECT * FROM billing WHERE status > 0;
-
-CREATE VIEW IF NOT EXISTS balance AS
-	SELECT uid,IFNULL(-SUM(quantity*price),0) AS balance
-	FROM confirmed_billing RIGHT JOIN user USING(uid)
-	GROUP BY uid;
-
-CREATE VIEW IF NOT EXISTS unpaid_balance AS
-	SELECT uid,IFNULL(SUM(quantity*price),0) AS balance
-	FROM billing RIGHT JOIN user USING(uid)
-	GROUP BY uid;
 
 COMMIT;

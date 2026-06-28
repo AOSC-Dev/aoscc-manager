@@ -1,17 +1,25 @@
 {% extends "user/base.html" %}
-{% block title %}联络信息{% endblock %}
+{% block title %}账号信息{% endblock %}
 
 {% block page %}
-<form method="post">
-    <h2>怎么称呼您？</h2>
+
+<h2>怎么称呼您？</h2>
+{% if g.arrived %}
+<p>您当前是昵称是：<strong>{{ g.user['nick'] }}</strong></p>
+<p>您已签到，暂时无法修改昵称，如需修改请{{ CONTACT_US | safe }}。</p>
+{% else %}
+<p>在开始注册之前，请设置您的昵称。该昵称将用于在公开和私下场合中提及您。</p>
+<form method="post" action="{{ url_for('user.post_nick') }}">
     <div class="form-row">
         <label for="nick">昵称</label>
-        <input type="text" id="nick" name="nick" required maxlength="50"
-            {{ 'disabled' if g.arrived else '' }} value="{{ g.nick }}">
+        <input type="text" id="nick" name="nick" required maxlength="50" value="{{ g.user['nick'] }}">
+    </div>
+    <div class="form-row">
+        <label></label>
         <div>
-            用于在公开和私下场合中提及您。
-            {% if g.arrived %}
-            <br>您已签到，如需修改请{{ CONTACT_US | safe }}。
+            <button type="submit" class="primary">保存</button>
+            {% if g.user['nick'] and not g.registered %}
+            <a class="button" href="{{ url_for('user.register') }}">前往参会注册 →</a>
             {% endif %}
         </div>
     </div>
@@ -22,44 +30,49 @@
             document.querySelector('h1 .nick').textContent = text;
         });
     </script>
-    <h2>主要联系方式</h2>
-    <p>
-        {% if g.type == 'telegram' %}
-        与您参会有关的通知将通过 <a href="https://t.me/AOSCCbot" target="_blank">Telegram 机器人</a> 发送到您绑定的 Telegram 账号。
-        {% elif g.type == 'email' %}
-        与您参会有关的通知将通过电子邮件发送到 {{ g.identity }} 。
-        {% endif %}
-    </p>
-    <p>希望更换主要联系方式？请使用相应方式重新登入。</p>
-    <h2>备用联系方式</h2>
-    <p>若我们无法通过上述主要联系方式及时联系到您，我们可能尝试通过下面几个途径与您联系。建议至少填写一项。</p>
-    {% if g.type != 'telegram' %}
+</form>
+{% endif %}
+
+<h2>登入与联系方式</h2>
+<p>与您参会有关的通知将通过下列方式发送到您绑定的平台账号。</p>
+<p>如需账号相关协助，请{{ CONTACT_US | safe }}。</p>
+<form method="post">
     <div class="form-row">
-        <label for="telegram">Telegram</label>
-        <input type="text" id="telegram" name="telegram" maxlength="35" value="{{ form['telegram'] }}">
+        <label>Telegram</label>
+        <div>
+            <button formaction="{{ url_for('user.bind_telegram') }}" formtarget="_blank"
+                type="submit">绑定新 Telegram 账号</button>
+            {% if g.user['telegram'] %}
+                <p>当前已绑定 Telegram 账号 (uid: {{ g.user['telegram'] }}) 。</p>
+                {% if g.user['email'] %}
+                <button formaction="{{ url_for('user.unbind_telegram') }}"
+                    type="submit" class="danger">解绑</button>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
-    {% if g.type != 'email' %}
     <div class="form-row">
         <label for="email">邮箱</label>
-        <input type="email" id="email" name="email" maxlength="254" value="{{ form['email'] }}">
+        <div>
+            <input formaction="{{ url_for('user.bind_email') }}"
+                type="email" id="email" name="email" maxlength="254">
+            <button formaction="{{ url_for('user.bind_email') }}"
+                type="submit">绑定新邮箱</button>
+            {% if g.user['email'] %}
+                <p>当前已绑定邮箱 {{ g.user['email'] }} 。</p>
+                {% if g.user['telegram'] %}
+                <button formaction="{{ url_for('user.unbind_email') }}"
+                    type="submit" class="danger">解绑</button>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
-    <div class="form-row">
-        <label for="phone">手机</label>
-        <input type="tel" id="phone" name="phone" maxlength="30" value="{{ form['phone'] }}">
-    </div>
-    <div class="form-row">
-        <label for="qq">QQ</label>
-        <input type="text" id="qq" name="qq" maxlength="15" value="{{ form['qq'] }}">
-    </div>
-    <div class="form-row">
-        <label for="wechat">微信</label>
-        <input type="text" id="wechat" name="wechat" maxlength="30" value="{{ form['wechat'] }}">
-    </div>
-    <div class="form-row">
-        <label></label>
-        <div><button type="submit" class="primary">保存</button></div>
-    </div>
+</form>
+
+<h2>删除账号</h2>
+<p>删除账号前请先取消会议注册。账号删除后无法恢复，但您可以重新注册。</p>
+<form method="post" action="{{ url_for('user.post_delete_account') }}"
+    onsubmit="return confirm('您确定要删除账号吗？')">
+    <button type="submit" class="danger">删除账号</button>
 </form>
 {% endblock %}

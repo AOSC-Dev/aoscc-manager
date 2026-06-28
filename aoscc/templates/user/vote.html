@@ -68,7 +68,7 @@ form button.active {
 {% for active in actives %}
 <div class="voting">
     <h3>{{ active['title'] }}</h3>
-    <form method="post" action="{{ url_for('service.post_vote', vid=active['vid']) }}">
+    <form method="post" action="{{ url_for('user.post_vote', vid=active['vid']) }}">
         <button type="submit" name="vote" value="1"
             class="{{ 'active' if votes.get(active['vid'], {}).get('vote') == 1 }}">
             赞成

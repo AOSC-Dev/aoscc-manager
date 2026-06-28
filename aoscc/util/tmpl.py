@@ -16,15 +16,6 @@ def inject_contact_us():
     return dict(CONTACT_US=f'<a href="{ url_for('contact') }">联系会务组</a>')
 
 
-@bp.app_template_filter('price')
-def get_price_display(price: int) -> str:
-    neg = '-' if price < 0 else ''
-    price = abs(price)
-    yuan = price // 100
-    fen = str(price % 100).zfill(2)
-    return f'<span class="price"><span>¥</span>&nbsp;{neg}{yuan}.{fen}</span>'
-
-
 @bp.app_template_filter('ts2dt')
 def ts2dt(timestamp: int) -> datetime:
     return datetime.fromtimestamp(timestamp)

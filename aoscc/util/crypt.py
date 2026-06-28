@@ -2,23 +2,31 @@ import hashlib
 import hmac
 from time import time
 
+from nacl.public import PrivateKey, PublicKey, SealedBox
+
 from ..config import *
 from ..secret import SECRET
 
-SIG_LEN = hashlib.sha256().digest_size * 2
+
+def encrypt(msg: str) -> bytes:
+    return SealedBox(PublicKey(SECRET)).encrypt(msg.encode())
+
+
+def decrypt(cipher: bytes, skey: str) -> str:
+    return SealedBox(PrivateKey(bytes.fromhex(skey))).decrypt(cipher).decode()
 
 
 def sign_msg(typ: str, msg: str, valid_for: int = 60) -> str:
     expiry = (int(time()) + valid_for) if valid_for else 0
     token = f'{typ}:{msg}:{expiry}'
-    sig = hmac.digest(SECRET, token.encode(), hashlib.sha256).hex()
+    sig = hmac.digest(SECRET, token.encode(), hashlib.sha256).hex()[0:32]
     return f'{token}:{sig}'
 
 
 def verify_msg(signed: str) -> tuple[str, str]:
     try:
-        token, sig = signed[:-SIG_LEN-1], signed[-SIG_LEN:]
-        expect = hmac.digest(SECRET, token.encode(), hashlib.sha256).hex()
+        token, sig = signed[:-32-1], signed[-32:]
+        expect = hmac.digest(SECRET, token.encode(), hashlib.sha256).hex()[0:32]
         if not hmac.compare_digest(sig, expect):
             raise ValueError('bad signature')
         typ, *msg, expiry = token.split(':')

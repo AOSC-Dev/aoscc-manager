@@ -2,35 +2,34 @@
 
 {% block main %}
 <h1>
-    您好<span class="nick">{% if g.nick %}，{{ g.nick }}{% endif %}</span>！
+    您好<span class="nick">{% if g.user['nick'] %}，{{ g.user['nick'] }}{% endif %}</span>！
     {% if g.arrived %}
-    <span class="status arrived">已签到</span>
+    <span class="status pink">已签到</span>
+    {% elif g.confirmed %}
+    <span class="status green">注册已确认</span>
     {% elif g.registered %}
-    <span class="status registered">已注册</span>
+    <span class="status orange">行程待确认</span>
     {% else %}
-    <span class="status not-registered">尚未注册</span>
+    <span class="status red">尚未注册</span>
     {% endif %}
 </h1>
 <p>欢迎您参加 {{ TITLE }} 。</p>
 <nav>
     <div>
-        {% if g.nick %}
-        <a class="button{% if request.path == url_for('user.info') %} primary{% endif %}" href="{{ url_for('user.info') }}">联络信息</a>
-        {% if not g.registered %}
-        <a class="button{% if request.path == url_for('user.register') %} primary{% endif %}" href="{{ url_for('user.register') }}">参会注册</a>
-        {% else %}
-        <a class="button{% if request.blueprint == 'service' %} primary{% endif %}" href="{{ url_for('service.index') }}">参会服务</a>
+        {% if g.registered %}
+        <a class="button{% if request.endpoint == 'user.index' %} primary{% endif %}" href="{{ url_for('user.index') }}">参会服务</a>
+        {% if g.confirmed %}
+        <a class="button{% if request.endpoint == 'user.pass' %} primary{% endif %}" href="{{ url_for('user.pass') }}">参会证</a>
         {% endif %}
-        <a class="button{% if request.path == url_for('user.merch') %} primary{% endif %}" href="{{ url_for('user.merch') }}">纪念品订购</a>
+        {% elif g.user['nick'] %}
+        <a class="button{% if request.endpoint == 'user.register' %} primary{% endif %}" href="{{ url_for('user.register') }}">参会注册</a>
         {% endif %}
         <div class="spacer"></div>
     </div>
     <div>
         <div class="spacer"></div>
-        {% if g.nick %}
-        <a class="button{% if request.path == url_for('user.billing') %} primary{% endif %}" href="{{ url_for('user.billing') }}">账单</a>
-        {% endif %}
-        <a class="button" href="{{ url_for('login.logout') }}">登出</a>
+        <a class="button{% if request.endpoint == 'user.info' %} primary{% endif %}" href="{{ url_for('user.info') }}">账号</a>
+        <a class="button" href="{{ url_for('user.logout') }}">登出</a>
     </div>
 </nav>
 <hr>

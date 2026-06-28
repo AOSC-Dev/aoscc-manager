@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, flash, g, abort, request, 
 
 from ..util.db import fetch_all, fetch_one, insert_dict, delete_from
 from ..util.form import Field, validate
-from . import bp, check_arrived
+from . import bp, arrived_only
 
 
 def is_in_pgp_party(uid: int = None) -> bool:
@@ -12,6 +12,7 @@ def is_in_pgp_party(uid: int = None) -> bool:
 
 
 @bp.post('/pgp')
+@arrived_only
 def post_pgp():
     if is_in_pgp_party():  # no silent update, must revoke first
         flash('信息已存在！')
@@ -23,13 +24,14 @@ def post_pgp():
         form.pop('consent', None)
         insert_dict('pgp_info', form|{'uid': g.uid})
         flash('保存成功！')
-    return redirect(url_for('service.pgp'))
+    return redirect(url_for('user.pgp'))
 
 
 @bp.post('/pgp/cancel')
+@arrived_only
 def post_pgp_cancel():
     delete_from('pgp_info', {'uid': g.uid})  # will CASCADE signees
-    return redirect(url_for('service.pgp'))
+    return redirect(url_for('user.pgp'))
 
 
 def query_key(uid: int) -> dict:
@@ -48,6 +50,7 @@ def query_key(uid: int) -> dict:
 
 
 @bp.get('/pgp/key')
+@arrived_only
 def pgp_key():
     if ret := query_key(request.args.get('uid')):
         session['_last_query_key'] = ret
@@ -57,7 +60,7 @@ def pgp_key():
 
 
 @bp.post('/pgp/sign')
-@check_arrived
+@arrived_only
 def post_pgp_sign():
     if form := validate(
         Field('对方用户不存在！', 'signee', 1, 10, int, is_in_pgp_party),
@@ -71,17 +74,18 @@ def post_pgp_sign():
             insert_dict('pgp_sign', form|{'signer': g.uid})
             flash('保存成功！')
     session.pop('_last_query_key', None)
-    return redirect(url_for('service.pgp'))
+    return redirect(url_for('user.pgp'))
 
 
 @bp.post('/pgp/sign/del')
+@arrived_only
 def post_pgp_sign_del():
     if form := validate(
         Field('对方用户不存在！', 'signee', 1, 10, int, is_in_pgp_party),
     ):
         delete_from('pgp_sign', form|{'signer': g.uid})
         flash('删除成功！')
-    return redirect(url_for('service.pgp'))
+    return redirect(url_for('user.pgp'))
 
 
 @bp.app_template_filter('fpr')
@@ -90,10 +94,11 @@ def fpr(fpr: str) -> str:  # magic, 0123ABCD to 0123 ABCD...
 
 
 @bp.get('/pgp')
+@arrived_only
 def pgp():
     mykey = fetch_one('pgp_info', {'uid': g.uid})
     records = fetch_all(
         'pgp_sign JOIN pgp_info ON pgp_info.uid = pgp_sign.signee',
         {'signer': g.uid},
     )
-    return render_template('service/pgp.html', mykey=mykey, records=records)
+    return render_template('user/pgp.html', mykey=mykey, records=records)

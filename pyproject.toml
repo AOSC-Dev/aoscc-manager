@@ -1,6 +1,6 @@
 [project]
 name = "aoscc"
-version = "2025.6.8.0"
+version = "2026.6.28.0"
 dependencies = [
     "flask",
     "python-telegram-bot",
@@ -11,7 +11,7 @@ dependencies = [
     "qrcode",
     "gunicorn",
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 authors = [
   {name = "TechCiel", email = "ciel@aosc.io"},
 ]

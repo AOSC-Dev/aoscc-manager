@@ -20,8 +20,19 @@ def send_telegram(uid: int, msg: str, **kwargs) -> bool:
         return True
     except Exception as exc:
         print(repr(exc))
-        if uid != LOG_ID:
-            send_telegram(LOG_ID, f'#TELEGRAM\nError sending to {uid}\n{escape(repr(exc))}')
+        if uid != REPORTING_ID:
+            send_telegram(REPORTING_ID, f'#TELEGRAM\nError sending to {uid}\n{escape(repr(exc))}')
+        return False
+
+
+def is_contributor_telegram(uid: int) -> bool:
+    try:
+        r = requests.post(f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember', json={
+            'chat_id': BAKA_GROUP_ID,
+            'user_id': uid,
+        }, timeout=10).json()
+        return r['ok'] and r['result']['status'] not in ('left', 'kicked')
+    except Exception:
         return False
 
 
@@ -31,22 +42,26 @@ def send_telegram(uid: int, msg: str, **kwargs) -> bool:
 from telegram import Update
 from telegram.ext import filters, Application, ContextTypes, MessageHandler, CommandHandler
 
-from .verify import sign_msg
+from .crypt import sign_msg
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if context.args and context.args[0].startswith('bind'):
+        bind = f'?bind={context.args[0].replace('_', ':')}'
+    else:
+        bind = ''
     await update.message.reply_text(f"""
-{update.effective_user.first_name} 您好，欢迎注册 {TITLE} ！请点击以下链接登入会议注册系统，链接有效期 {LOGIN_TOKEN_EXPIRY} 分钟，您可随时发送 /start 获取登入链接。
+{update.effective_user.first_name} 您好，欢迎注册 {TITLE} ！请点击以下链接{'绑定 Telegram ' if bind else '登入会议注册系统'}，链接有效期 {LOGIN_TOKEN_EXPIRY} 分钟，您可随时发送 /start 获取登入链接。
 
 如需更多协助，您可在此机器人会话留言，或邮件联系 aoscc@aosc.io 。
 
-{URL_BASE}/login/{sign_msg('telegram', str(update.effective_user.id), LOGIN_TOKEN_EXPIRY*60)}
+{URL_BASE}/login/{sign_msg('telegram', str(update.effective_user.id), LOGIN_TOKEN_EXPIRY*60)}{bind}
 """, disable_web_page_preview=True)
 
 
 async def private_msg(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = update.message
-    fwded = await msg.forward(MGMT_ID)
+    fwded = await msg.forward(PRIVATE_QUESTION_ID)
     await fwded.reply_text(f'REPLY ME FOR USER {update.effective_user.id}')
     await msg.reply_text('您的消息已经转送至会务组，我们将尽快回复。')
 
@@ -71,7 +86,7 @@ def bot_main():
 
     bot.add_handler(CommandHandler('start', start, filters.ChatType.PRIVATE))
     bot.add_handler(MessageHandler(filters.ChatType.PRIVATE, private_msg))
-    bot.add_handler(MessageHandler(filters.Chat(MGMT_ID), reply_msg))
+    bot.add_handler(MessageHandler(filters.Chat(PRIVATE_QUESTION_ID), reply_msg))
 
     bot.run_polling()
 

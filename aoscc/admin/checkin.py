@@ -1,13 +1,12 @@
 from time import time
 
-from flask import render_template, redirect, url_for, session, flash, request, g
+from flask import redirect, url_for, session, flash, request
 
 from ..config import *
 from ..util.db import update_table
 from ..util.form import Field, validate
-from ..util.grant import check_role, has_role
-from ..util.verify import verify_msg
-from . import bp
+from ..util.crypt import verify_msg
+from . import bp, check_role
 
 
 @bp.post('/checkin/<int:uid>')
@@ -23,14 +22,8 @@ def post_user_checkin(uid: int):
 
 @bp.get('/checkin/<string:token>')
 @bp.post('/checkin', defaults={'token': None})
-#@check_role('checkin')  # see below
+@check_role('checkin')  # see below
 def post_checkin(token: str):
-    if not has_role('checkin'):
-        if token and request.method == 'GET':
-            return render_template('admin/checkin-401.html')
-        flash('角色权限不足。')
-        return redirect(url_for('admin.index'))
-
     token = request.form.get('token', token)
     try:
         if not isinstance(token, str):

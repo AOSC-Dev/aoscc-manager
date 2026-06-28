@@ -24,18 +24,28 @@ def query_all(sql: str, args: tuple = ()) -> list[dict]:
     return list(map(dict, rows))
 
 
-def fetch_all(table: str, cond: dict = None) -> list[dict]:
-    cond = cond or {}
+def _build_condition(cond: dict) -> tuple[str, tuple]:
+    return (' AND '.join(f'`{k}` = ?' for k in cond.keys())) if cond else '1'
+
+
+def fetch_all(table: str, cond: dict = None, limit: int = None) -> list[dict]:
     return query_all(
-        f'SELECT * FROM {table} WHERE {(
-            " AND ".join(f"`{k}` = ?" for k in cond.keys())
-        ) if cond else '1'}',
+        f'SELECT * FROM {table} WHERE {_build_condition(cond)}'
+        f'{f' LIMIT {limit}' if limit is not None else ''}',
         tuple((cond or {}).values())
     )
 
 
+def count_rows(table: str, cond: dict = None) -> int:
+    cur = g.db.execute(
+        f'SELECT COUNT(*) FROM {table} WHERE {_build_condition(cond)}',
+        tuple((cond or {}).values())
+    )
+    return cur.fetchone()[0]
+
+
 def fetch_one(table: str, cond: dict = None) -> dict|None:
-    if rows := fetch_all(table, cond):
+    if rows := fetch_all(table, cond, limit=1):
         return rows[0]
 
 
@@ -60,6 +70,7 @@ def delete_from(table: str, cond: dict, commit: bool = True) -> int:
     if commit:
         g.db.commit()
     return cur.rowcount
+
 
 def update_table(table: str, d: dict[str,str|int], cond: dict, commit: bool = True) -> int:
     cur = g.db.execute(

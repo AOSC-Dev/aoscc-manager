@@ -56,7 +56,7 @@ table td strong {
 <div class="draw">
     <h3>{{ active['title'] }}</h3>
     <p>{{ active['count'] }} 人</p>
-    <form method="post" action="{{ url_for('service.post_draw', did=active['did']) }}">
+    <form method="post" action="{{ url_for('user.post_draw', did=active['did']) }}">
         选择颜色：
         <input type="color" id="color" name="color" required
             value="{{ mytkts.get(active['did'], {}).get('color', '#'+rand) }}">

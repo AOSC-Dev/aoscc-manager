@@ -3,21 +3,11 @@
 
 {% block main %}
 <h1>管理</h1>
-<p>您当前的角色是：{{ ' '.join(g.roles) or '无' }}</p>
-<p>请求授权 ID ：<code id="session">{{ session['id'] }}</code></p>
+<p>您当前的角色是：{{ ' '.join(g.roles) }}</p>
 <nav>
     <div>
         {% if has_role('*') %}
         <a class="button" href="{{ url_for('admin.users') }}">用户</a>
-        {% endif %}
-        {% if has_role('payment') %}
-        <a class="button" href="{{ url_for('admin.payment') }}">支付</a>
-        {% endif %}
-        {% if has_role('accommo') %}
-        <a class="button" href="{{ url_for('admin.accommo') }}">住宿</a>
-        {% endif %}
-        {% if has_role('merch') %}
-        <a class="button" href="{{ url_for('admin.merch') }}">订货</a>
         {% endif %}
         {% if has_role('notify') %}
         <a class="button" href="{{ url_for('admin.notify') }}">通知</a>
@@ -37,27 +27,18 @@
         <div class="spacer"></div>
         {% if has_role('admin') %}
         <a class="button" href="{{ url_for('admin.db') }}">数据库</a>
-        <a class="button" href="{{ url_for('admin.grant') }}">权限</a>
         {% endif %}
         {% if has_role('*') %}
-        <a class="button" href="{{ url_for('admin.revoke') }}">登出</a>
+        <a class="button" href="{{ url_for('user.logout') }}">登出</a>
         {% endif %}
     </div>
 </nav>
 <hr>
 {% block page %}
-{% if has_role('*') %}
 <p>请选择一个模块开始。</p>
-{% endif %}
 {% endblock %}
-<script>
-    document.getElementById('session').addEventListener('click', (event) => {
-        navigator.clipboard.writeText(event.currentTarget.textContent);
-        setTimeout(() => {alert('已复制！')}, 200);
-    })
-</script>
 {% endblock %}
 
 {% block footer_navigate %}
-<a href="{{ url_for('user.register') }}">返回前台</a>
+<a href="{{ url_for('user.index') }}">返回前台</a>
 {% endblock %}
