@@ -50,7 +50,7 @@ RESERVE_CUTOFF = datetime(2026, 7, 31, 23, 59, 59)
 REGISTER_CUTOFF = datetime(2026, 8, 7, 23, 59, 59)
 
 ## services
-BADGE_CUTOFF = datetime(2026, 8, 7, 23, 59, 59)
+BADGE_CUTOFF = datetime(2026, 8, 4, 23, 59, 59)
 VOLUNTEER_OPEN = True
 
 ALL_CONFIG = {k: v for k, v in locals().items() if re.fullmatch(r'[A-Z]+(_[A-Z]+)*', k)}
