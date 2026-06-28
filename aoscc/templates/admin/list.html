@@ -8,6 +8,18 @@ td:empty::before {
     font-style: italic;
     color: #777;
 }
+td.pink {
+    background-color: #b0b7;
+}
+td.green {
+    background-color: #0b07;
+}
+td.red {
+    background-color: #b007;
+}
+td.orange {
+    background-color: #d707;
+}
 </style>
 {% endblock %}
 
@@ -39,15 +51,15 @@ td:empty::before {
             <td>
                 <label for="user-{{ user['uid'] }}">{{ user['uid'] }}</label>
             </td>
-            <td>
-                {% if user['arrived'] %}
-                已签到
-                {% elif user['confirmed'] %}
-                已注册
-                {% elif user['registered'] %}
-                待确认
-                {% endif %}
-            </td>
+            {% if user['arrived'] %}
+            <td class="pink">已签到</td>
+            {% elif user['confirmed'] %}
+            <td class="green">已确认</td>
+            {% elif user['registered'] %}
+            <td class="orange">已注册</td>
+            {% else %}
+            <td class="red">未注册</td>
+            {% endif %}
             <td>
                 <a href="{{ url_for('admin.user', uid=user['uid']) }}">详情</a>
             </td>
