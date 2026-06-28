@@ -96,7 +96,7 @@
                     line2: document.getElementById('line2').value
                 }).toString();
                 document.querySelector('img').src = '{{ url_for("user.badge_live") }}?' + query;
-            }, 300));
+            }, 1000));
         </script>
         {% endif %}
     </article>
