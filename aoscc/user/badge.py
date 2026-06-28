@@ -28,7 +28,7 @@ def _enlarge_overlay() -> bool:
         new = Image.new("RGBA", (1575, 2362))  # 80x120mm dpi=500
         old = Image.open(_my_badge_overlay(), 'r', ('PNG',))
         old = old.crop((0, 0, min(old.width, 1200), min(old.height,800)))
-        new.paste(old, (180, 750), old)  # paste to customize area
+        new.paste(old, (180, 740), old)  # paste to customize area
         old.close()
         new.save(_my_badge_overlay(), format="png")
         new.close()
@@ -63,9 +63,9 @@ def _generate_overlay(line1: str, line2: str) -> Image.Image | None:
         overlay = Image.new("RGBA", (1575, 2362))  # 80x120mm dpi=500
         draw = ImageDraw.Draw(overlay)
         # draw the white line
-        draw.rectangle([(182, 1121), (1392, 1130)], fill=(0x5b,0x60,0x52))
-        overlay.paste(text1, (180, 1110-text1.height), text1)
-        overlay.paste(text2, (180, 1170), text2)
+        draw.rectangle([(182, 1101), (1392, 1110)], fill=(0x5b,0x60,0x52))
+        overlay.paste(text1, (180, 1090-text1.height), text1)
+        overlay.paste(text2, (180, 1150), text2)
         return overlay
 
 
