@@ -8,6 +8,7 @@ from ..util.form import Field, validate
 from ..util.mail import send_email_login, is_contributor_email
 from ..util.crypt import verify_msg
 from . import bp
+from .register import check_block_register
 
 
 @bp.post('/login')
@@ -72,4 +73,4 @@ def logout():
 def login():
     if g.uid:
         return redirect(url_for('user.index'))
-    return render_template('user/login.html')
+    return render_template('user/login.html', block_register=check_block_register())

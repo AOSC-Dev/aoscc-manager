@@ -38,7 +38,7 @@ def check_block_register() -> str:
     confirmed = total - not_confirmed
     if g.registered:
         return '您已完成注册，请勿重复注册'
-    if 'REGOK' in g.user['remarks']:
+    if g.user and 'REGOK' in g.user['remarks']:
         return ''
     if not REGISTER_OPEN or NOW() >= REGISTER_CUTOFF:
         return '不在注册开放时间'

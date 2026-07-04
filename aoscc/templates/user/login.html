@@ -61,9 +61,17 @@ form > img {
 {% block main %}
 <aside>
     <h1>{{ TITLE }} 与会者注册</h1>
-    {% if NOW() <= INTERNAL_ONLY %}
+    {% if block_register %}
+    <div class="infobox warning">
+        <p>当前{{ block_register }}。</p>
+    </div>
+    {% elif NOW() <= INTERNAL_ONLY %}
     <div class="infobox warning">
         <p><strong>注意！</strong>目前为社区贡献者封闭注册期，请使用指定账号注册。公众注册开放时间请见下方专题页。</p>
+    </div>
+    {% else %}
+    <div class="infobox">
+        <p>当前注册开放中。</p>
     </div>
     {% endif %}
     <p>安同开源社区年度聚会 {{ TITLE }} 将于 8 月 15-16 日在杭州电子科技大学（下沙校区）举行。在为期两天的活动中，欢迎您来聆听行业一线人员分享知识经验、广交好友。</p>
