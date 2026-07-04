@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+{% block title %}管理后台{% endblock %}
+
+{% block page %}
+<p>目前登入人数：<strong>{{ n_users }}</strong></p>
+<p>目前注册人数：<strong>{{ n_registered }}</strong></p>
+<p>目前确认人数：<strong>{{ n_confirmed }}</strong></p>
+<p>目前签到人数：<strong>{{ n_arrived }}</strong></p>
+{% endblock %}

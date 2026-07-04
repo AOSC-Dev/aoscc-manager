@@ -7,6 +7,7 @@
 <nav>
     <div>
         {% if has_role('*') %}
+        <a class="button" href="{{ url_for('admin.index') }}">概览</a>
         <a class="button" href="{{ url_for('admin.users') }}">用户</a>
         {% endif %}
         {% if has_role('notify') %}
@@ -35,7 +36,6 @@
 </nav>
 <hr>
 {% block page %}
-<p>请选择一个模块开始。</p>
 {% endblock %}
 {% endblock %}
 

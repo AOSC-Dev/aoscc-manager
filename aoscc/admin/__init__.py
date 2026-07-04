@@ -1,6 +1,6 @@
 import functools
 
-from flask import Blueprint, render_template, redirect, url_for, g, flash
+from flask import Blueprint, redirect, url_for, g, flash
 
 bp = Blueprint('admin', __name__)
 
@@ -36,9 +36,4 @@ def check_role(*roles):
     return wrapper
 
 
-@bp.get('/')
-def index():
-    return render_template('admin/base.html')
-
-
-from . import notify, user, db, vote, draw, checkin
+from . import index, notify, user, db, vote, draw, checkin
