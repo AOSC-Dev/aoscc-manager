@@ -61,7 +61,7 @@ form > img {
 {% block main %}
 <aside>
     <h1>{{ TITLE }} 与会者注册</h1>
-    {% if INTERNAL_ONLY %}
+    {% if NOW() <= INTERNAL_ONLY %}
     <div class="infobox warning">
         <p><strong>注意！</strong>目前为社区贡献者封闭注册期，请使用指定账号注册。公众注册开放时间请见下方专题页。</p>
     </div>

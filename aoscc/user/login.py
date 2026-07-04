@@ -15,7 +15,7 @@ def post_login():
     if form := validate(
         Field('邮箱', 'email', 1, 254, str, r'(?i)[a-z0-9+_.-]+@[a-z0-9-]+(\.[a-z0-9-]+)+')
     ):
-        if INTERNAL_ONLY and not is_contributor_email(form['email']):
+        if NOW() <= INTERNAL_ONLY and not is_contributor_email(form['email']):
             flash('封闭注册期，请使用指定的平台账号注册。')
             return redirect(url_for('user.login'))
         flash(send_email_login(form['email']))
@@ -49,7 +49,7 @@ def do_login(token: str):
     if row := fetch_one('user', {typ: iden}):
         session['uid'] = row['uid']
     else:
-        if INTERNAL_ONLY and (
+        if NOW() <= INTERNAL_ONLY and (
             (typ == 'telegram' and not is_contributor_telegram(int(iden))) or
             (typ == 'email' and not is_contributor_email(iden))
         ):
