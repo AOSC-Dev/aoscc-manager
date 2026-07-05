@@ -8,8 +8,11 @@ section {
     max-width: 30rem;
     width: 100%;
 }
-img#bg {
+#pass img {
     width: 100%;
+}
+#pass-fallback {
+    position: relative;
 }
 img#fg {
     position: absolute;
@@ -18,15 +21,61 @@ img#fg {
     left: 9.2%;
     width: 56.7%;
 }
+#pass-generated {
+    display: none;
+}
 </style>
 {% endblock %}
 
 {% block page %}
 <div class="infobox warning">
-    <p>该参会证可用于签到及领取会议纪念品，可截图使用，但请勿发送给他人。</p>
+    <p>该参会证可用于签到及领取会议纪念品，可截图使用，或长按/右键保存图片，但请勿发送给他人。</p>
 </div>
 <section id="pass">
-    <img id="bg" src="{{ url_for("static", filename="visitor_pass.png") }}">
-    <img id="fg" src="data:image/png;base64,{{ qr | safe }}">
+    <img id="pass-generated" alt="参会证">
+    <div id="pass-fallback">
+        <img id="bg" src="{{ url_for("static", filename="visitor_pass.png") }}">
+        <img id="fg" src="data:image/png;base64,{{ qr | safe }}">
+    </div>
 </section>
+<script>
+(() => {
+    const generated = document.getElementById("pass-generated");
+    const fallback = document.getElementById("pass-fallback");
+    const bg = document.getElementById("bg");
+    const fg = document.getElementById("fg");
+
+    const load = (img) => img.complete && img.naturalWidth
+        ? Promise.resolve()
+        : new Promise((resolve, reject) => {
+            img.addEventListener("load", resolve, { once: true });
+            img.addEventListener("error", reject, { once: true });
+        });
+
+    Promise.all([load(bg), load(fg)]).then(() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = bg.naturalWidth;
+        canvas.height = bg.naturalHeight;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(bg, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+            fg,
+            canvas.width * 0.092,
+            canvas.height * 0.325,
+            canvas.width * 0.567,
+            canvas.width * 0.567,
+        );
+
+        generated.src = canvas.toDataURL("image/png");
+        generated.style.display = "block";
+        fallback.hidden = true;
+    }).catch(() => {
+        generated.remove();
+    });
+})();
+</script>
 {% endblock %}
