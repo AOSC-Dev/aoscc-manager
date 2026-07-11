@@ -51,7 +51,7 @@ REGISTER_CUTOFF = datetime(2026, 8, 7, 23, 59, 59)
 
 ## services
 BADGE_CUTOFF = datetime(2026, 8, 4, 23, 59, 59)
-VOLUNTEER_OPEN = True
+VOLUNTEER_OPEN = False
 
 ALL_CONFIG = {k: v for k, v in locals().items() if re.fullmatch(r'[A-Z]+(_[A-Z]+)*', k)}
 __all__ = list(ALL_CONFIG.keys())+['ALL_CONFIG']
