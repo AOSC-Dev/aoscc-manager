@@ -76,7 +76,7 @@ def arrived_only(view):
 @bp.get('/')
 @registered_only
 def index():
-    return render_template('user/index.html')
+    return render_template('user/index.html', is_volunteer=volunteer.is_volunteer())
 
 
 from . import login, info, register, pass_, badge, volunteer, vote, draw, pgp

@@ -41,7 +41,7 @@
 <p><a href="{{ url_for('user.badge') }}" class="button">去查看 &gt;&gt;</a></p>
 {% endif %}
 
-{% if VOLUNTEER_OPEN == true %}
+{% if VOLUNTEER_OPEN == true or is_volunteer %}
 <h2>志愿者招募</h2>
 <p>{{ TITLE }} ，有你更精彩！我们正在招募会务志愿者，欢迎有意协助现场工作的朋友报名。</p>
 <p><a href="{{ url_for('user.volunteer') }}" class="button">去报名 &gt;&gt;</a></p>
