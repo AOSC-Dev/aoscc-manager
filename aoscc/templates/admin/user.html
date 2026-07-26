@@ -96,19 +96,30 @@ article > aside img {
             {% endif %}
         </div>
         {% if register %}
-        <div class="form-row">
-            <label>确认时间</label>
-            {% if not register['confirmed'] %}
-            <div>尚未确认</div>
-            {% else %}
-            <div>{{ register['confirmed'] | ts2dt | datetime }}</div>
-            {% endif %}
-        </div>
+        <form method="post" action="{{ url_for('admin.post_user_cancel', uid=user['uid']) }}">
+            <div class="form-row">
+                <label>确认时间</label>
+                {% if not register['confirmed'] %}
+                <div>尚未确认</div>
+                {% else %}
+                <div>
+                    {{ register['confirmed'] | ts2dt | datetime }}
+                    {% if not register['arrived'] and has_role('user') %}
+                    <button type="submit" class="danger" name="action" value="cancel"
+                        onclick="return confirm('确定要撤销确认？')">
+                        撤销确认
+                    </button>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </form>
+        {% if register['confirmed'] %}
         <form method="post" action="{{ url_for('admin.post_user_checkin', uid=user['uid']) }}">
             <div class="form-row">
                 <label>签到时间</label>
+                {% if register['arrived'] %}
                 <div>
-                    {% if register['arrived'] %}
                     {{ register['arrived'] | ts2dt | datetime }}
                     {% if has_role('checkin') %}
                     <button type="submit" class="danger" name="action" value="cancel"
@@ -116,17 +127,20 @@ article > aside img {
                         撤销签到
                     </button>
                     {% endif %}
-                    {% else %}
+                </div>
+                {% else %}
+                <div>
                     尚未签到
                     {% if has_role('checkin') %}
                     <button type="submit" class="primary" name="action" value="checkin">
                         签到
                     </button>
                     {% endif %}
-                    {% endif %}
                 </div>
+                {% endif %}
             </div>
         </form>
+        {% endif %}
         <div class="form-row">
             <label>胸牌</label>
             <div>

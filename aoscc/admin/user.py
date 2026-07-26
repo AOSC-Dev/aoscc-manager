@@ -20,6 +20,13 @@ def post_user_remarks(uid: int):
     return redirect(url_for('admin.user', uid=uid))
 
 
+@bp.post('/user/<int:uid>/cancel')
+@check_role('user')
+def post_user_cancel(uid: int):
+    update_table('register', {'confirmed': 0}, {'uid': uid})
+    return redirect(url_for('admin.user', uid=uid))
+
+
 @bp.get('/user/<int:uid>/badge')
 @check_role('user')
 def user_badge(uid: int):
