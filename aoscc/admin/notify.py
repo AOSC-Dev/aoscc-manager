@@ -85,6 +85,12 @@ def notify():
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': 1})])
         case 'volunteer_fail':
             uids = ','.join([str(u['uid']) for u in fetch_all('volunteer', {'status': -1})])
+        case 'badge':
+            uids = ','.join([str(u['uid']) for u in fetch_all('badge')])
+        case 'no_badge':
+            uids = ','.join([str(u['uid']) for u in query_all(
+                'SELECT uid FROM register WHERE uid NOT IN (SELECT uid FROM badge)'
+            )])
         case 'pgp':
             uids = ','.join([str(u['uid']) for u in fetch_all('pgp_info')])
         case _:
