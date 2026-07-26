@@ -75,7 +75,7 @@ def post_register():
 @bp.post('/register/confirm')
 @registered_only
 def post_register_confirm():
-    if get_confirmed_count() >= REGISTER_CAP:
+    if get_confirmed_count() >= REGISTER_CAP and 'REGOK' not in g.user['remarks']:
         flash('注册人数已达上限，无法确认行程！')
     else:
         update_table('register', {'confirmed': int(time())}, {'uid': g.uid})

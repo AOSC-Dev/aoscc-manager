@@ -9,7 +9,12 @@
 {% if not g.confirmed %}
 <h2>行程确认</h2>
 <div class="infobox error">
+    {% if NOW() > RESERVE_CUTOFF %}
+    <p>当前是候补注册时段，席位先到先得。未确认行程的注册将在注册截止后被取消。</p>
+    <p><strong>请先确认您的参会计划并预订行程后再点选确认，以免浪费参会席位！</strong></p>
+    {% else %}
     <p><strong>请注意！</strong>您仍需在 {{ RESERVE_CUTOFF | date }} 前预订行程并确认参会！未及时确认将导致席位被释放！</p>
+    {% endif %}
 </div>
 <p>如果您已经预订行程并确认线下参会，请点击下方按钮确认。</p>
 <form method="post" action="{{ url_for('user.post_register_confirm') }}">
